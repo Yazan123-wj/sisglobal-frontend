@@ -1,0 +1,7 @@
+export { default as AboutPage } from './AboutPage'
+export { default as HomePage } from './HomePage'
+export { default as InsightDetailPage } from './InsightDetailPage'
+export { default as InsightsPage } from './InsightsPage'
+export { default as VacanciesPage } from './VacanciesPage'
+export { default as VacancyDetailPage } from './VacancyDetailPage'
+export { default as WhatWeDoPage } from './WhatWeDoPage'

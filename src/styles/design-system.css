@@ -1,0 +1,49 @@
+:root {
+  --navy: #092046;
+  --navy-deep: #061530;
+  --navy-mid: #0b2d6d;
+  --navy-raised: #0d2748;
+  --blue: #0a4a9c;
+  --blue-bright: #1a6ec4;
+  --sky: #4f9ad0;
+  --sky-soft: #c5dcf0;
+  --ice: #f4f8fc;
+  --paper: #ffffff;
+  --mist: #e7eef6;
+  --text: #092046;
+  --muted: #5a6b82;
+  --line: #d4e0ec;
+  --accent: #1a6ec4;
+  --accent-soft: #7eb6e0;
+  --ink: var(--navy);
+  --ink-raised: var(--navy-raised);
+  --canvas: var(--ice);
+  --gold: var(--blue-bright);
+  --gold-light: var(--accent-soft);
+  --content-width: 1180px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 48px;
+  --space-12: 112px;
+  --radius-xs: 8px;
+  --radius-sm: 8px;
+  --radius-pill: 8px;
+  --shadow-button: 0 8px 18px rgba(9, 32, 70, .16);
+  --shadow-card: 0 22px 45px rgba(9, 32, 70, .1);
+  --transition: 180ms cubic-bezier(.2, .8, .2, 1);
+  --header-height: 76px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-visual { animation: hero-drift 18s ease-in-out infinite alternate; }
+  .service-card { will-change: transform; }
+}
+
+@keyframes hero-drift {
+  from { transform: scale(1.01) translate3d(0, 0, 0); }
+  to { transform: scale(1.05) translate3d(-1.1%, -.6%, 0); }
+}
