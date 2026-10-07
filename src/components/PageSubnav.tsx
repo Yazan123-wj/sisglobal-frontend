@@ -45,7 +45,7 @@ export default function PageSubnav({
   }, [items, onSelect])
 
   return (
-    <nav className={cn('page-subnav', extra && 'page-subnav-stack')} aria-label="On this page">
+    <nav className={cn('page-subnav', extra ? 'page-subnav-stack' : undefined)} aria-label="On this page">
       <div className="container">
         <div className="page-subnav-inner">
           {items.map((item) => (

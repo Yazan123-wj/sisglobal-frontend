@@ -118,12 +118,10 @@ function ServiceView({
   service,
   image,
   pillarId,
-  onSelectPillar,
 }: {
   service: WorkService
   image: string
   pillarId: string
-  onSelectPillar: (id: string) => void
 }) {
   const pillar = service.pillars.find((item) => item.id === pillarId) ?? service.pillars[0]
   const pillarIndex = service.pillars.findIndex((item) => item.id === pillar.id)
@@ -332,7 +330,7 @@ export default function WhatWeDoPage() {
       <section id="work-content" className="work-content section">
         <div className="container">
           {selected ? (
-            <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} onSelectPillar={setPillarId} />
+            <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
           ) : (
             <div className="work-overview">
               <div className="about-intro">
