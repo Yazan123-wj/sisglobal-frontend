@@ -5,7 +5,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import PageSubnav from '@/components/PageSubnav'
-import { insightKinds, insightsByKind } from '@/data/insights'
+import { insightKindPath, insightKinds, insightsByKind } from '@/data/insights'
 import type { Insight, InsightImage } from '@/data/insights'
 
 const insightImages: Record<InsightImage, string> = {
@@ -24,7 +24,10 @@ const insightSections = [
 
 function InsightCard({ item, featured = false }: { item: Insight; featured?: boolean }) {
   return (
-    <Link className={featured ? 'insight-tile is-featured' : 'insight-tile'} to={`/insights/${item.id}`}>
+    <Link
+      className={featured ? 'insight-tile is-featured' : 'insight-tile'}
+      to={item.kind === 'story' ? `/case-studies/${item.id}` : `/insights/${item.id}`}
+    >
       <div className="insight-tile-media" data-curtain >
         <img src={insightImages[item.image]} alt="" />
         {featured ? <span>Featured</span> : null}
@@ -78,9 +81,14 @@ export default function InsightsPage() {
         return (
           <section key={kind.id} id={`insight-${kind.id === 'article' ? 'articles' : kind.id === 'news' ? 'news' : 'stories'}`} className="insight-section">
             <div className="container">
-              <div className="about-intro">
-                <h2>{kind.label}</h2>
-                <p>{kind.intro}</p>
+              <div className="insight-section-head">
+                <div className="about-intro">
+                  <h2>{kind.label}</h2>
+                  <p>{kind.intro}</p>
+                </div>
+                <Link className="text-link" to={insightKindPath[kind.id]}>
+                  View all {kind.label.toLowerCase()} <span aria-hidden="true">↗</span>
+                </Link>
               </div>
               <div className="insight-tile-grid">
                 {featured ? <InsightCard item={featured} featured /> : null}

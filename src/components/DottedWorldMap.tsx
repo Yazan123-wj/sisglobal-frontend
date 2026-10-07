@@ -14,7 +14,7 @@ const HIT_R = 22
 const CROP_X = 520
 const CROP_Y = 90
 const VIEW_W = 1400 - CROP_X
-const VIEW_H = 400
+const VIEW_H = 460
 
 type MapLocation = GlobalLocation & { x: number; y: number }
 
@@ -105,6 +105,7 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
       <div className="map-frame">
         <svg
           viewBox={`${CROP_X} ${CROP_Y} ${VIEW_W} ${VIEW_H}`}
+          preserveAspectRatio="xMinYMid meet"
           role="img"
           aria-label="Dotted world map of SIS Global locations"
         >

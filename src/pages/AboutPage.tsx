@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
-import DottedWorldMap from '@/components/DottedWorldMap'
+import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import PageSubnav from '@/components/PageSubnav'
 import { globalLocations } from '@/data/locations'
 
@@ -36,8 +35,6 @@ const whoCards = [
 
 export default function AboutPage() {
   const navigate = useNavigate()
-  const [activeId, setActiveId] = useState(globalLocations.find((location) => location.headquarters)?.id ?? globalLocations[0].id)
-  const active = globalLocations.find((location) => location.id === activeId) ?? globalLocations[0]
 
   return (
     <main className="about-page">
@@ -112,45 +109,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="about-presence" className="about-section section">
-        <div className="container">
-          <div className="about-intro">
-            <h2>Global Presence</h2>
-            <p>Map and directory of SIS Global regions and office locations.</p>
-          </div>
-          <div className="about-presence-grid">
-            <div className="about-map-panel">
-              <p className="about-panel-label">Presence map</p>
-              <DottedWorldMap activeId={activeId} onActivate={setActiveId} />
-              <p className="about-map-caption">{active.country}{active.city ? ` · ${active.city}` : ''} · {active.year}</p>
-            </div>
-            <article className="about-side-panel">
-              <p className="about-panel-label">Countries & offices</p>
-              <ul className="about-office-list">
-                {globalLocations.map((location) => (
-                  <li key={location.id}>
-                    <button type="button" className={location.id === activeId ? 'is-active' : undefined} onClick={() => setActiveId(location.id)}>
-                      <span className="about-office-name">
-                        <b>{location.country}</b>
-                        {location.headquarters ? <em>HQ</em> : null}
-                      </span>
-                      <small>{location.year}</small>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </article>
-            <article className="about-side-panel">
-              <p className="about-panel-label">Regional contacts</p>
-              <div className="about-contact-block">
-                <p>Headquarters</p>
-                <b>Riyadh, Saudi Arabia</b>
-                <a href="mailto:info@sisglobal.com">info@sisglobal.com</a>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+      <GlobalPresenceSection sectionId="about-presence" />
 
       <section id="about-cta" className="about-cta">
         <div className="container">

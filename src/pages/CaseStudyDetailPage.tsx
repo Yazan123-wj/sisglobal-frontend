@@ -5,10 +5,10 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import PageSubnav from '@/components/PageSubnav'
-import { getInsight, insightKindPath, insightKinds, relatedInsights } from '@/data/insights'
+import { getCaseStudy, relatedCaseStudies } from '@/data/insights'
 import type { InsightImage } from '@/data/insights'
 
-const insightImages: Record<InsightImage, string> = {
+const caseImages: Record<InsightImage, string> = {
   workforce: caseWorkforce,
   telecom: caseTelecom,
   ict: caseIct,
@@ -29,40 +29,38 @@ function splitBody(body: string[]) {
   }
 }
 
-export default function InsightDetailPage() {
+export default function CaseStudyDetailPage() {
   const { id = '' } = useParams()
   const navigate = useNavigate()
-  const insight = getInsight(id)
+  const study = getCaseStudy(id)
 
-  if (!insight) return <Navigate to="/insights" replace />
-  if (insight.kind === 'story') return <Navigate to={`/case-studies/${insight.id}`} replace />
+  if (!study) return <Navigate to="/case-studies" replace />
 
-  const related = relatedInsights(insight)
-  const kind = insightKinds.find((item) => item.id === insight.kind)
-  const { lead, before, quote, after } = splitBody(insight.body)
+  const related = relatedCaseStudies(study.id)
+  const { lead, before, quote, after } = splitBody(study.body)
 
   return (
     <main className="insight-detail-page">
-      <section className="about-hero" aria-labelledby="insight-title">
-        <div className="about-hero-visual" style={{ backgroundImage: `url(${insightImages[insight.image]})` }} aria-hidden="true" />
+      <section className="about-hero" aria-labelledby="case-title">
+        <div className="about-hero-visual" style={{ backgroundImage: `url(${caseImages[study.image]})` }} aria-hidden="true" />
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
-            <p className="eyebrow light">{insight.unit} · {insight.topic}</p>
-            <h1 id="insight-title">{insight.title}</h1>
-            <p>{insight.excerpt}</p>
+            <p className="eyebrow light">{study.unit} · {study.topic}</p>
+            <h1 id="case-title">{study.title}</h1>
+            <p>{study.excerpt}</p>
           </div>
           <dl className="about-hero-facts">
             <div>
-              <dt>Published</dt>
-              <dd>{insight.date}</dd>
+              <dt>Unit</dt>
+              <dd>{study.unit}</dd>
             </div>
             <div>
-              <dt>Read</dt>
-              <dd>{insight.read}</dd>
+              <dt>Sector</dt>
+              <dd>{study.topic}</dd>
             </div>
             <div>
               <dt>Type</dt>
-              <dd>{kind?.label}</dd>
+              <dd>Case study</dd>
             </div>
           </dl>
         </div>
@@ -70,40 +68,30 @@ export default function InsightDetailPage() {
 
       <PageSubnav
         items={[
-          { id: 'insights', label: 'All Insights' },
-          { id: 'insight-articles', label: 'Articles' },
-          { id: 'insight-news', label: 'News' },
-          { id: 'insight-stories', label: 'Success Stories' },
+          { id: 'all', label: 'All case studies' },
+          { id: 'case-study', label: 'Overview' },
         ]}
-        activeId="insights"
+        activeId="case-study"
         onSelect={(target) => {
-          if (target === 'insights') {
-            navigate('/insights')
+          if (target === 'all') {
+            navigate('/case-studies')
             return
           }
-          if (target === 'insight-articles') {
-            navigate(insightKindPath.article)
-            return
-          }
-          if (target === 'insight-news') {
-            navigate(insightKindPath.news)
-            return
-          }
-          navigate(insightKindPath.story)
+          document.getElementById('case-study')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }}
       />
 
-      <article id="insights" className="insight-article">
+      <article id="case-study" className="insight-article">
         <div className="container insight-article-layout">
           <div className="insight-article-main">
-            <p className="insight-article-kicker">{kind?.label} · {insight.unit}</p>
+            <p className="insight-article-kicker">Case study · {study.unit}</p>
             <p className="insight-lead">{lead}</p>
 
             <figure className="insight-figure">
-              <div className="insight-figure-media" data-curtain >
-                <img src={insightImages[insight.image]} alt="" />
+              <div className="insight-figure-media" data-curtain>
+                <img src={caseImages[study.image]} alt="" />
               </div>
-              <figcaption>{insight.unit} · {insight.topic}</figcaption>
+              <figcaption>{study.unit} · {study.topic}</figcaption>
             </figure>
 
             {before.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -113,23 +101,19 @@ export default function InsightDetailPage() {
 
           <aside className="insight-aside">
             <div className="insight-aside-card">
-              <h2>In this piece</h2>
+              <h2>At a glance</h2>
               <dl>
                 <div>
-                  <dt>Published</dt>
-                  <dd>{insight.date}</dd>
-                </div>
-                <div>
-                  <dt>Reading time</dt>
-                  <dd>{insight.read}</dd>
-                </div>
-                <div>
                   <dt>Unit</dt>
-                  <dd>{insight.unit}</dd>
+                  <dd>{study.unit}</dd>
                 </div>
                 <div>
-                  <dt>Topic</dt>
-                  <dd>{insight.topic}</dd>
+                  <dt>Sector</dt>
+                  <dd>{study.topic}</dd>
+                </div>
+                <div>
+                  <dt>Focus</dt>
+                  <dd>Delivery</dd>
                 </div>
               </dl>
             </div>
@@ -148,19 +132,19 @@ export default function InsightDetailPage() {
         <section className="insight-section">
           <div className="container">
             <div className="about-intro">
-              <h2>More {kind?.label.toLowerCase()}</h2>
-              <p>Continue reading from the same desk.</p>
+              <h2>More case studies</h2>
+              <p>Continue through the work.</p>
             </div>
             <div className="insight-tile-grid is-related">
               {related.map((item) => (
-                <Link key={item.id} className="insight-tile" to={`/insights/${item.id}`}>
-                  <div className="insight-tile-media" data-curtain >
-                    <img src={insightImages[item.image]} alt="" />
+                <Link key={item.id} className="insight-tile" to={`/case-studies/${item.id}`}>
+                  <div className="insight-tile-media" data-curtain>
+                    <img src={caseImages[item.image]} alt="" />
                   </div>
                   <div className="insight-tile-body">
                     <p>{item.unit} · {item.topic}</p>
                     <h3>{item.title}</h3>
-                    <small>{item.date} · {item.read}</small>
+                    <small>Read case study</small>
                   </div>
                 </Link>
               ))}

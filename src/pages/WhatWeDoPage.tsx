@@ -166,20 +166,6 @@ function ServiceView({
 
       <section id="work-offer" className="work-block">
         <h2>What we offer</h2>
-        <div className="work-offer-tabs" role="tablist" aria-label="Choose a service line">
-          {service.pillars.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={item.id === pillar.id}
-              className={item.id === pillar.id ? 'is-active' : undefined}
-              onClick={() => onSelectPillar(item.id)}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
         <article className="work-pillar-panel">
           <div className="work-pillar-hero" data-curtain >
             <img src={gallery[pillarIndex % gallery.length]} alt="" />
@@ -321,7 +307,27 @@ export default function WhatWeDoPage() {
         </div>
       </section>
 
-      <PageSubnav items={[...workTabs]} activeId={active} onSelect={select} />
+      <PageSubnav
+        items={[...workTabs]}
+        activeId={active}
+        onSelect={select}
+        extra={selected ? (
+          <div className="page-subnav-pills" role="tablist" aria-label={`${selected.label} service lines`}>
+            {selected.pillars.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={item.id === pillarId}
+                className={item.id === pillarId ? 'is-active' : undefined}
+                onClick={() => selectPillar(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      />
 
       <section id="work-content" className="work-content section">
         <div className="container">

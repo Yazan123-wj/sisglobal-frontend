@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/cn'
 
@@ -11,10 +12,12 @@ export default function PageSubnav({
   items,
   activeId,
   onSelect,
+  extra,
 }: {
   items: PageSectionLink[]
   activeId?: string
   onSelect?: (id: string) => void
+  extra?: ReactNode
 }) {
   const [observedId, setObservedId] = useState(items[0]?.id ?? '')
   const currentId = activeId ?? observedId
@@ -42,24 +45,27 @@ export default function PageSubnav({
   }, [items, onSelect])
 
   return (
-    <nav className="page-subnav" aria-label="On this page">
-      <div className="container page-subnav-inner">
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={cn(item.id === currentId && 'is-active')}
-            onClick={() => {
-              if (onSelect) {
-                onSelect(item.id)
-                return
-              }
-              document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
+    <nav className={cn('page-subnav', extra && 'page-subnav-stack')} aria-label="On this page">
+      <div className="container">
+        <div className="page-subnav-inner">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className={cn(item.id === currentId && 'is-active')}
+              onClick={() => {
+                if (onSelect) {
+                  onSelect(item.id)
+                  return
+                }
+                document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        {extra}
       </div>
     </nav>
   )

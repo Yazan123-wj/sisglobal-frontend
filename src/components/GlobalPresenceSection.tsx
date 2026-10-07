@@ -4,16 +4,16 @@ import DottedWorldMap from '@/components/DottedWorldMap'
 import { globalLocations } from '@/data/locations'
 import { cn } from '@/lib/cn'
 
-export default function GlobalPresenceSection() {
+export default function GlobalPresenceSection({ sectionId = 'presence' }: { sectionId?: string }) {
   const [activeId, setActiveId] = useState(globalLocations[1]?.id ?? globalLocations[0].id)
   const active = globalLocations.find((location) => location.id === activeId) ?? globalLocations[0]
 
   return (
-    <section id="presence" className="presence-section" aria-labelledby="global-presence-heading">
+    <section id={sectionId} className="presence-section" aria-labelledby="global-presence-heading">
       <div className="presence-shell">
         <div className="presence-head">
           <div className="presence-detail">
-            <p className="presence-index">05 / Global presence</p>
+            <p className="presence-index">Global presence</p>
             <p className="presence-country">{active.country}</p>
             <p className="presence-meta">Established {active.year}</p>
             <p className="presence-blurb">{active.blurb}</p>

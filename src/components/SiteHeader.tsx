@@ -4,6 +4,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { brandForPath } from '@/data/brand'
 
 const links = [
+  { label: 'Case Studies', to: '/case-studies' },
   { label: 'Insights', to: '/insights' },
 ]
 
@@ -53,7 +54,6 @@ export default function SiteHeader() {
 
   const brand = brandForPath(location.pathname)
   const workCurrent = location.pathname.startsWith('/what-we-do')
-  const insightCurrent = location.pathname.startsWith('/insights')
   const careerCurrent = location.pathname.startsWith('/vacancies')
 
   return (
@@ -112,7 +112,12 @@ export default function SiteHeader() {
           </div>
         </div>
         {links.map((link) => (
-          <NavLink key={link.to} to={link.to} className={insightCurrent ? 'is-current' : undefined} onClick={closeMenus}>
+          <NavLink
+            key={link.to}
+            to={link.to}
+            className={({ isActive }) => (isActive ? 'is-current' : undefined)}
+            onClick={closeMenus}
+          >
             {link.label}
           </NavLink>
         ))}

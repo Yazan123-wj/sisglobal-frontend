@@ -29,6 +29,7 @@ export default function SiteFooter() {
             <p className="footer-label">Explore</p>
             <Link to="/about">About</Link>
             <Link to="/what-we-do">Solutions</Link>
+            <Link to="/case-studies">Case Studies</Link>
             <Link to="/insights">Insights</Link>
             <button type="button" onClick={() => go('industries')}>Industries</button>
             <Link to="/about#about-presence">Global Presence</Link>
@@ -44,6 +45,8 @@ export default function SiteFooter() {
           <div>
             <p className="footer-label">Contact</p>
             <a href="mailto:info@sisglobal.com">info@sisglobal.com</a>
+            <a href="https://www.linkedin.com/company/sis-global-hq" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://www.facebook.com/saudiintelligentsolutions" target="_blank" rel="noreferrer">Facebook</a>
           </div>
         </div>
       </div>

@@ -171,6 +171,12 @@ export const insightKinds: { id: InsightKind; label: string; intro: string }[] =
   { id: 'story', label: 'Success Stories', intro: 'How the work looks when people, operations and technology come together.' },
 ]
 
+export const insightKindPath: Record<InsightKind, string> = {
+  article: '/insights/articles',
+  news: '/insights/news',
+  story: '/case-studies',
+}
+
 export function insightsByKind(kind: InsightKind) {
   return insights.filter((item) => item.kind === kind)
 }
@@ -181,4 +187,12 @@ export function getInsight(id: string) {
 
 export function relatedInsights(insight: Insight, count = 3) {
   return insights.filter((item) => item.id !== insight.id && item.kind === insight.kind).slice(0, count)
+}
+
+export function getCaseStudy(id: string) {
+  return insights.find((item) => item.id === id && item.kind === 'story')
+}
+
+export function relatedCaseStudies(id: string, count = 2) {
+  return insightsByKind('story').filter((item) => item.id !== id).slice(0, count)
 }

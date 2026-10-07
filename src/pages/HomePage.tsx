@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import { vacancies } from '@/data/vacancies'
-import { insightsByKind } from '@/data/insights'
+import { insightsByKind, type InsightImage } from '@/data/insights'
 import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
@@ -24,9 +24,36 @@ const clients = [
   { name: 'Dell', mark: 'dell' },
   { name: 'Fortinet', mark: 'fortinet' },
 ]
-const techPartners = ['Microsoft', 'HP', 'Cisco', 'Dell', 'Apple', 'Lenovo', 'Nextivity', 'Fortinet']
+const techPartners = [
+  { name: 'Microsoft', mark: 'microsoft' },
+  { name: 'HP', mark: 'hp' },
+  { name: 'Cisco', mark: 'cisco' },
+  { name: 'Dell', mark: 'dell' },
+  { name: 'Apple', mark: 'apple' },
+  { name: 'Lenovo', mark: 'lenovo' },
+  { name: 'Nextivity', mark: 'nextivity' },
+  { name: 'Fortinet', mark: 'fortinet' },
+]
+
+const homeIndustries = [
+  { title: 'Telecommunications & Technology', copy: 'Rollout, operations and ICT support for live networks and digital estates.', image: caseTelecom },
+  { title: 'Government & Public Sector', copy: 'Workforce, field operations and infrastructure for public programmes.', image: caseWorkforce },
+  { title: 'Engineering & Infrastructure', copy: 'Field teams and technical operations across sites, power and facilities.', image: heroNetworkImage },
+  { title: 'Healthcare', copy: 'People operations and workplace technology that keep services running.', image: caseWorkforce },
+  { title: 'Financial & Professional Services', copy: 'Secure infrastructure, connectivity and support for enterprise estates.', image: caseIct },
+  { title: 'Retail & Consumer', copy: 'Flexible workforce and technology support as operations scale.', image: caseIct },
+]
 const featuredOpenings = vacancies.slice(0, 3)
 const articles = insightsByKind('article').slice(0, 3)
+const stories = insightsByKind('story')
+const featuredStory = stories[0]
+const moreStories = stories.slice(1, 3)
+const storyImages: Record<InsightImage, string> = {
+  workforce: caseWorkforce,
+  telecom: caseTelecom,
+  ict: caseIct,
+  network: heroNetworkImage,
+}
 
 type ServiceKey = 'hcm' | 'tso' | 'ict'
 
@@ -55,6 +82,9 @@ function BrandMark({ mark }: { mark: string }) {
       {mark === 'dell' && <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" strokeWidth="2.5" />}
       {mark === 'dell' && <path d="M10 16.8 16 10l6 6.8H10Z" />}
       {mark === 'fortinet' && <path d="M16 5 27 11v10L16 27 5 21V11L16 5Z" />}
+      {mark === 'apple' && <path d="M21.4 12.2c-1.9 0-2.7 1-4.1 1-1.5 0-2.6-1-4.2-1-2.2 0-4.5 1.4-5.6 3.5-2.4 4.2-.6 10.4 1.7 13.8 1.1 1.6 2.4 3.5 4.2 3.4 1.6-.1 2.2-1.1 4.1-1.1s2.4 1.1 4.2 1c1.8-.1 3-1.7 4.1-3.4 1.3-1.9 1.8-3.7 1.8-3.8-.1 0-3.5-1.4-3.5-5.3 0-3.4 2.7-4.9 2.8-5-.1-.1-2.5-2.1-5.5-2.1Zm-4-3.2c.9-1.1 1.6-2.6 1.4-4.1-1.2.1-2.7.8-3.6 1.9-.8.9-1.6 2.4-1.4 3.8 1.3.1 2.7-.7 3.6-1.6Z" />}
+      {mark === 'lenovo' && <path d="M6 10h20v12H6V10Zm3 3.2v5.6h2.1V16h2.4c1.8 0 2.9-1 2.9-2.4S15.4 11.2 13.6 11.2H9Zm2.1 1.8h1.5c.6 0 .9.3.9.7s-.3.7-.9.7H11.1v-1.4Zm7.4 3.8V13.2h2.1v1.1c.3-.8 1.1-1.3 2.1-1.3.3 0 .6 0 .8.1v1.9c-.2-.1-.5-.2-.8-.2-.8 0-1.4.6-1.4 1.6v1.8h-2.8Z" />}
+      {mark === 'nextivity' && <path d="M7 8h6.4L18 16.2 21.2 8H25L19.1 24h-6.2L7 8Zm3.4 2.6 3.1 7.8h.1l3.2-7.8h-6.4Z" />}
     </svg>
   )
 }
@@ -64,6 +94,7 @@ export default function HomePage() {
   const [searchParams] = useSearchParams()
   const [activeService, setActiveService] = useState<ServiceKey>('tso')
   const [formSent, setFormSent] = useState(false)
+  const [clientsOpen, setClientsOpen] = useState(false)
   const active = services[activeService]
 
   useEffect(() => {
@@ -74,6 +105,15 @@ export default function HomePage() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const submitForm = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setFormSent(true) }
+
+  useEffect(() => {
+    if (!clientsOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setClientsOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [clientsOpen])
 
   return (
     <main id="top">
@@ -88,10 +128,10 @@ export default function HomePage() {
           <div className="trust-copy">
             <h3>Trusted by<br />great brands</h3>
             <p>Energy, telecom, government and finance teams work with SIS Global when they need one accountable partner.</p>
-            <button className="button button-navy" type="button" onClick={() => goTo('contact')}>More clients</button>
+            <button className="button button-navy" type="button" onClick={() => setClientsOpen(true)}>More clients</button>
           </div>
           <ul className="logo-row">
-            {clients.map((client) => (
+            {clients.slice(0, 8).map((client) => (
               <li key={client.name}>
                 <BrandMark mark={client.mark} />
                 <span>{client.name}</span>
@@ -99,17 +139,59 @@ export default function HomePage() {
             ))}
           </ul>
         </div>
-        <div className="section-heading intro-heading"><p className="eyebrow"><span>02</span> A connected partner</p><div><h2>One group. Three capabilities.<br /><em>Everywhere you operate.</em></h2><p>SIS Global combines human capital, technical operations and ICT infrastructure to simplify the operational challenges that hold businesses back.</p></div></div>
+        {clientsOpen ? (
+          <div className="clients-modal" role="presentation" onClick={() => setClientsOpen(false)}>
+            <div className="clients-modal-card" role="dialog" aria-modal="true" aria-labelledby="clients-title" onClick={(event) => event.stopPropagation()}>
+              <div className="clients-modal-head">
+                <h2 id="clients-title">Clients</h2>
+                <button className="text-link" type="button" onClick={() => setClientsOpen(false)}>Close</button>
+              </div>
+              <ul className="logo-row is-all">
+                {clients.map((client) => (
+                  <li key={client.name}>
+                    <BrandMark mark={client.mark} />
+                    <span>{client.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : null}
+        <div className="section-heading intro-heading"><p className="eyebrow">A connected partner</p><div><h2>One group. Three capabilities.<br /><em>Everywhere you operate.</em></h2><p>SIS Global combines human capital, technical operations and ICT infrastructure to simplify the operational challenges that hold businesses back.</p></div></div>
         <div id="services" className="service-cards">
-          <article className="service-card service-hcm"><div className="card-top"><span>01</span><p>Idarat HCM</p><span className="corner-arrow"><Arrow /></span></div><div className="service-card-content"><p className="card-eyebrow">Human Capital Management</p><h3>Ready people, right where they are needed.</h3><p>Recruitment, HR operations and workforce services designed for scale.</p><button type="button" onClick={() => navigate('/what-we-do/hcm')}>Explore HCM <Arrow /></button></div></article>
-          <article className="service-card service-tso"><div className="card-top"><span>02</span><p>Idarat TSO</p><span className="corner-arrow"><Arrow /></span></div><div className="service-card-content"><p className="card-eyebrow">Technical Services & Operations</p><h3>Specialist execution, from plan to field.</h3><p>Reliable rollout and managed operations across complex environments.</p><button type="button" onClick={() => navigate('/what-we-do/tso')}>Explore TSO <Arrow /></button></div></article>
-          <article className="service-card service-ict"><div className="card-top"><span>03</span><p>Identiti ICT</p><span className="corner-arrow"><Arrow /></span></div><div className="service-card-content"><p className="card-eyebrow">ICT Infrastructure</p><h3>Technology foundations for lasting progress.</h3><p>Secure hardware, software and networks with end-to-end support.</p><button type="button" onClick={() => navigate('/what-we-do/ict')}>Explore ICT <Arrow /></button></div></article>
+          <Link className="service-card service-hcm" to="/what-we-do/hcm">
+            <div className="card-top"><span>01</span><p>Idarat HCM</p><span className="corner-arrow"><Arrow /></span></div>
+            <div className="service-card-content">
+              <p className="card-eyebrow">Human Capital Management</p>
+              <h3>Ready people, right where they are needed.</h3>
+              <p>Recruitment, HR operations and workforce services designed for scale.</p>
+              <span className="text-link">Explore HCM <Arrow /></span>
+            </div>
+          </Link>
+          <Link className="service-card service-tso" to="/what-we-do/tso">
+            <div className="card-top"><span>02</span><p>Idarat TSO</p><span className="corner-arrow"><Arrow /></span></div>
+            <div className="service-card-content">
+              <p className="card-eyebrow">Technical Services & Operations</p>
+              <h3>Specialist execution, from plan to field.</h3>
+              <p>Reliable rollout and managed operations across complex environments.</p>
+              <span className="text-link">Explore TSO <Arrow /></span>
+            </div>
+          </Link>
+          <Link className="service-card service-ict" to="/what-we-do/ict">
+            <div className="card-top"><span>03</span><p>Identiti ICT</p><span className="corner-arrow"><Arrow /></span></div>
+            <div className="service-card-content">
+              <p className="card-eyebrow">ICT Infrastructure</p>
+              <h3>Technology foundations for lasting progress.</h3>
+              <p>Secure hardware, software and networks with end-to-end support.</p>
+              <span className="text-link">Explore ICT <Arrow /></span>
+            </div>
+          </Link>
         </div></div></section>
       <MetricsBar />
       <section id="difference" className="difference-section section">
         <div className="container">
           <div className="difference-heading">
-            <p className="eyebrow"><span>03</span> What sets us apart</p>
+            <p className="eyebrow">What sets us apart</p>
             <div className="difference-lead">
               <h2>Three capabilities.<br />One accountable partner.</h2>
               <p>Less coordination. More momentum. SIS Global connects the people, services and infrastructure behind critical operations.</p>
@@ -134,62 +216,80 @@ export default function HomePage() {
           </div>
           <div id="industries" className="industry-band">
             <div className="industry-band-copy">
-              <p>Industries we serve</p>
-              <button type="button" onClick={() => goTo('presence')}>Explore industries <Arrow /></button>
+              <div>
+                <p>Industries we serve</p>
+                <span>People, field operations and technology across the sectors we already work in.</span>
+              </div>
+              <button type="button" onClick={() => navigate({ pathname: '/what-we-do', hash: 'industries' })}>
+                Explore industries <Arrow />
+              </button>
             </div>
-            <ul className="industry-pills">
-              {['Telecommunications', 'Government', 'Healthcare', 'Financial Services', 'Technology', 'Infrastructure', 'Retail'].map((item) => (
-                <li key={item}>{item}</li>
+            <div className="industry-card-grid">
+              {homeIndustries.map((industry) => (
+                <article key={industry.title} className="industry-card">
+                  <div className="industry-card-media">
+                    <img src={industry.image} alt="" />
+                  </div>
+                  <div className="industry-card-body">
+                    <h3>{industry.title}</h3>
+                    <p>{industry.copy}</p>
+                  </div>
+                </article>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </section>
       <section id="cases" className="case-section section">
         <div className="container">
           <div className="cases-heading">
-            <p className="eyebrow"><span>04</span> Case studies</p>
+            <p className="eyebrow">Case studies</p>
             <div className="cases-lead">
               <h2>Delivering results<br />that matter.</h2>
               <div>
                 <p>From national-scale rollouts to the operational detail that makes them work.</p>
-                <button className="text-link" type="button" onClick={() => goTo('contact')}>View all case studies <Arrow /></button>
+                <Link className="text-link" to="/case-studies">View all case studies <Arrow /></Link>
               </div>
             </div>
           </div>
           <div className="case-grid">
-            <article className="case-card">
-              <div className="case-art-wrap" data-curtain ><img className="case-art" src={caseTelecom} alt="" /></div>
-              <div className="case-content">
-                <span>Telecommunications</span>
-                <h3>5G rollout across 200+ sites in Saudi Arabia</h3>
-                <p>Accelerated deployment with zero safety incidents across every project phase.</p>
-                <button type="button">Read case study <Arrow /></button>
-              </div>
-            </article>
-            <article className="case-card">
-              <div className="case-art-wrap" data-curtain ><img className="case-art" src={caseWorkforce} alt="" /></div>
-              <div className="case-content">
-                <span>Government</span>
-                <h3>Managed workforce for a major government entity</h3>
-                <p>500+ professionals mobilised to support essential services.</p>
-                <button type="button">Read case study <Arrow /></button>
-              </div>
-            </article>
-            <article className="case-card">
-              <div className="case-art-wrap" data-curtain ><img className="case-art" src={caseIct} alt="" /></div>
-              <div className="case-content">
-                <span>Financial services</span>
-                <h3>ICT infrastructure refresh for a Riyadh bank</h3>
-                <p>Secure, resilient infrastructure delivered inside a 90-day window.</p>
-                <button type="button">Read case study <Arrow /></button>
-              </div>
-            </article>
+            {featuredStory ? (
+              <Link className="case-card is-featured" to={`/case-studies/${featuredStory.id}`}>
+                <div className="case-art-wrap" data-curtain>
+                  <img className="case-art" src={storyImages[featuredStory.image]} alt="" />
+                  <span>Featured</span>
+                </div>
+                <div className="case-content">
+                  <span>{featuredStory.topic}</span>
+                  <h3>{featuredStory.title}</h3>
+                  <p>{featuredStory.excerpt}</p>
+                  <small>Read case study <Arrow /></small>
+                </div>
+              </Link>
+            ) : null}
+            {moreStories.map((story) => (
+              <Link key={story.id} className="case-card" to={`/case-studies/${story.id}`}>
+                <div className="case-art-wrap" data-curtain>
+                  <img className="case-art" src={storyImages[story.image]} alt="" />
+                </div>
+                <div className="case-content">
+                  <span>{story.topic}</span>
+                  <h3>{story.title}</h3>
+                  <p>{story.excerpt}</p>
+                  <small>Read case study <Arrow /></small>
+                </div>
+              </Link>
+            ))}
           </div>
           <div className="partner-strip">
             <p>Technology partners</p>
             <ul>
-              {techPartners.map((name) => <li key={name}>{name}</li>)}
+              {techPartners.map((partner) => (
+                <li key={partner.name}>
+                  <BrandMark mark={partner.mark} />
+                  <span className="sr-only">{partner.name}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -198,7 +298,7 @@ export default function HomePage() {
       <section id="careers" className="careers-panel">
         <div className="container split-inner">
           <div className="split-intro">
-            <p className="eyebrow light"><span>06</span> Careers</p>
+            <p className="eyebrow light">Careers</p>
             <h2>Join a growing team<br />across the region.</h2>
             <p>Help us create the capability that keeps organisations moving.</p>
             <button className="button button-gold" type="button" onClick={() => navigate('/vacancies')}>View all openings <Arrow /></button>
@@ -225,7 +325,7 @@ export default function HomePage() {
       <section id="insights" className="insights-section">
         <div className="container">
           <div className="insights-heading">
-            <p className="eyebrow"><span>07</span> Insights</p>
+            <p className="eyebrow">Insights</p>
             <div className="insights-lead">
               <h2>Perspectives on<br /><em>technology & operations.</em></h2>
               <div>
@@ -252,7 +352,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section id="contact" className="contact-section section"><div className="container contact-wrap"><div className="contact-copy"><p className="eyebrow light"><span>08</span> Start a conversation</p><h2>Let’s make<br /><em>progress practical.</em></h2><p>Tell us what your operation needs next. The right SIS Global team will be in touch.</p><div className="contact-note"><span>Response commitment</span><b>Within one business day</b></div></div><div className="form-card">{formSent ? <div className="success-state"><span>✓</span><h3>Thanks for getting in touch.</h3><p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p><button className="button button-outline" type="button" onClick={() => setFormSent(false)}>Send another enquiry <Arrow /></button></div> : <form onSubmit={submitForm}><div className="form-heading"><h3>How can we help?</h3><p>Fields marked with * are required.</p></div><div className="form-grid"><label>Name *<input required name="name" placeholder="Your full name" /></label><label>Business email *<input required type="email" name="email" placeholder="name@company.com" /></label><label>Company *<input required name="company" placeholder="Your company" /></label><label>Area of interest *<select required name="interest" defaultValue=""><option value="" disabled>Select a service</option><option>Human Capital Management</option><option>Technical Services & Operations</option><option>ICT Infrastructure</option><option>Multiple services</option><option>Not sure yet</option></select></label><label className="wide">Optional message<textarea name="message" placeholder="A few details about your enquiry" rows={4} /></label></div><button className="button button-gold form-submit" type="submit">Send inquiry <Arrow /></button></form>}</div></div></section>
+      <section id="contact" className="contact-section section"><div className="container contact-wrap"><div className="contact-copy"><p className="eyebrow light">Start a conversation</p><h2>Let’s make<br /><em>progress practical.</em></h2><p>Tell us what your operation needs next. The right SIS Global team will be in touch.</p><div className="contact-note"><span>Response commitment</span><b>Within one business day</b></div></div><div className="form-card">{formSent ? <div className="success-state"><span>✓</span><h3>Thanks for getting in touch.</h3><p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p><button className="button button-outline" type="button" onClick={() => setFormSent(false)}>Send another enquiry <Arrow /></button></div> : <form onSubmit={submitForm}><div className="form-heading"><h3>How can we help?</h3><p>Fields marked with * are required.</p></div><div className="form-grid"><label>Name *<input required name="name" placeholder="Your full name" /></label><label>Business email *<input required type="email" name="email" placeholder="name@company.com" /></label><label>Company *<input required name="company" placeholder="Your company" /></label><label>Area of interest *<select required name="interest" defaultValue=""><option value="" disabled>Select a service</option><option>Human Capital Management</option><option>Technical Services & Operations</option><option>ICT Infrastructure</option><option>Multiple services</option><option>Not sure yet</option></select></label><label className="wide">Optional message<textarea name="message" placeholder="A few details about your enquiry" rows={4} /></label></div><button className="button button-gold form-submit" type="submit">Send inquiry <Arrow /></button></form>}</div></div></section>
     </main>
   )
 }
