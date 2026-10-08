@@ -35,7 +35,6 @@ export default function InsightDetailPage() {
   const insight = getInsight(id)
 
   if (!insight) return <Navigate to="/insights" replace />
-  if (insight.kind === 'story') return <Navigate to={`/case-studies/${insight.id}`} replace />
 
   const related = relatedInsights(insight)
   const kind = insightKinds.find((item) => item.id === insight.kind)

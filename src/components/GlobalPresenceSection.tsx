@@ -1,10 +1,19 @@
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 
 import DottedWorldMap from '@/components/DottedWorldMap'
 import { globalLocations } from '@/data/locations'
 import { cn } from '@/lib/cn'
 
-export default function GlobalPresenceSection({ sectionId = 'presence' }: { sectionId?: string }) {
+export default function GlobalPresenceSection({
+  sectionId = 'presence',
+  heading,
+  lead,
+}: {
+  sectionId?: string
+  heading?: ReactNode
+  lead?: string
+}) {
   const [activeId, setActiveId] = useState(globalLocations[1]?.id ?? globalLocations[0].id)
   const active = globalLocations.find((location) => location.id === activeId) ?? globalLocations[0]
 
@@ -20,7 +29,8 @@ export default function GlobalPresenceSection({ sectionId = 'presence' }: { sect
           </div>
 
           <div className="presence-lead">
-            <h2 id="global-presence-heading">Local expertise.<br />International reach.</h2>
+            <h2 id="global-presence-heading">{heading ?? <>Local expertise.<br />International reach.</>}</h2>
+            {lead ? <p className="presence-lead-copy">{lead}</p> : null}
             <ul className="map-country-list" aria-label="SIS Global operating locations">
               {globalLocations.map((location) => {
                 const selected = location.id === activeId

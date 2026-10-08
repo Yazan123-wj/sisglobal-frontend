@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useCountUp } from '@/hooks/useCountUp'
 
 const metrics = [
-  { value: 19, suffix: '+', label: 'Years in KSA & MENA' },
-  { value: 500, suffix: '+', label: 'Enterprise clients' },
-  { value: 3000, suffix: '+', label: 'Professionals managed' },
-  { value: 8500, suffix: '+', label: 'Field jobs delivered' },
-  { value: 8, suffix: '+', label: 'Countries' },
+  { value: 19, suffix: '+', label: 'Years of Experience' },
+  { value: 500, suffix: '+', label: 'Enterprise Clients' },
+  { value: 3000, suffix: '+', label: 'Professionals Managed' },
+  { value: 8500, suffix: '+', label: 'Field Jobs Delivered' },
+  { value: 8, suffix: '+', label: 'Countries of Operation' },
 ]
 
 function MetricStat({ value, suffix, label, active, delay }: { value: number; suffix: string; label: string; active: boolean; delay: number }) {
@@ -47,7 +47,7 @@ export default function MetricsBar() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="metrics-section" aria-label="SIS Global metrics">
+    <section ref={sectionRef} className="metrics-section" aria-label="SIS at a Glance">
       <div className="container metrics-grid">
         {metrics.map((metric, index) => (
           <MetricStat key={metric.label} {...metric} active={active} delay={index * 140} />

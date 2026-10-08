@@ -22,8 +22,8 @@ const whoCards = [
     image: caseWorkforce,
   },
   {
-    title: 'Mission & vision',
-    copy: 'One accountable partner for the people, operations and infrastructure behind critical work.',
+    title: 'How we operate',
+    copy: 'People, field operations and technology stay in one sequence, with a single team accountable for the result.',
     image: caseTelecom,
   },
   {
@@ -69,7 +69,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="about-intro">
             <h2>Who we are</h2>
-            <p>Company introduction, story, mission and team — built around delivery in KSA and the wider region.</p>
+            <p>Company introduction, how we work, and the teams behind delivery in KSA and the wider region.</p>
           </div>
           <div className="about-card-grid">
             {whoCards.map((card, index) => (

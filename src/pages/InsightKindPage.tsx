@@ -15,14 +15,24 @@ const insightImages: Record<InsightImage, string> = {
   network: heroNetworkImage,
 }
 
-const kindCopy: Record<Exclude<InsightKind, 'story'>, { title: string; lead: string }> = {
+const kindCopy: Record<InsightKind, { title: string; lead: string; focus: string; navId: string }> = {
   article: {
     title: 'Articles from the SIS Global team.',
     lead: 'Perspectives on people, field operations and the technology that keeps organisations moving.',
+    focus: 'Editorial',
+    navId: 'insight-articles',
   },
   news: {
     title: 'News and updates from SIS Global.',
     lead: 'Company announcements, certifications and service news from across the group.',
+    focus: 'Updates',
+    navId: 'insight-news',
+  },
+  story: {
+    title: 'Success stories from live programmes.',
+    lead: 'How people, field operations and technology come together on the ground.',
+    focus: 'Delivery',
+    navId: 'insight-stories',
   },
 }
 
@@ -50,14 +60,14 @@ function InsightCard({ item, featured = false }: { item: Insight; featured?: boo
   )
 }
 
-export default function InsightKindPage({ kind: kindId }: { kind: Exclude<InsightKind, 'story'> }) {
+export default function InsightKindPage({ kind: kindId }: { kind: InsightKind }) {
   const navigate = useNavigate()
   const kind = insightKinds.find((item) => item.id === kindId)
   const copy = kindCopy[kindId]
   const items = insightsByKind(kindId)
   const featured = items[0]
   const rest = items.slice(1)
-  const activeId = kindId === 'article' ? 'insight-articles' : 'insight-news'
+  const activeId = copy.navId
 
   return (
     <main className="insights-page">
@@ -80,7 +90,7 @@ export default function InsightKindPage({ kind: kindId }: { kind: Exclude<Insigh
             </div>
             <div>
               <dt>Focus</dt>
-              <dd>{kindId === 'news' ? 'Updates' : 'Editorial'}</dd>
+              <dd>{copy.focus}</dd>
             </div>
           </dl>
         </div>

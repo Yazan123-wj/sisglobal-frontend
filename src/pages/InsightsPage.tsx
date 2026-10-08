@@ -26,7 +26,7 @@ function InsightCard({ item, featured = false }: { item: Insight; featured?: boo
   return (
     <Link
       className={featured ? 'insight-tile is-featured' : 'insight-tile'}
-      to={item.kind === 'story' ? `/case-studies/${item.id}` : `/insights/${item.id}`}
+      to={`/insights/${item.id}`}
     >
       <div className="insight-tile-media" data-curtain >
         <img src={insightImages[item.image]} alt="" />

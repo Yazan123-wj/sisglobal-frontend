@@ -174,7 +174,7 @@ export const insightKinds: { id: InsightKind; label: string; intro: string }[] =
 export const insightKindPath: Record<InsightKind, string> = {
   article: '/insights/articles',
   news: '/insights/news',
-  story: '/case-studies',
+  story: '/insights/stories',
 }
 
 export function insightsByKind(kind: InsightKind) {

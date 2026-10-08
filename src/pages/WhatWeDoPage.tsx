@@ -249,10 +249,19 @@ export default function WhatWeDoPage() {
   const active: WorkTab = fromPath ?? fromQuery ?? 'all'
   const selected = active === 'all' ? null : workServices[active]
   const [pillarId, setPillarId] = useState(selected?.pillars[0]?.id ?? '')
+  const pillsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setPillarId(selected?.pillars[0]?.id ?? '')
   }, [selected?.key])
+
+  useEffect(() => {
+    pillsRef.current?.querySelector<HTMLElement>('.is-active')?.scrollIntoView({
+      inline: 'center',
+      block: 'nearest',
+      behavior: 'smooth',
+    })
+  }, [pillarId])
 
   const select = (id: string) => {
     navigate(id === 'all' ? '/what-we-do' : `/what-we-do/${id}`)
@@ -310,7 +319,7 @@ export default function WhatWeDoPage() {
         activeId={active}
         onSelect={select}
         extra={selected ? (
-          <div className="page-subnav-pills" role="tablist" aria-label={`${selected.label} service lines`}>
+          <div ref={pillsRef} className="page-subnav-pills" role="tablist" aria-label={`${selected.label} service lines`}>
             {selected.pillars.map((item) => (
               <button
                 key={item.id}

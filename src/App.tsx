@@ -34,6 +34,7 @@ export default function App() {
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/insights/articles" element={<InsightKindPage kind="article" />} />
           <Route path="/insights/news" element={<InsightKindPage kind="news" />} />
+          <Route path="/insights/stories" element={<InsightKindPage kind="story" />} />
           <Route path="/insights/:id" element={<InsightDetailPage />} />
           <Route path="/vacancies" element={<VacanciesPage />} />
           <Route path="/vacancies/:id" element={<VacancyDetailPage />} />
