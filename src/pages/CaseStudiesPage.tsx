@@ -4,6 +4,7 @@ import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
+import Arrow from '@/components/Arrow'
 import PageSubnav from '@/components/PageSubnav'
 import { insightsByKind } from '@/data/insights'
 import type { Insight, InsightImage } from '@/data/insights'
@@ -89,7 +90,7 @@ export default function CaseStudiesPage() {
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
-            Contact Us <span aria-hidden="true">→</span>
+            Contact Us <Arrow dir="right" />
           </button>
         </div>
       </section>

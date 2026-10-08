@@ -462,6 +462,19 @@ textarea:focus-visible {
 
 .button:hover { box-shadow: none; }
 
+.icon-arrow {
+  width: 12px;
+  height: 12px;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.button .icon-arrow,
+.nav-cta .icon-arrow {
+  width: 13px;
+  height: 13px;
+}
+
 .button-gold {
   background: var(--blue-bright);
   background-image: none;
@@ -812,7 +825,19 @@ textarea:focus-visible {
 
 .card-top span:first-child { color: var(--accent-soft); font-size: 10px; letter-spacing: .1em; }
 .card-top p { margin: 0; font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -.05em; z-index: 1; }
-.card-top .corner-arrow { position: absolute; top: 21px; right: 21px; color: var(--accent-soft); font-size: 18px; }
+.card-top .corner-arrow {
+  position: absolute;
+  top: 21px;
+  right: 21px;
+  color: var(--accent-soft);
+  display: grid;
+  place-items: center;
+}
+
+.card-top .corner-arrow .icon-arrow {
+  width: 16px;
+  height: 16px;
+}
 
 .service-card-content { padding: 25px 24px 22px; display: flex; flex: 1; flex-direction: column; }
 .card-eyebrow { margin: 0; text-transform: uppercase; color: #7b8ea3; font-size: 10px; letter-spacing: .08em; font-weight: 700; }
@@ -2190,7 +2215,13 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   background: #fff;
   color: var(--navy);
-  font-size: 16px;
+  display: grid;
+  place-items: center;
+}
+
+.work-scroll-nav .icon-arrow {
+  width: 14px;
+  height: 14px;
 }
 
 .work-scroll-nav button:hover {

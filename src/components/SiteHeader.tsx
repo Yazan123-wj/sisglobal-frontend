@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
+import Arrow from '@/components/Arrow'
 import { brandForPath } from '@/data/brand'
 
 const links = [
@@ -125,7 +126,7 @@ export default function SiteHeader() {
           Career
         </NavLink>
         <button className="nav-cta" type="button" onClick={() => go('/#contact')}>
-          Contact Us <span aria-hidden="true">↗</span>
+          Contact Us <Arrow />
         </button>
       </nav>
     </header>

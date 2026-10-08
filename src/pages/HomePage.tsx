@@ -7,6 +7,7 @@ import { insightsByKind, type InsightImage } from '@/data/insights'
 import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
+import Arrow from '@/components/Arrow'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import MetricsBar from '@/components/MetricsBar'
 import { gsap, useGSAP } from '@/lib/gsap'
@@ -63,8 +64,6 @@ const services: Record<ServiceKey, { label: string; eyebrow: string; title: stri
   tso: { label: 'Idarat TSO', eyebrow: 'Technical Services & Operations', title: 'Expert operations, delivered on the ground.', description: 'Idarat TSO brings specialist field talent, disciplined service delivery and regional execution to complex technical programmes.', accent: 'tso', details: ['Telecom rollouts', 'Managed services', 'Field operations'] },
   ict: { label: 'Identiti ICT', eyebrow: 'ICT Infrastructure', title: 'Infrastructure built for what is next.', description: 'Identiti ICT designs, deploys and supports secure technology foundations that keep enterprise operations resilient and ready to scale.', accent: 'ict', details: ['Technology infrastructure', 'Cybersecurity', 'Systems integration'] },
 }
-
-function Arrow() { return <span aria-hidden="true">↗</span> }
 
 const partnerLoop = [...techPartners, ...techPartners, ...techPartners]
 

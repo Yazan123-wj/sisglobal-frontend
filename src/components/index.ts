@@ -1,3 +1,4 @@
+export { default as Arrow } from './Arrow'
 export { default as GlobalPresenceSection } from './GlobalPresenceSection'
 export { default as HashScroll } from './HashScroll'
 export { default as MetricsBar } from './MetricsBar'

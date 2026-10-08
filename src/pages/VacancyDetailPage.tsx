@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
+import Arrow from '@/components/Arrow'
 import { getVacancy } from '@/data/vacancies'
 
 export default function VacancyDetailPage() {
@@ -20,7 +21,7 @@ export default function VacancyDetailPage() {
     <main className="vacancy-detail-page">
       <section className="vacancy-detail-hero">
         <div className="container">
-          <Link className="text-link" to="/vacancies">← All vacancies</Link>
+          <Link className="text-link" to="/vacancies"><Arrow dir="left" /> All vacancies</Link>
           <p className="vacancy-meta">{vacancy.unit} · {vacancy.type} · {vacancy.location}</p>
           <h1>{vacancy.title}</h1>
           <p>{vacancy.summary}</p>

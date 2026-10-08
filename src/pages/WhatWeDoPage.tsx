@@ -6,6 +6,7 @@ import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
+import Arrow from '@/components/Arrow'
 import PageSubnav from '@/components/PageSubnav'
 import { workOverview, workServices } from '@/data/workContent'
 import type { ServiceKey, WorkAudience, WorkService } from '@/data/workContent'
@@ -61,8 +62,8 @@ function ScrollRow({
         <h2>{title}</h2>
         {scrollable ? (
           <div className="work-scroll-nav">
-            <button type="button" aria-label="Previous" onClick={() => move(-1)}>←</button>
-            <button type="button" aria-label="Next" onClick={() => move(1)}>→</button>
+            <button type="button" aria-label="Previous" onClick={() => move(-1)}><Arrow dir="left" /></button>
+            <button type="button" aria-label="Next" onClick={() => move(1)}><Arrow dir="right" /></button>
           </div>
         ) : null}
       </div>
@@ -91,8 +92,8 @@ function AudienceRow({ audiences }: { audiences: WorkAudience[] }) {
         <h2>Who we serve</h2>
         {scrollable ? (
           <div className="work-scroll-nav">
-            <button type="button" aria-label="Previous" onClick={() => move(-1)}>←</button>
-            <button type="button" aria-label="Next" onClick={() => move(1)}>→</button>
+            <button type="button" aria-label="Previous" onClick={() => move(-1)}><Arrow dir="left" /></button>
+            <button type="button" aria-label="Next" onClick={() => move(1)}><Arrow dir="right" /></button>
           </div>
         ) : null}
       </div>
@@ -362,7 +363,7 @@ export default function WhatWeDoPage() {
                         {item.children.map((child) => <li key={child}>{child}</li>)}
                       </ul>
                     </div>
-                    <span className="work-overview-go">Explore {item.label} <span aria-hidden="true">→</span></span>
+                    <span className="work-overview-go">Explore {item.label} <Arrow dir="right" /></span>
                   </button>
                 ))}
               </div>
@@ -389,7 +390,7 @@ export default function WhatWeDoPage() {
           <h2>{selected ? selected.cta.title : 'Discuss your project with SIS Global'}</h2>
           {selected ? <p className="work-cta-copy">{selected.cta.copy}</p> : null}
           <button className="text-link" type="button" onClick={contact}>
-            {selected ? selected.cta.label : 'Contact Us'} <span aria-hidden="true">→</span>
+            {selected ? selected.cta.label : 'Contact Us'} <Arrow dir="right" />
           </button>
         </div>
       </section>
