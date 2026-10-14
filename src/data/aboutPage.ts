@@ -6,14 +6,14 @@ export const aboutIntro = [
 ]
 
 export const aboutGlance = [
-  { value: '19+', label: 'Years of Excellence' },
-  { value: '500+', label: 'Enterprise Clients' },
-  { value: '40+', label: 'Technology Partners' },
-  { value: '3,000+', label: 'Professionals Managed' },
-  { value: '8,500+', label: 'Field Jobs Delivered' },
-  { value: '8,000+', label: 'PCs & Devices Supported' },
-  { value: '1,850+', label: 'Daily Operations' },
   { value: '8+', label: 'Countries of Operation' },
+  { value: '19+', label: 'Years of Excellence' },
+  { value: '40+', label: 'Technology Partners' },
+  { value: '500+', label: 'Enterprise Clients' },
+  { value: '1,850+', label: 'Daily Operations' },
+  { value: '3,000+', label: 'Professionals Managed' },
+  { value: '8,000+', label: 'PCs & Devices Supported' },
+  { value: '8,500+', label: 'Field Jobs Delivered' },
 ]
 
 export const aboutStory = [
