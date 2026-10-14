@@ -1959,8 +1959,7 @@ textarea:focus-visible {
   position: sticky;
   top: var(--header-height);
   z-index: 18;
-  background: rgba(255, 255, 255, .94);
-  backdrop-filter: blur(16px);
+  background: #fff;
   border-bottom: 1px solid var(--line);
 }
 
@@ -3850,13 +3849,14 @@ a.about-card:hover { border-color: var(--navy); }
   top: calc(100% + var(--dial-shift));
   width: 0;
   height: 0;
+  transform-origin: 0 0;
 }
 
 .about-dial-wheel::before {
   content: '';
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 0;
+  top: 0;
   width: calc(var(--dial-r) * -2);
   height: calc(var(--dial-r) * -2);
   border: 1px solid rgba(255, 255, 255, .2);
@@ -3869,21 +3869,28 @@ a.about-card:hover { border-color: var(--navy); }
   position: absolute;
   left: 0;
   top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 84px;
-  margin-left: -42px;
+  width: 0;
+  height: 0;
   padding: 0;
   border: 0;
   background: none;
   color: rgba(255, 255, 255, .42);
   cursor: grab;
-  transform-origin: 50% 100%;
+  transform-origin: 0 0;
 }
 
 .about-dial-tick span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -100%) translateY(var(--dial-r));
+}
+
+.about-dial-tick b {
   display: block;
   font-family: 'Manrope', sans-serif;
   font-size: 32px;
@@ -4150,13 +4157,17 @@ a.about-card:hover { border-color: var(--navy); }
 }
 
 .about-offices a {
-  display: inline-block;
-  margin-top: 10px;
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
   color: var(--blue);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
 }
+
+.about-offices a:first-of-type { margin-top: 10px; }
+.about-offices a:hover { color: var(--navy); }
 
 .about-missing {
   display: flex;
@@ -4934,7 +4945,7 @@ a.about-card:hover { border-color: var(--navy); }
   .about-glance div:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .about-story-section { padding-top: 64px; }
   .about-dial-copy { min-height: 160px; }
-  .about-dial-tick span { font-size: 22px; }
+  .about-dial-tick b { font-size: 22px; }
   .about-vm,
   .about-tiles,
   .about-certs,

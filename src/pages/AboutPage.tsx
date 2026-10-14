@@ -203,6 +203,7 @@ export default function AboutPage() {
                 <h3>{officeTitle(office)}</h3>
                 {office.lines?.map((line) => <p key={line}>{line}</p>)}
                 {office.phone ? <a href={telHref(office.phone)}>{office.phone}</a> : null}
+                {office.email ? <a href={`mailto:${office.email}`}>{office.email}</a> : null}
               </article>
             ))}
           </div>

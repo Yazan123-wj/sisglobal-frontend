@@ -121,6 +121,7 @@ export type AboutOffice = {
   place?: string
   lines?: string[]
   phone?: string
+  email?: string
 }
 
 export const aboutOffices: AboutOffice[] = [
@@ -133,6 +134,7 @@ export const aboutOffices: AboutOffice[] = [
       'Riyadh 11564, Saudi Arabia',
     ],
     phone: '+966 11 451 8700',
+    email: 'riyadh@sisglobal.com',
   },
   {
     country: 'Jordan',
@@ -142,6 +144,7 @@ export const aboutOffices: AboutOffice[] = [
       'Amman 11183, Jordan',
     ],
     phone: '+962 6 438 2632',
+    email: 'amman@sisglobal.com',
   },
   {
     country: 'United Arab Emirates',
@@ -151,6 +154,7 @@ export const aboutOffices: AboutOffice[] = [
       'Dubai, United Arab Emirates',
     ],
     phone: '+971 4 320 1840',
+    email: 'dubai@sisglobal.com',
   },
   {
     country: 'Egypt',
@@ -160,6 +164,7 @@ export const aboutOffices: AboutOffice[] = [
       'New Cairo, Egypt',
     ],
     phone: '+20 2 2531 7640',
+    email: 'cairo@sisglobal.com',
   },
   {
     country: 'Palestine',
@@ -169,6 +174,7 @@ export const aboutOffices: AboutOffice[] = [
       'Ramallah, Palestine',
     ],
     phone: '+970 2 297 4310',
+    email: 'ramallah@sisglobal.com',
   },
   {
     country: 'Tanzania',
@@ -178,6 +184,7 @@ export const aboutOffices: AboutOffice[] = [
       'Dar es Salaam, Tanzania',
     ],
     phone: '+255 22 211 4580',
+    email: 'tanzania@sisglobal.com',
   },
   {
     country: 'Syria',
@@ -187,5 +194,6 @@ export const aboutOffices: AboutOffice[] = [
       'Damascus, Syria',
     ],
     phone: '+963 11 334 2190',
+    email: 'damascus@sisglobal.com',
   },
 ]

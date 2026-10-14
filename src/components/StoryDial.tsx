@@ -54,9 +54,9 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
         if (delta < -180) delta += 360
         const dist = Math.abs(delta)
         const t = gsap.utils.clamp(0, 1, dist / 95)
-        const span = node.querySelector('span')
-        if (span) {
-          gsap.set(span, {
+        const label = node.querySelector('b')
+        if (label) {
+          gsap.set(label, {
             opacity: gsap.utils.interpolate(1, 0.22, t),
             scale: gsap.utils.interpolate(1.85, 0.62, Math.min(t * 1.12, 1)),
           })
@@ -83,7 +83,7 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
     }
 
     measure()
-    gsap.set(wheelEl, { rotation: 0 })
+    gsap.set(wheelEl, { rotation: 0, transformOrigin: '0 0' })
     layout()
 
     const [drag] = Draggable.create(wheelEl, {
@@ -150,12 +150,14 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
               }}
               className="about-dial-tick"
               type="button"
-              style={{ transform: `rotate(${index * step}deg) translateY(var(--dial-r))` }}
+              style={{ transform: `rotate(${index * step}deg)` }}
               aria-label={`${entry.year} ${entry.title}`}
               aria-pressed={index === active}
             >
-              <span>{pad(index)}</span>
-              <i />
+              <span>
+                <b>{pad(index)}</b>
+                <i />
+              </span>
             </button>
           ))}
         </div>

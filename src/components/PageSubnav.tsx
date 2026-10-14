@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/cn'
@@ -26,6 +26,11 @@ export default function PageSubnav({
   const [observedId, setObservedId] = useState(items[0]?.id ?? '')
   const currentId = activeId ?? observedId
   const itemKey = items.map((item) => item.id).join('|')
+  const navRef = useRef<HTMLElement>(null)
+  const lockId = useRef<string | null>(null)
+  const lockTimer = useRef(0)
+  const itemsRef = useRef(items)
+  itemsRef.current = items
 
   useEffect(() => {
     setObservedId(itemKey.split('|')[0] ?? '')
@@ -34,17 +39,22 @@ export default function PageSubnav({
   useEffect(() => {
     if (onSelect) return
 
-    const update = () => {
-      const nodes = items
-        .map((item) => document.getElementById(item.id))
-        .filter((node): node is HTMLElement => Boolean(node))
-      if (!nodes.length) return
+    let spy = 128
+    let frame = 0
 
+    const measure = () => {
       const header = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
       ) || 76
-      const nav = document.querySelector('.page-subnav')
-      const spy = header + (nav instanceof HTMLElement ? nav.offsetHeight : 52) + 4
+      spy = header + (navRef.current?.offsetHeight ?? 52) + 4
+    }
+
+    const update = () => {
+      if (lockId.current) return
+      const nodes = itemsRef.current
+        .map((item) => document.getElementById(item.id))
+        .filter((node): node is HTMLElement => Boolean(node))
+      if (!nodes.length) return
 
       let current = nodes[0].id
       for (const node of nodes) {
@@ -53,17 +63,32 @@ export default function PageSubnav({
       setObservedId((prev) => (prev === current ? prev : current))
     }
 
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
+    const onScroll = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        update()
+      })
     }
-  }, [itemKey, items, onSelect])
+
+    measure()
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', measure, { passive: true })
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.clearTimeout(lockTimer.current)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', measure)
+    }
+  }, [itemKey, onSelect])
 
   return (
-    <nav className={cn('page-subnav', extra ? 'page-subnav-stack' : undefined, className)} aria-label={label}>
+    <nav
+      ref={navRef}
+      className={cn('page-subnav', extra ? 'page-subnav-stack' : undefined, className)}
+      aria-label={label}
+    >
       <div className="container">
         <div className="page-subnav-inner">
           {items.map((item) => (
@@ -76,8 +101,15 @@ export default function PageSubnav({
                   onSelect(item.id)
                   return
                 }
+                const target = document.getElementById(item.id)
+                if (!target) return
+                lockId.current = item.id
                 setObservedId(item.id)
-                document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                window.clearTimeout(lockTimer.current)
+                target.scrollIntoView({ block: 'start' })
+                lockTimer.current = window.setTimeout(() => {
+                  lockId.current = null
+                }, 900)
               }}
             >
               {item.label}

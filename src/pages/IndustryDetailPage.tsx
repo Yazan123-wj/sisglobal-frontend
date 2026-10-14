@@ -1,23 +1,12 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
-import heroNetworkImage from '@/assets/sis-global-network-hero.png'
-import caseIct from '@/assets/case-ict.jpg'
-import caseTelecom from '@/assets/case-telecom.jpg'
-import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
 import PageSubnav from '@/components/PageSubnav'
 import { brandLogos } from '@/data/brand'
+import { industryImages } from '@/data/industryImages'
 import { getIndustryPage, type IndustryItem, type IndustrySupport } from '@/data/industryPages'
 import { getIndustry, workIndustries } from '@/data/workContent'
-import type { InsightImage } from '@/data/insights'
-
-const industryImages: Record<InsightImage, string> = {
-  workforce: caseWorkforce,
-  telecom: caseTelecom,
-  ict: caseIct,
-  network: heroNetworkImage,
-}
 
 const sections = [
   { id: 'industry-overview', label: 'Overview' },
@@ -124,7 +113,7 @@ export default function IndustryDetailPage() {
   return (
     <main className="work-page industry-page">
       <section className="about-hero" aria-labelledby="industry-title">
-        <div className="about-hero-visual" style={{ backgroundImage: `url(${industryImages[listing.image]})` }} aria-hidden="true" />
+        <div className="about-hero-visual" style={{ backgroundImage: `url(${industryImages[listing.slug]})` }} aria-hidden="true" />
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
             <p className="industry-crumb">
@@ -215,7 +204,7 @@ export default function IndustryDetailPage() {
                 {related.map((item) => (
                   <Link key={item.slug} className="industry-related-card" to={`/what-we-do/industries/${item.slug}`}>
                     <div className="about-card-media" data-curtain>
-                      <img src={industryImages[item.image]} alt="" />
+                      <img src={industryImages[item.slug]} alt="" />
                     </div>
                     <div>
                       <h3>{item.title}</h3>

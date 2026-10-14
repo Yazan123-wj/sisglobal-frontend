@@ -5,11 +5,12 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
-import { globalLocations } from '@/data/locations'
+import { industryImages } from '@/data/industryImages'
 import { insightsByKind, type InsightImage } from '@/data/insights'
+import { globalLocations } from '@/data/locations'
 import { workIndustries } from '@/data/workContent'
 
-const industryImages: Record<InsightImage, string> = {
+const storyImages: Record<InsightImage, string> = {
   workforce: caseWorkforce,
   telecom: caseTelecom,
   ict: caseIct,
@@ -55,7 +56,7 @@ export default function IndustriesPage() {
             {workIndustries.map((industry) => (
               <Link key={industry.slug} className="about-card" to={`/what-we-do/industries/${industry.slug}`}>
                 <div className="about-card-media" data-curtain>
-                  <img src={industryImages[industry.image]} alt="" />
+                  <img src={industryImages[industry.slug]} alt="" />
                 </div>
                 <div className="about-card-body">
                   <h3>{industry.title}</h3>
@@ -84,7 +85,7 @@ export default function IndustriesPage() {
             {stories.map((story) => (
               <Link key={story.id} className="case-card" to={`/insights/${story.id}`}>
                 <div className="case-art-wrap" data-curtain>
-                  <img className="case-art" src={industryImages[story.image]} alt="" />
+                  <img className="case-art" src={storyImages[story.image]} alt="" />
                 </div>
                 <div className="case-content">
                   <span>{story.topic}</span>
