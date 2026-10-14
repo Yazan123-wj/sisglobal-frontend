@@ -2,19 +2,14 @@ import { memo, useMemo, useRef } from 'react'
 
 import { globalLocations } from '@/data/locations'
 import type { GlobalLocation } from '@/data/locations'
-import worldMap from '@/data/worldDots.json'
+import regionMap from '@/data/regionMap.json'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { prefersReducedMotion } from '@/lib/motion'
 
-const WORLD_DOT = '#E2E7EC'
-const WORLD_R = 1.85
-const PIN_W = 16
-const PIN_H = 22
+const PIN_W = 18
+const PIN_H = 25
 const HIT_R = 22
-const CROP_X = 520
-const CROP_Y = 90
-const VIEW_W = 1400 - CROP_X
-const VIEW_H = 460
+const SIS_IDS = new Set(globalLocations.map((location) => location.id))
 
 type MapLocation = GlobalLocation & { x: number; y: number }
 
@@ -23,28 +18,47 @@ type DottedWorldMapProps = {
   onActivate: (id: string) => void
 }
 
-const WorldDots = memo(function WorldDots() {
+const CountryShapes = memo(function CountryShapes({
+  activeId,
+  onActivate,
+}: {
+  activeId: string
+  onActivate: (id: string) => void
+}) {
+  const rest = regionMap.countries.filter((country) => !(country.id && SIS_IDS.has(country.id)))
+  const sis = regionMap.countries.filter((country) => country.id && SIS_IDS.has(country.id))
+
   return (
-    <g className="world-dots" clipPath="url(#sis-world-reveal)">
-      {worldMap.dots.map(([x, y], index) => (
-        x < CROP_X - 8 || y < CROP_Y - 8 || y > CROP_Y + VIEW_H + 8
-          ? null
-          : <circle key={index} cx={x} cy={y} r={WORLD_R} fill={WORLD_DOT} />
+    <g className="region-countries">
+      {rest.map((country) => (
+        <path
+          key={country.iso}
+          d={country.d}
+          fill="#e7eef4"
+          stroke="#a9b9c8"
+          strokeWidth={0.85}
+          strokeLinejoin="round"
+        />
       ))}
+      {sis.map((country) => {
+        const selected = country.id === activeId
+        return (
+          <path
+            key={country.iso}
+            d={country.d}
+            fill={selected ? '#0A4A9C' : '#4F9AD0'}
+            stroke={selected ? '#092046' : '#1A6EC4'}
+            strokeWidth={selected ? 1.65 : 1.1}
+            strokeLinejoin="round"
+            className="map-hit"
+            onPointerEnter={() => onActivate(country.id!)}
+            onClick={() => onActivate(country.id!)}
+          />
+        )
+      })}
     </g>
   )
 })
-
-function nearestLinks(locations: MapLocation[], active: MapLocation, count = 3) {
-  return [...locations]
-    .filter((location) => location.id !== active.id)
-    .sort((a, b) => {
-      const da = (a.x - active.x) ** 2 + (a.y - active.y) ** 2
-      const db = (b.x - active.x) ** 2 + (b.y - active.y) ** 2
-      return da - db
-    })
-    .slice(0, count)
-}
 
 export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapProps) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -52,47 +66,33 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
   const locations = useMemo<MapLocation[]>(
     () =>
       globalLocations.flatMap((location) => {
-        const point = worldMap.locations[location.id as keyof typeof worldMap.locations]
-        return point ? [{ ...location, ...point }] : []
+        const point = regionMap.locations[location.id as keyof typeof regionMap.locations]
+        if (!point || point.x < -20 || point.x > regionMap.width + 20 || point.y < -20 || point.y > regionMap.height + 20) {
+          return []
+        }
+        return [{ ...location, ...point }]
       }),
     [],
   )
 
   const active = locations.find((location) => location.id === activeId) ?? locations[0]
-  const links = active ? nearestLinks(locations, active) : []
 
   useGSAP(
     () => {
       const root = rootRef.current
       if (!root) return
       const reduced = prefersReducedMotion()
-      const reveal = root.querySelector<SVGRectElement>('[data-world-reveal]')
       const pins = root.querySelectorAll<SVGGElement>('[data-map-pin]')
 
       gsap.set(pins, { autoAlpha: reduced ? 1 : 0, scale: reduced ? 1 : 0.7, transformOrigin: '50% 100%' })
-
-      if (reduced) {
-        if (reveal) gsap.set(reveal, { attr: { width: VIEW_W + 32 } })
-        return
-      }
-
-      gsap.fromTo(
-        reveal,
-        { attr: { width: 0 } },
-        {
-          attr: { width: VIEW_W + 32 },
-          duration: 1.15,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: root, start: 'top 78%', once: true },
-        },
-      )
+      if (reduced) return
 
       gsap.to(pins, {
         autoAlpha: 1,
         scale: 1,
         duration: 0.4,
-        stagger: 0.06,
-        delay: 0.38,
+        stagger: 0.05,
+        delay: 0.12,
         ease: 'power3.out',
         scrollTrigger: { trigger: root, start: 'top 78%', once: true },
       })
@@ -104,55 +104,45 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
     <div ref={rootRef} className="dotted-world-map">
       <div className="map-frame">
         <svg
-          viewBox={`${CROP_X} ${CROP_Y} ${VIEW_W} ${VIEW_H}`}
-          preserveAspectRatio="xMinYMid meet"
+          viewBox={`0 0 ${regionMap.width} ${regionMap.height}`}
+          preserveAspectRatio="xMidYMid meet"
           role="img"
-          aria-label="Dotted world map of SIS Global locations"
+          aria-label="Map of SIS Global locations across the Middle East and Africa"
         >
           <defs>
-            <clipPath id="sis-world-reveal">
-              <rect data-world-reveal x={CROP_X - 16} y={CROP_Y - 16} width="0" height={VIEW_H + 32} />
-            </clipPath>
+            <filter id="map-pin-shadow" x="-40%" y="-20%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" floodColor="#092046" floodOpacity="0.28" />
+            </filter>
           </defs>
 
-          <WorldDots />
-
-          {active ? (
-            <g className="map-links" pointerEvents="none">
-              {links.map((location) => (
-                <line
-                  key={location.id}
-                  x1={active.x}
-                  y1={active.y}
-                  x2={location.x}
-                  y2={location.y}
-                  stroke="#9AA7B4"
-                  strokeWidth="1.1"
-                  strokeDasharray="3 5"
-                />
-              ))}
-            </g>
-          ) : null}
+          <CountryShapes activeId={activeId} onActivate={onActivate} />
 
           <g className="sis-locations">
             {locations.map((location) => {
               const selected = location.id === active?.id
               return (
                 <g key={location.id} transform={`translate(${location.x - PIN_W / 2} ${location.y - PIN_H})`}>
+                  {selected ? (
+                    <circle cx={PIN_W / 2} cy={PIN_H} r="17" fill="#092046" opacity="0.16" pointerEvents="none" />
+                  ) : null}
                   <g
                     data-map-pin={location.id}
                     className={selected ? 'map-pin is-active' : 'map-pin'}
                     pointerEvents="none"
+                    filter="url(#map-pin-shadow)"
                   >
                     <path
                       d={`M${PIN_W / 2} ${PIN_H}C${PIN_W / 2} ${PIN_H} 0 ${PIN_H * 0.58} 0 ${PIN_H * 0.36}A${PIN_W / 2} ${PIN_W / 2} 0 1 1 ${PIN_W} ${PIN_H * 0.36}C${PIN_W} ${PIN_H * 0.58} ${PIN_W / 2} ${PIN_H} ${PIN_W / 2} ${PIN_H}Z`}
-                      fill={selected ? '#101820' : '#C5CDD4'}
+                      fill={selected ? '#092046' : '#0A4A9C'}
+                      stroke="#ffffff"
+                      strokeWidth="1.35"
+                      strokeLinejoin="round"
                     />
-                    <circle cx={PIN_W / 2} cy={PIN_H * 0.36} r="3.1" fill="#fff" />
+                    <circle cx={PIN_W / 2} cy={PIN_H * 0.34} r="2.85" fill="#ffffff" />
                   </g>
                   <circle
                     cx={PIN_W / 2}
-                    cy={PIN_H - 8}
+                    cy={PIN_H}
                     r={HIT_R}
                     fill="transparent"
                     className="map-hit"
@@ -166,18 +156,6 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
             })}
           </g>
         </svg>
-
-        {active ? (
-          <p
-            className="map-pin-label"
-            style={{
-              left: `${((active.x - CROP_X) / VIEW_W) * 100}%`,
-              top: `${((active.y - CROP_Y) / VIEW_H) * 100}%`,
-            }}
-          >
-            {active.country}
-          </p>
-        ) : null}
       </div>
     </div>
   )

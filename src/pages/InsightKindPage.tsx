@@ -38,7 +38,6 @@ const kindCopy: Record<InsightKind, { title: string; lead: string; focus: string
 }
 
 const insightNav = [
-  { id: 'insights', label: 'All Insights' },
   { id: 'insight-articles', label: 'Articles' },
   { id: 'insight-news', label: 'News' },
   { id: 'insight-stories', label: 'Success Stories' },
@@ -101,16 +100,12 @@ export default function InsightKindPage({ kind: kindId }: { kind: InsightKind })
         items={insightNav}
         activeId={activeId}
         onSelect={(target) => {
-          if (target === 'insights') {
-            navigate('/insights')
-            return
-          }
           if (target === 'insight-articles') {
-            navigate('/insights/articles')
+            navigate(insightKindPath.article)
             return
           }
           if (target === 'insight-news') {
-            navigate('/insights/news')
+            navigate(insightKindPath.news)
             return
           }
           navigate(insightKindPath.story)

@@ -1,19 +1,10 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { brandForPath } from '@/data/brand'
 
 export default function SiteFooter() {
   const location = useLocation()
-  const navigate = useNavigate()
   const brand = brandForPath(location.pathname)
-
-  const go = (id: string) => {
-    if (location.pathname !== '/') {
-      navigate({ pathname: '/', hash: id })
-      return
-    }
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
 
   return (
     <footer className="site-footer">
@@ -28,10 +19,10 @@ export default function SiteFooter() {
           <div>
             <p className="footer-label">Explore</p>
             <Link to="/about">About</Link>
-            <Link to="/what-we-do">Solutions</Link>
-            <Link to="/case-studies">Case Studies</Link>
+            <Link to="/what-we-do/hcm">Solutions</Link>
             <Link to="/insights">Insights</Link>
-            <button type="button" onClick={() => go('industries')}>Industries</button>
+            <Link to="/insights/stories">Success Stories</Link>
+            <Link to="/what-we-do/industries">Industries</Link>
             <Link to="/about#about-presence">Global Presence</Link>
             <Link to="/vacancies">Careers</Link>
           </div>

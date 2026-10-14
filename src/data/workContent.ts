@@ -61,13 +61,47 @@ export const workOverview = {
     },
   ],
   industries: [
-    'Telecommunications & Technology',
+    'Telecommunications',
     'Government & Public Sector',
-    'Engineering & Infrastructure',
+    'Energy & Utilities',
+    'Oil, Gas & Manufacturing',
+    'Data Centers & Technology',
     'Healthcare',
-    'Financial & Professional Services',
+    'Education',
+    'Banking & Financial Services',
+    'Transportation & Logistics',
+    'Construction, Real Estate & Smart Buildings',
+    'Hospitality & Tourism',
+    'Professional & Business Services',
     'Retail & Consumer',
   ],
+}
+
+export const workNav = [
+  { id: 'hcm', label: 'HCM', to: '/what-we-do/hcm' },
+  { id: 'tso', label: 'TSO', to: '/what-we-do/tso' },
+  { id: 'ict', label: 'ICT', to: '/what-we-do/ict' },
+  { id: 'industries', label: 'Industries', to: '/what-we-do/industries' },
+] as const
+
+export const workIndustries = [
+  { slug: 'telecommunications', title: 'Telecommunications', copy: 'Rollout, optimization, maintenance and specialist workforce for mobile operators and network vendors.', cta: 'Explore more', image: 'telecom' as const },
+  { slug: 'government', title: 'Government & Public Sector', copy: 'Secure infrastructure, smart services and compliant workforce support for national programs.', cta: 'Explore more', image: 'workforce' as const },
+  { slug: 'energy-utilities', title: 'Energy & Utilities', copy: 'Reliable power, connected assets and skilled field teams for critical utility networks.', cta: 'Explore more', image: 'network' as const },
+  { slug: 'oil-gas-manufacturing', title: 'Oil, Gas & Manufacturing', copy: 'Safe operations, connected production, IT/OT security and technical manpower for industrial sites.', cta: 'Explore more', image: 'network' as const },
+  { slug: 'data-centers', title: 'Data Centers & Technology', copy: 'Infrastructure, power and cybersecurity for facilities where availability is critical.', cta: 'Explore more', image: 'ict' as const },
+  { slug: 'healthcare', title: 'Healthcare', copy: 'Connected, secure hospitals and the specialist staff that keep them running.', cta: 'Explore more', image: 'workforce' as const },
+  { slug: 'education', title: 'Education', copy: 'Smart campuses, digital classrooms and reliable connectivity for schools and universities.', cta: 'Explore more', image: 'workforce' as const },
+  { slug: 'financial-services', title: 'Banking & Financial Services', copy: 'Secure, compliant technology and workforce operations for banks and fintechs.', cta: 'Explore more', image: 'ict' as const },
+  { slug: 'transportation-logistics', title: 'Transportation & Logistics', copy: 'Visibility, automation and connectivity for ports, airports, fleets and warehouses.', cta: 'Explore more', image: 'network' as const },
+  { slug: 'construction-real-estate', title: 'Construction, Real Estate & Smart Buildings', copy: 'Smart building systems, security and project manpower from build to operation.', cta: 'Explore more', image: 'network' as const },
+  { slug: 'hospitality-tourism', title: 'Hospitality & Tourism', copy: 'Seamless guest connectivity, secure venues and seasonal workforce support.', cta: 'Explore more', image: 'workforce' as const },
+  { slug: 'professional-services', title: 'Professional & Business Services', copy: 'Specialist talent, simpler HR and a connected workplace for consultancies and growing firms.', cta: 'Explore more', image: 'workforce' as const },
+  { slug: 'retail-consumer', title: 'Retail & Consumer', copy: 'Store technology, data capture and flexible staffing for multi-branch retail.', cta: 'Explore more', image: 'ict' as const },
+]
+
+export function getIndustry(slug: string) {
+  return workIndustries.find((industry) => industry.slug === slug)
 }
 
 export const workServices: Record<ServiceKey, WorkService> = {
@@ -82,12 +116,12 @@ export const workServices: Record<ServiceKey, WorkService> = {
       'Combining regional expertise, scalable delivery and a deep understanding of workforce operations, Idarat HCM helps organizations simplify HR processes and focus on their core business.',
     ],
     metrics: [
-      { value: '3,000+', label: 'Resources managed' },
-      { value: '1,200+', label: 'Active resources' },
       { value: '70+', label: 'Clients served' },
-      { value: '280K+', label: 'Payslips issued' },
-      { value: '230K+', label: 'Helpdesk tickets resolved' },
+      { value: '1,200+', label: 'Active resources' },
+      { value: '3,000+', label: 'Resources managed' },
       { value: '100K+', label: 'HR operations processed' },
+      { value: '230K+', label: 'Helpdesk tickets resolved' },
+      { value: '280K+', label: 'Payslips issued' },
     ],
     reasons: [
       { title: 'End-to-end HCM expertise', copy: 'Support across the employee lifecycle, from finding the right talent to managing ongoing workforce requirements.' },
@@ -135,15 +169,15 @@ export const workServices: Record<ServiceKey, WorkService> = {
           'End-to-end HR outsourcing — extend your HR capability across ongoing workforce operations.',
         ],
       },
+      {
+        id: 'my-idarat',
+        label: 'MY Idarat',
+        title: 'My Idarat — manage your workforce from one platform',
+        intro: 'My Idarat is SIS Global’s talent management platform and mobile app. It brings recruitment, employee self-service and day-to-day workforce management together in one place. Organizations can use My Idarat to source and recruit talent, manage employee information, support HR requests, and give employees easier access to essential services. By reducing manual work and bringing key processes together, the platform helps HR teams save time, control costs and manage their workforce more efficiently.',
+        items: [],
+        notes: ['Manage HR tasks wherever you are. Download the My Idarat app.'],
+      },
     ],
-    extra: {
-      title: 'My Idarat — manage your workforce from one platform',
-      copy: [
-        'My Idarat is SIS Global’s talent management platform and mobile app. It brings recruitment, employee self-service and day-to-day workforce management together in one place.',
-        'Organizations can use My Idarat to source and recruit talent, manage employee information, support HR requests, and give employees easier access to essential services. By reducing manual work and bringing key processes together, the platform helps HR teams save time, control costs and manage their workforce more efficiently.',
-      ],
-      cta: 'Manage HR tasks wherever you are. Download the My Idarat app.',
-    },
     audiences: [
       { title: 'Large enterprises', copy: 'Support complex and large-scale workforce requirements through structured HCM services, recruitment solutions and scalable HR operations.' },
       { title: 'Growing & mid-sized businesses', copy: 'Extend internal HR capabilities as the organization grows, with flexible support across recruitment, administration, payroll and workforce management.' },

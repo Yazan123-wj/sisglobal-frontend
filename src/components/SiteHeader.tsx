@@ -4,39 +4,46 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import Arrow from '@/components/Arrow'
 import { brandForPath } from '@/data/brand'
 
-const links = [
-  { label: 'Case Studies', to: '/case-studies' },
-  { label: 'Insights', to: '/insights' },
-]
-
-const services = [
-  { label: 'All', to: '/what-we-do', note: 'HCM, TSO and ICT', end: true },
+const workLinks = [
   { label: 'Idarat HCM', to: '/what-we-do/hcm', note: 'Human capital' },
   { label: 'Idarat TSO', to: '/what-we-do/tso', note: 'Technical operations' },
   { label: 'Identiti ICT', to: '/what-we-do/ict', note: 'ICT infrastructure' },
+  { label: 'Industries', to: '/what-we-do/industries', note: 'Sectors we serve' },
 ]
+
+function workLinkCurrent(to: string, pathname: string) {
+  return pathname === to || pathname.startsWith(`${to}/`)
+}
+
+const insightLinks = [
+  { label: 'Articles', to: '/insights/articles', note: 'Featured writing' },
+  { label: 'News', to: '/insights/news', note: 'Company updates' },
+  { label: 'Success Stories', to: '/insights/stories', note: 'Project outcomes' },
+]
+
+type OpenMenu = 'work' | 'insights' | null
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [workOpen, setWorkOpen] = useState(false)
-  const hideWork = useRef(0)
+  const [openMenu, setOpenMenu] = useState<OpenMenu>(null)
+  const hideMenu = useRef(0)
   const location = useLocation()
   const navigate = useNavigate()
 
   const closeMenus = () => {
-    window.clearTimeout(hideWork.current)
+    window.clearTimeout(hideMenu.current)
     setMenuOpen(false)
-    setWorkOpen(false)
+    setOpenMenu(null)
   }
 
-  const openWork = () => {
-    window.clearTimeout(hideWork.current)
-    setWorkOpen(true)
+  const showMenu = (menu: OpenMenu) => {
+    window.clearTimeout(hideMenu.current)
+    setOpenMenu(menu)
   }
 
-  const scheduleHideWork = () => {
-    window.clearTimeout(hideWork.current)
-    hideWork.current = window.setTimeout(() => setWorkOpen(false), 180)
+  const scheduleHideMenu = () => {
+    window.clearTimeout(hideMenu.current)
+    hideMenu.current = window.setTimeout(() => setOpenMenu(null), 180)
   }
 
   const go = (to: string) => {
@@ -55,6 +62,7 @@ export default function SiteHeader() {
 
   const brand = brandForPath(location.pathname)
   const workCurrent = location.pathname.startsWith('/what-we-do')
+  const insightsCurrent = location.pathname.startsWith('/insights')
   const careerCurrent = location.pathname.startsWith('/vacancies')
 
   return (
@@ -79,49 +87,71 @@ export default function SiteHeader() {
           About Us
         </NavLink>
         <div
-          className={workOpen ? 'nav-item is-open' : 'nav-item'}
-          onMouseEnter={openWork}
-          onMouseLeave={scheduleHideWork}
+          className={openMenu === 'work' ? 'nav-item is-open' : 'nav-item'}
+          onMouseEnter={() => showMenu('work')}
+          onMouseLeave={scheduleHideMenu}
         >
           <button
             type="button"
             className={workCurrent ? 'nav-trigger is-current' : 'nav-trigger'}
-            aria-expanded={workOpen}
+            aria-expanded={openMenu === 'work'}
             aria-haspopup="true"
             onClick={() => {
-              window.clearTimeout(hideWork.current)
-              setWorkOpen((open) => !open)
+              window.clearTimeout(hideMenu.current)
+              setOpenMenu((menu) => (menu === 'work' ? null : 'work'))
             }}
           >
             What We Do <span className="nav-caret" aria-hidden="true" />
           </button>
           <div className="nav-dropdown">
             <div className="nav-dropdown-panel">
-              {services.map((service) => (
+              {workLinks.map((item) => (
                 <NavLink
-                  key={service.to}
-                  to={service.to}
-                  end={service.end}
-                  className={({ isActive }) => (isActive ? 'is-current' : undefined)}
+                  key={item.to}
+                  to={item.to}
+                  className={() => (workLinkCurrent(item.to, location.pathname) ? 'is-current' : undefined)}
                   onClick={closeMenus}
                 >
-                  <strong>{service.label}</strong>
-                  <span>{service.note}</span>
+                  <strong>{item.label}</strong>
+                  <span>{item.note}</span>
                 </NavLink>
               ))}
             </div>
           </div>
         </div>
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) => (isActive ? 'is-current' : undefined)}
-            onClick={closeMenus}
+        <div
+          className={openMenu === 'insights' ? 'nav-item is-open' : 'nav-item'}
+          onMouseEnter={() => showMenu('insights')}
+          onMouseLeave={scheduleHideMenu}
+        >
+          <button
+            type="button"
+            className={insightsCurrent ? 'nav-trigger is-current' : 'nav-trigger'}
+            aria-expanded={openMenu === 'insights'}
+            aria-haspopup="true"
+            onClick={() => {
+              window.clearTimeout(hideMenu.current)
+              setOpenMenu((menu) => (menu === 'insights' ? null : 'insights'))
+            }}
           >
-            {link.label}
-          </NavLink>
-        ))}
+            Insights <span className="nav-caret" aria-hidden="true" />
+          </button>
+          <div className="nav-dropdown">
+            <div className="nav-dropdown-panel">
+              {insightLinks.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => (isActive ? 'is-current' : undefined)}
+                  onClick={closeMenus}
+                >
+                  <strong>{item.label}</strong>
+                  <span>{item.note}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
         <NavLink to="/vacancies" className={careerCurrent ? 'is-current' : undefined} onClick={closeMenus}>
           Career
         </NavLink>

@@ -35,7 +35,7 @@ export default function InsightDetailPage() {
   const navigate = useNavigate()
   const insight = getInsight(id)
 
-  if (!insight) return <Navigate to="/insights" replace />
+  if (!insight) return <Navigate to={insightKindPath.article} replace />
 
   const related = relatedInsights(insight)
   const kind = insightKinds.find((item) => item.id === insight.kind)
@@ -70,17 +70,12 @@ export default function InsightDetailPage() {
 
       <PageSubnav
         items={[
-          { id: 'insights', label: 'All Insights' },
           { id: 'insight-articles', label: 'Articles' },
           { id: 'insight-news', label: 'News' },
           { id: 'insight-stories', label: 'Success Stories' },
         ]}
-        activeId="insights"
+        activeId={insight.kind === 'article' ? 'insight-articles' : insight.kind === 'news' ? 'insight-news' : 'insight-stories'}
         onSelect={(target) => {
-          if (target === 'insights') {
-            navigate('/insights')
-            return
-          }
           if (target === 'insight-articles') {
             navigate(insightKindPath.article)
             return
