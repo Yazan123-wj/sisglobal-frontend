@@ -28,6 +28,8 @@ export default function MetricsBar() {
       return
     }
 
+    if (!contextSafe) return
+
     let tweens: ReturnType<typeof gsap.to>[] = []
     const play = contextSafe(() => {
       tweens.forEach((tween) => tween.kill())
