@@ -79,8 +79,8 @@ function SupportPanel({ group }: { group: IndustrySupport }) {
   return (
     <section className="industry-support-panel">
       <header className="industry-support-head">
-        {logo ? <img src={logo.src} alt="" /> : null}
         <h3>{group.title}</h3>
+        {logo ? <img src={logo.src} alt="" /> : null}
       </header>
       <div className="industry-support-grid">
         {group.items.map((item, index) => (

@@ -6,10 +6,9 @@ import regionMap from '@/data/regionMap.json'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { prefersReducedMotion } from '@/lib/motion'
 
-const PIN_W = 18
-const PIN_H = 25
-const HIT_R = 22
-const SIS_IDS = new Set(globalLocations.map((location) => location.id))
+const PIN_W = 32
+const PIN_H = 44
+const HIT_R = 34
 
 type MapLocation = GlobalLocation & { x: number; y: number }
 
@@ -18,44 +17,12 @@ type DottedWorldMapProps = {
   onActivate: (id: string) => void
 }
 
-const CountryShapes = memo(function CountryShapes({
-  activeId,
-  onActivate,
-}: {
-  activeId: string
-  onActivate: (id: string) => void
-}) {
-  const rest = regionMap.countries.filter((country) => !(country.id && SIS_IDS.has(country.id)))
-  const sis = regionMap.countries.filter((country) => country.id && SIS_IDS.has(country.id))
-
+const LandDots = memo(function LandDots() {
   return (
-    <g className="region-countries">
-      {rest.map((country) => (
-        <path
-          key={country.iso}
-          d={country.d}
-          fill="#e7eef4"
-          stroke="#a9b9c8"
-          strokeWidth={0.85}
-          strokeLinejoin="round"
-        />
+    <g className="region-countries" aria-hidden="true">
+      {regionMap.countries.map((country) => (
+        <path key={country.iso} d={country.d} fill="url(#land-dots)" />
       ))}
-      {sis.map((country) => {
-        const selected = country.id === activeId
-        return (
-          <path
-            key={country.iso}
-            d={country.d}
-            fill={selected ? '#0A4A9C' : '#4F9AD0'}
-            stroke={selected ? '#092046' : '#1A6EC4'}
-            strokeWidth={selected ? 1.65 : 1.1}
-            strokeLinejoin="round"
-            className="map-hit"
-            onPointerEnter={() => onActivate(country.id!)}
-            onClick={() => onActivate(country.id!)}
-          />
-        )
-      })}
     </g>
   )
 })
@@ -107,23 +74,30 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
           viewBox={`0 0 ${regionMap.width} ${regionMap.height}`}
           preserveAspectRatio="xMidYMid meet"
           role="img"
-          aria-label="Map of SIS Global locations across the Middle East and Africa"
+          aria-label="Map of SIS Global locations across the Middle East, Africa and Europe"
         >
           <defs>
+            <pattern id="land-dots" width="9" height="9" patternUnits="userSpaceOnUse">
+              <circle cx="4.5" cy="4.5" r="1.35" fill="#b8c5d3" />
+            </pattern>
             <filter id="map-pin-shadow" x="-40%" y="-20%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" floodColor="#092046" floodOpacity="0.28" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#092046" floodOpacity="0.22" />
             </filter>
           </defs>
 
-          <CountryShapes activeId={activeId} onActivate={onActivate} />
+          <rect width={regionMap.width} height={regionMap.height} fill="#f7f8fa" />
+
+          <LandDots />
 
           <g className="sis-locations">
             {locations.map((location) => {
               const selected = location.id === active?.id
+              const pinFill = selected || location.headquarters ? '#092046' : '#1a6ec4'
+
               return (
                 <g key={location.id} transform={`translate(${location.x - PIN_W / 2} ${location.y - PIN_H})`}>
                   {selected ? (
-                    <circle cx={PIN_W / 2} cy={PIN_H} r="17" fill="#092046" opacity="0.16" pointerEvents="none" />
+                    <circle cx={PIN_W / 2} cy={PIN_H} r="26" fill="#092046" opacity="0.12" pointerEvents="none" />
                   ) : null}
                   <g
                     data-map-pin={location.id}
@@ -133,12 +107,12 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
                   >
                     <path
                       d={`M${PIN_W / 2} ${PIN_H}C${PIN_W / 2} ${PIN_H} 0 ${PIN_H * 0.58} 0 ${PIN_H * 0.36}A${PIN_W / 2} ${PIN_W / 2} 0 1 1 ${PIN_W} ${PIN_H * 0.36}C${PIN_W} ${PIN_H * 0.58} ${PIN_W / 2} ${PIN_H} ${PIN_W / 2} ${PIN_H}Z`}
-                      fill={selected ? '#092046' : '#0A4A9C'}
+                      fill={pinFill}
                       stroke="#ffffff"
-                      strokeWidth="1.35"
+                      strokeWidth="2"
                       strokeLinejoin="round"
                     />
-                    <circle cx={PIN_W / 2} cy={PIN_H * 0.34} r="2.85" fill="#ffffff" />
+                    <circle cx={PIN_W / 2} cy={PIN_H * 0.34} r="4.5" fill="#ffffff" />
                   </g>
                   <circle
                     cx={PIN_W / 2}

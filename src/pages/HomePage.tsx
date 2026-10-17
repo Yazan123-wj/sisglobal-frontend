@@ -9,7 +9,7 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import homeCareersImage from '@/assets/home-careers.jpg'
 import homeInsightsImage from '@/assets/home-insights.jpg'
 import Arrow from '@/components/Arrow'
-import BrandMark from '@/components/BrandMark'
+import DifferenceSection from '@/components/DifferenceSection'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import LogoMarquee from '@/components/LogoMarquee'
 import MetricsBar from '@/components/MetricsBar'
@@ -71,7 +71,6 @@ export default function HomePage() {
   const [searchParams] = useSearchParams()
   const [activeService, setActiveService] = useState<ServiceKey>('tso')
   const [formSent, setFormSent] = useState(false)
-  const [clientsOpen, setClientsOpen] = useState(false)
   const active = services[activeService]
 
   useEffect(() => {
@@ -82,15 +81,6 @@ export default function HomePage() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const submitForm = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setFormSent(true) }
-
-  useEffect(() => {
-    if (!clientsOpen) return
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setClientsOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [clientsOpen])
 
   return (
     <main id="top">
@@ -108,31 +98,10 @@ export default function HomePage() {
         <div className="container service-switcher" role="tablist" aria-label="SIS Global business units">{(Object.keys(services) as ServiceKey[]).map((key, index) => { const service = services[key]; const selected = key === activeService; return <button key={key} type="button" role="tab" aria-selected={selected} className={selected ? 'active' : ''} onClick={() => setActiveService(key)}><span>0{index + 1}</span><b>{service.label}</b><small>{service.eyebrow}</small></button> })}</div>
       </section>
       <section id="about" className="trust-section section"><div className="container">
-        <div className="trust-strip">
-          <div className="trust-copy">
-            <h3>Trusted by<br />leading organizations</h3>
-            <button className="button button-navy" type="button" onClick={() => setClientsOpen(true)}>More clients</button>
-          </div>
+        <div className="trusted-logos-block">
+          <h2>Trusted by Leading Organizations</h2>
           <LogoMarquee items={clients} />
         </div>
-        {clientsOpen ? (
-          <div className="clients-modal" role="presentation" onClick={() => setClientsOpen(false)}>
-            <div className="clients-modal-card" role="dialog" aria-modal="true" aria-labelledby="clients-title" onClick={(event) => event.stopPropagation()}>
-              <div className="clients-modal-head">
-                <h2 id="clients-title">Clients</h2>
-                <button className="text-link" type="button" onClick={() => setClientsOpen(false)}>Close</button>
-              </div>
-              <ul className="logo-row is-all">
-                {clients.map((client) => (
-                  <li key={client.name}>
-                    <BrandMark mark={client.mark} />
-                    <span>{client.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ) : null}
         <div className="about-do">
           <div className="about-do-heading">
             <h2>Who we are,<br /><em>and what we do.</em></h2>
@@ -162,29 +131,7 @@ export default function HomePage() {
       <MetricsBar />
       <section id="difference" className="difference-section section">
         <div className="container">
-          <div className="difference-heading">
-            <p className="eyebrow">What sets us apart</p>
-            <div className="difference-lead">
-              <h2>The Expertise You Need.<br />The Accountability You Expect.</h2>
-            </div>
-          </div>
-          <div className="difference-grid">
-            <article>
-              <span>01</span>
-              <h3>Quality & Operational Excellence</h3>
-              <p>Experienced teams, standardized processes and ISO-certified management systems, with quality and safety built into every stage.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Integrity & Accountability</h3>
-              <p>Transparent communication, clear ownership and dependable execution. We stand behind every commitment we make.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Commitment to Your Success</h3>
-              <p>We align our expertise and services with your business priorities to solve operational challenges and create lasting value.</p>
-            </article>
-          </div>
+          <DifferenceSection />
           <div id="industries" className="industry-band">
             <div className="industry-band-copy">
               <p>Expertise across industries</p>
@@ -205,7 +152,7 @@ export default function HomePage() {
           <div className="cases-heading">
             <p className="eyebrow">Success stories</p>
             <div className="cases-lead">
-              <h2>Projects that<br />deliver impact.</h2>
+              <h2>Projects that<br /><em>deliver impact.</em></h2>
               <div>
                 <p>Discover how we help operators, enterprises and public-sector organizations turn complex challenges into measurable results.</p>
                 <Link className="text-link" to="/insights/stories">View Success Stories <Arrow /></Link>
@@ -245,7 +192,7 @@ export default function HomePage() {
         </div>
       </section>
       <GlobalPresenceSection
-        heading={<>Where you can<br />find us.</>}
+        heading={<>Where you can<br /><em>find us.</em></>}
         lead="Explore our locations and connect with the teams delivering SIS Global’s services across the region."
       />
       <section className="home-split" aria-label="Careers and insights">
@@ -253,7 +200,7 @@ export default function HomePage() {
           <img className="home-split-photo" src={homeCareersImage} alt="" aria-hidden="true" />
           <div className="home-split-copy">
             <p className="eyebrow light">Work with us</p>
-            <h2>Build what’s next<br />with us.</h2>
+            <h2>Build what’s next<br /><em>with us.</em></h2>
             <p>Find your next opportunity. Explore our open vacancies.</p>
             <span className="button button-gold">Explore Vacancies <Arrow /></span>
           </div>

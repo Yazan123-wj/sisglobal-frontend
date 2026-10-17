@@ -171,7 +171,7 @@ export default function AboutPage() {
       </section>
 
       <section className="about-section section">
-        <div className="container">
+        <div className="container trusted-logos-block">
           <h2>Trusted by Leading Organizations</h2>
           <LogoMarquee items={clients} />
         </div>

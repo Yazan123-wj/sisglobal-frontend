@@ -75,7 +75,7 @@ export default function IndustriesPage() {
         <div className="container">
           <div className="cases-heading">
             <div className="cases-lead">
-              <h2>Real Projects Across<br />Every Sector</h2>
+              <h2>Real Projects Across<br /><em>Every Sector</em></h2>
               <Link className="text-link" to="/insights/stories">
                 View All Success Stories <Arrow />
               </Link>

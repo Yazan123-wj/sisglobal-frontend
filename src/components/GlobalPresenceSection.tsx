@@ -26,7 +26,7 @@ export default function GlobalPresenceSection({
 
         <div className="presence-copy">
           <p className="presence-index">Global presence</p>
-          <h2 id="global-presence-heading">{heading ?? <>Local expertise.<br />International reach.</>}</h2>
+          <h2 id="global-presence-heading">{heading ?? <>Local expertise.<br /><em>International reach.</em></>}</h2>
           {lead ? <p className="presence-lead-copy">{lead}</p> : null}
 
           <ul className="map-country-list" aria-label="SIS Global operating locations">
