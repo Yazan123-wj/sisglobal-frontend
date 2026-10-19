@@ -8,7 +8,9 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
 import PageSubnav from '@/components/PageSubnav'
+import TsoSectionView from '@/components/TsoSectionView'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
+import { getTsoSection, tsoNav } from '@/data/tsoPages'
 import { workServices } from '@/data/workContent'
 import type { ServiceKey, WorkAudience, WorkService } from '@/data/workContent'
 
@@ -212,12 +214,16 @@ export default function WhatWeDoPage() {
 
   const selected = workServices[fromPath]
   const isHcm = fromPath === 'hcm'
+  const isTso = fromPath === 'tso'
   const hcmMatch = hcmNav.some((item) => item.id === section)
+  const tsoMatch = tsoNav.some((item) => item.id === section)
   if (isHcm && section && !hcmMatch) return <Navigate to="/what-we-do/hcm" replace />
+  if (isTso && section && !tsoMatch) return <Navigate to="/what-we-do/tso" replace />
 
   const hcmSection = isHcm ? getHcmSection(section ?? 'overview') : null
+  const tsoSection = isTso ? getTsoSection(section ?? 'overview') : null
   const pillar = selected.pillars.find((item) => item.id === section)
-  if (!isHcm && section && !pillar) return <Navigate to={`/what-we-do/${fromPath}`} replace />
+  if (!isHcm && !isTso && section && !pillar) return <Navigate to={`/what-we-do/${fromPath}`} replace />
 
   const pillarId = pillar?.id ?? 'overview'
   const sectionNav = [
@@ -226,9 +232,11 @@ export default function WhatWeDoPage() {
   ]
 
   const contact = () => navigate({ pathname: '/', hash: 'contact' })
-  const heroTitle = hcmSection?.title ?? (pillar ? pillar.title : selected.title)
-  const heroLead = hcmSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
-  const heroEyebrow = hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
+  const heroTitle = tsoSection?.title ?? hcmSection?.title ?? (pillar ? pillar.title : selected.title)
+  const heroLead = tsoSection?.lead ?? hcmSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
+  const heroEyebrow = tsoSection?.eyebrow ?? hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
+  const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
+  const subnavActive = isHcm ? (hcmSection?.id ?? 'overview') : isTso ? (tsoSection?.id ?? 'overview') : pillarId
 
   return (
     <main className="work-page">
@@ -246,21 +254,23 @@ export default function WhatWeDoPage() {
       <PageSubnav
         className="page-subnav-work"
         label={`${selected.label} service lines`}
-        items={isHcm ? hcmNav : sectionNav}
-        activeId={isHcm ? (hcmSection?.id ?? 'overview') : pillarId}
+        items={subnavItems}
+        activeId={subnavActive}
         onSelect={(id) => navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)}
       />
 
       <section id="work-content" className="work-content section">
         <div className="container">
-          {hcmSection ? (
+          {tsoSection ? (
+            <TsoSectionView section={tsoSection} />
+          ) : hcmSection ? (
             <HcmSectionView section={hcmSection} image={images.hcm} />
           ) : (
             <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
           )}
         </div>
       </section>
-      {hcmSection?.close ? (
+      {tsoSection ? null : hcmSection?.close ? (
         <section className="about-cta">
           <div className="container">
             <h2>{hcmSection.close.title}</h2>

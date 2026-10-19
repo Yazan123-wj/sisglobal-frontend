@@ -162,6 +162,7 @@ export default function AboutPage() {
           <div className="about-certs">
             {aboutCerts.map((item) => (
               <article key={item.code}>
+                <img src={item.logo} alt="" />
                 <h3>{item.code}</h3>
                 <p>{item.label}</p>
               </article>

@@ -3,7 +3,9 @@ import { useRef } from 'react'
 import BrandMark from '@/components/BrandMark'
 import { gsap, useGSAP } from '@/lib/gsap'
 
-export default function LogoMarquee({ items }: { items: { name: string; mark: string }[] }) {
+export type LogoItem = { name: string; mark?: string; src?: string }
+
+export default function LogoMarquee({ items }: { items: LogoItem[] }) {
   const root = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLUListElement>(null)
   const loop = [...items, ...items, ...items]
@@ -52,9 +54,15 @@ export default function LogoMarquee({ items }: { items: { name: string; mark: st
     <div className="logo-swiper" ref={root}>
       <ul className="logo-track" ref={track} aria-hidden="true">
         {loop.map((item, index) => (
-          <li key={`${item.mark}-${index}`}>
-            <BrandMark mark={item.mark} />
-            <span>{item.name}</span>
+          <li key={`${item.name}-${index}`}>
+            {item.src ? (
+              <img src={item.src} alt="" />
+            ) : (
+              <>
+                {item.mark ? <BrandMark mark={item.mark} /> : null}
+                <span>{item.name}</span>
+              </>
+            )}
           </li>
         ))}
       </ul>

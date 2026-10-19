@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
 import LogoMarquee from '@/components/LogoMarquee'
-import { clients } from '@/data/clients'
+import { hcmClients } from '@/data/hcmClients'
 import type { HcmItem, HcmSection } from '@/data/hcmPages'
 
 function chips(scope: string) {
@@ -92,7 +92,7 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
       {section.id === 'overview' ? (
         <section className="work-block hcm-trust">
           <h2>Trusted by Leading Organizations</h2>
-          <LogoMarquee items={clients} />
+          <LogoMarquee items={hcmClients} />
         </section>
       ) : null}
 

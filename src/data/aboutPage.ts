@@ -1,3 +1,9 @@
+import iso14001 from '@/assets/certs/iso-14001.png'
+import iso22301 from '@/assets/certs/iso-22301.png'
+import iso27001 from '@/assets/certs/iso-27001.png'
+import iso45001 from '@/assets/certs/iso-45001.png'
+import iso9001 from '@/assets/certs/iso-9001.png'
+
 export const aboutIntro = [
   'SIS Global is a Riyadh-headquartered business solutions group helping organizations manage their people, their technology and their critical operations through specialized, integrated services.',
   'Founded in the United Kingdom in 2006, we established operations in Saudi Arabia in 2007 and have continued to grow in response to our clients’ changing needs.',
@@ -94,11 +100,11 @@ export const aboutCeo = {
 }
 
 export const aboutCerts = [
-  { code: 'ISO 9001', label: 'Quality Management' },
-  { code: 'ISO 45001', label: 'Occupational Health & Safety' },
-  { code: 'ISO 14001', label: 'Environmental Management' },
-  { code: 'ISO 27001', label: 'Information Security Management' },
-  { code: 'ISO 22301', label: 'Business Continuity Management' },
+  { code: 'ISO 9001', label: 'Quality Management', logo: iso9001 },
+  { code: 'ISO 45001', label: 'Occupational Health & Safety', logo: iso45001 },
+  { code: 'ISO 14001', label: 'Environmental Management', logo: iso14001 },
+  { code: 'ISO 27001', label: 'Information Security Management', logo: iso27001 },
+  { code: 'ISO 22301', label: 'Business Continuity Management', logo: iso22301 },
 ]
 
 export const aboutCta = {

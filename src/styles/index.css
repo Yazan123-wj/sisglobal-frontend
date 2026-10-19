@@ -1228,6 +1228,14 @@ textarea:focus-visible {
   padding: 0;
 }
 
+.logo-track img {
+  display: block;
+  height: 42px;
+  width: auto;
+  max-width: 148px;
+  object-fit: contain;
+}
+
 .partner-strip .brand-logo {
   width: 32px;
   height: 32px;
@@ -2681,6 +2689,164 @@ a.work-box:hover {
 
 .hcm-trust .logo-swiper { margin-top: 8px; }
 
+.hcm-trust h3 {
+  margin: 28px 0 4px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  letter-spacing: -.3px;
+}
+
+.tso-anchor { scroll-margin-top: calc(var(--header-height) + 88px); }
+
+.tso-kicker {
+  margin: 28px 0 4px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.tso-split {
+  display: grid;
+  grid-template-columns: minmax(200px, .7fr) minmax(0, 1.3fr);
+  gap: 8px 56px;
+  align-items: start;
+}
+
+.tso-split h2 { margin: 0; }
+
+.tso-lines { margin-top: 56px; }
+
+.tso-line {
+  display: grid;
+  grid-template-columns: minmax(220px, .72fr) minmax(0, 1.28fr);
+  gap: 18px 56px;
+  align-items: start;
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tso-line:last-child { border-bottom: 1px solid var(--line); }
+
+.tso-line h2 {
+  margin: 0 0 16px;
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(26px, 2.6vw, 34px);
+  letter-spacing: -.6px;
+}
+
+.tso-line .hcm-prose { max-width: none; }
+
+.tso-line .hcm-chips { margin-top: 18px; }
+
+.tso-directory {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.tso-directory li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px 36px;
+  align-items: center;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tso-directory li:last-child { border-bottom: 1px solid var(--line); }
+
+.tso-directory h3 {
+  margin: 0 0 6px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  letter-spacing: -.3px;
+}
+
+.tso-directory p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.tso-directory .text-link { margin-top: 0; }
+
+.tso-service { padding-top: 8px; }
+
+.tso-service-head {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px 28px;
+  align-items: start;
+}
+
+.tso-service-head > span {
+  color: var(--blue);
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: .85;
+}
+
+.tso-service-head h2 { margin: 0 0 14px; }
+
+.tso-sub { margin-top: 40px; }
+
+.tso-sub h3 {
+  margin: 0 0 16px;
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(22px, 2vw, 28px);
+  letter-spacing: -.4px;
+}
+
+.tso-sub-lead { margin-bottom: 8px; }
+
+.tso-sub-lead p,
+.tso-sub .hcm-prose p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.tso-sub-lead p:last-child,
+.tso-sub .hcm-prose p:last-child { margin-bottom: 0; }
+
+.tso-close {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-top: 12px;
+  padding-top: 28px;
+}
+
+.tso-close p {
+  margin: 0;
+  max-width: 42ch;
+  color: var(--navy);
+  font-family: 'Manrope', sans-serif;
+  font-size: 22px;
+  letter-spacing: -.4px;
+  line-height: 1.3;
+}
+
+.tso-close .text-link { margin-top: 0; flex-shrink: 0; }
+
+.hcm-prose + .hcm-chips,
+.hcm-prose + .hcm-steps,
+.hcm-prose + .hcm-why,
+.hcm-prose + .hcm-stack,
+.hcm-chips + .text-link,
+.work-block > .text-link,
+.hcm-stack .text-link {
+  margin-top: 22px;
+}
+
 .hcm-callout {
   display: flex;
   align-items: flex-end;
@@ -4005,8 +4171,19 @@ a.about-card:hover { border-color: var(--navy); }
 }
 
 .about-certs article {
-  padding-top: 16px;
-  border-top: 2px solid var(--navy);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.about-certs img {
+  display: block;
+  height: 112px;
+  width: auto;
+  max-width: 100%;
+  margin-bottom: 16px;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .about-certs h3 {
@@ -4940,6 +5117,16 @@ a.about-card:hover { border-color: var(--navy); }
     font-size: 18px;
   }
   .hcm-steps p { font-size: 15px; }
+  .tso-split,
+  .tso-line,
+  .tso-service-head,
+  .tso-directory li,
+  .tso-close {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .tso-service-head > span { font-size: 36px; }
   .hcm-models { grid-template-columns: 1fr; gap: 28px; }
   .hcm-callout,
   .hcm-app { grid-template-columns: 1fr; }
