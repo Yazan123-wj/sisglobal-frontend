@@ -130,11 +130,12 @@ function BlockView({ block }: { block: TsoBlock }) {
   if (block.type === 'prose') return <Prose paragraphs={block.paragraphs} />
 
   if (block.type === 'stats') {
+    const items = [...block.items].sort((a, b) => Number(a.value.replace(/[^\d.]/g, '')) - Number(b.value.replace(/[^\d.]/g, '')))
     return (
       <section className="work-block">
         <h2>{block.title}</h2>
         <dl className="hcm-stats">
-          {block.items.map((item) => (
+          {items.map((item) => (
             <div key={item.label}>
               <dd>{item.value}</dd>
               <dt>{item.label}</dt>
@@ -166,7 +167,6 @@ function BlockView({ block }: { block: TsoBlock }) {
     return (
       <section className="work-block hcm-trust">
         <h2>{block.title}</h2>
-        <h3 className="tso-kicker">Trusted by Leading Organizations</h3>
         <LogoMarquee items={tsoClients} />
       </section>
     )
@@ -220,7 +220,7 @@ function BlockView({ block }: { block: TsoBlock }) {
 
 function CtaBand({ block }: { block: CtaBlock }) {
   return (
-    <section className="hcm-callout">
+    <section className="hcm-callout tso-callout">
       <div>
         {block.title ? <h2>{block.title}</h2> : null}
         {block.copy ? <p>{block.copy}</p> : null}

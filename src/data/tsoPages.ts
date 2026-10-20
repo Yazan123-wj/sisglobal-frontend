@@ -60,11 +60,11 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         type: 'stats',
         title: 'TSO at a Glance',
         items: [
-          { value: '19+', label: 'Years of Excellence' },
-          { value: '1,850+', label: 'Daily Operations' },
-          { value: '46+', label: 'Active Teams' },
-          { value: '22+', label: 'Projects' },
           { value: '15+', label: 'Clients Served' },
+          { value: '19+', label: 'Years of Excellence' },
+          { value: '22+', label: 'Projects' },
+          { value: '46+', label: 'Active Teams' },
+          { value: '1,850+', label: 'Daily Operations' },
         ],
       },
       {
@@ -93,7 +93,7 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
           { title: 'Delivery Models That Flex', copy: 'Specialist crew for a two-week drive test campaign. Embedded team on a client program. Managed nationwide O&M. We design the model around the work, not the other way around.' },
         ],
       },
-      { type: 'partners', title: 'Clients' },
+      { type: 'partners', title: 'Trusted by Leading Organizations' },
       {
         type: 'cta',
         title: "Let's Build Reliable Operations Together",

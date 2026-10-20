@@ -2698,16 +2698,6 @@ a.work-box:hover {
 
 .tso-anchor { scroll-margin-top: calc(var(--header-height) + 88px); }
 
-.tso-kicker {
-  margin: 28px 0 4px;
-  font-family: 'Manrope', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--blue);
-}
-
 .tso-split {
   display: grid;
   grid-template-columns: minmax(200px, .7fr) minmax(0, 1.3fr);
@@ -2728,6 +2718,7 @@ a.work-box:hover {
   border-top: 1px solid var(--line);
 }
 
+.tso-line:first-child { border-top: 0; }
 .tso-line:last-child { border-bottom: 1px solid var(--line); }
 
 .tso-line h2 {
@@ -2854,6 +2845,10 @@ a.work-box:hover {
   gap: 32px;
   margin-top: 64px;
   padding: 36px 0;
+  border-top: 1px solid var(--line);
+}
+
+.tso-callout {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }

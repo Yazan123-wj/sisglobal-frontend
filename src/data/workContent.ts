@@ -198,12 +198,12 @@ export const workServices: Record<ServiceKey, WorkService> = {
       'Since 2007, we have supported complex operating environments with the expertise and on-the-ground execution needed to keep projects moving and infrastructure performing. Backed by SIS Global’s regional presence, we mobilize the right teams and capabilities around each engagement — from focused specialist scopes to large-scale, long-running programs.',
     ],
     metrics: [
-      { value: '19+', label: 'Years of excellence' },
-      { value: '1,850+', label: 'Daily operations' },
-      { value: '46+', label: 'Active teams' },
-      { value: '22+', label: 'Projects' },
-      { value: '8,500+', label: 'Field jobs delivered' },
       { value: '15+', label: 'Clients served' },
+      { value: '19+', label: 'Years of excellence' },
+      { value: '22+', label: 'Projects' },
+      { value: '46+', label: 'Active teams' },
+      { value: '1,850+', label: 'Daily operations' },
+      { value: '8,500+', label: 'Field jobs delivered' },
     ],
     reasons: [
       { title: 'End-to-end, under one roof', copy: 'From network planning and rollout to ongoing O&M and logistics support, capabilities span the technical service lifecycle through one accountable partner.' },
