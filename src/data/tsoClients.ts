@@ -11,13 +11,17 @@ import sbm from '@/assets/tso-clients/saudi-business-machines.jpg'
 
 export const tsoClients = [
   { name: 'Atheer', src: atheer },
-  { name: 'Ericsson', src: ericsson },
   { name: 'Digis Squared', src: digisSquared },
   { name: 'Fibertech', src: fibertech },
-  { name: 'Huawei', src: huawei },
-  { name: 'Nokia Arabia', src: nokiaArabia },
-  { name: 'Nokia Al-Saudia', src: nokiaAlSaudia },
   { name: 'Rakuten', src: rakuten },
   { name: 'Relacom', src: relacom },
   { name: 'Saudi Business Machines', src: sbm },
+]
+
+export const tsoTechPartners = [
+  { name: 'Ericsson', src: ericsson },
+  { name: 'Huawei', src: huawei },
+  { name: 'Nokia Arabia', src: nokiaArabia },
+  { name: 'Nokia Al-Saudia', src: nokiaAlSaudia },
+  { name: 'Nextivity', mark: 'nextivity' },
 ]

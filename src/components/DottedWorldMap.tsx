@@ -75,9 +75,14 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
               ))}
             </clipPath>
             <filter id={pinShadowId} x="-40%" y="-20%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#092046" floodOpacity="0.22" />
+              <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#0B234A" floodOpacity="0.22" />
             </filter>
-            <radialGradient id={`${rawId}-side-fade`} cx="42%" cy="40%" r="74%">
+            <radialGradient id={`${rawId}-pin-glow`} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#0B234A" stopOpacity="0.2" />
+              <stop offset="55%" stopColor="#0B234A" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="#0B234A" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id={`${rawId}-side-fade`} cx="38%" cy="36%" r="78%">
               <stop offset="42%" stopColor="#f7f8fa" stopOpacity="0" />
               <stop offset="66%" stopColor="#f7f8fa" stopOpacity="0.4" />
               <stop offset="86%" stopColor="#f7f8fa" stopOpacity="0.85" />
@@ -125,7 +130,7 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
           <g className="sis-locations">
             {locations.map((location) => {
               const selected = location.id === active?.id
-              const pinFill = selected || location.headquarters ? '#092046' : '#1a6ec4'
+              const pinFill = selected || location.headquarters ? '#0B234A' : '#1a6ec4'
 
               return (
                 <g
@@ -133,9 +138,14 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
                   className={selected ? 'map-pin-group is-active' : 'map-pin-group'}
                   transform={`translate(${location.x - PIN_W / 2} ${location.y - PIN_H})`}
                 >
-                  {selected ? (
-                    <circle cx={PIN_W / 2} cy={PIN_H} r="34" fill="#092046" opacity="0.12" pointerEvents="none" />
-                  ) : null}
+                  <circle
+                    className="map-pin-halo"
+                    cx={PIN_W / 2}
+                    cy={PIN_H}
+                    r="40"
+                    fill={`url(#${rawId}-pin-glow)`}
+                    pointerEvents="none"
+                  />
                   <g className={selected ? 'map-pin-wrap is-active' : 'map-pin-wrap'}>
                     <g
                       data-map-pin={location.id}

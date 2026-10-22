@@ -1,7 +1,6 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 
-import { gsap, useGSAP } from '@/lib/gsap'
-import { prefersReducedMotion } from '@/lib/motion'
+import differenceImage from '@/assets/case-workforce.jpg'
 
 const pillars = [
   {
@@ -19,56 +18,45 @@ const pillars = [
 ] as const
 
 export default function DifferenceSection() {
-  const rootRef = useRef<HTMLDivElement>(null)
-
-  useGSAP(
-    () => {
-      const root = rootRef.current
-      if (!root || prefersReducedMotion()) return
-
-      root.querySelectorAll<HTMLElement>('[data-diff-num]').forEach((num) => {
-        gsap.fromTo(
-          num,
-          { y: 48 },
-          {
-            y: -48,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: num.closest('li'),
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.4,
-            },
-          },
-        )
-      })
-    },
-    { scope: rootRef },
-  )
+  const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <div ref={rootRef} className="difference-stage">
-      <div className="difference-sticky">
+    <div className="difference-stage">
+      <div className="difference-head">
         <p className="eyebrow">What sets us apart</p>
-        <h2>
-          The Expertise You Need.
-          <br />
-          <em>The Accountability You Expect.</em>
-        </h2>
+        <h2>The Expertise You Need. <em>The Accountability You Expect.</em></h2>
       </div>
-      <ol className="difference-rows">
-        {pillars.map((pillar, index) => (
-          <li key={pillar.title}>
-            <span className="difference-num" data-diff-num>
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <div>
-              <h3>{pillar.title}</h3>
-              <p>{pillar.copy}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <div className="difference-split">
+        <figure className="difference-media" data-curtain>
+          <img src={differenceImage} alt="" />
+        </figure>
+        <div className="difference-faq">
+          {pillars.map((pillar, index) => {
+            const expanded = open === index
+            return (
+              <article key={pillar.title} className={expanded ? 'is-open' : undefined}>
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  onClick={() => setOpen(expanded ? null : index)}
+                >
+                  <span className="difference-num">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="difference-faq-title">{pillar.title}</span>
+                  <span className="difference-faq-plus" aria-hidden="true">
+                    <span />
+                    <span />
+                  </span>
+                </button>
+                <div className="difference-faq-body">
+                  <div>
+                    <p>{pillar.copy}</p>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

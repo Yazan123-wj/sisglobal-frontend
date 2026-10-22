@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import iso14001 from '@/assets/certs/iso-14001.png'
@@ -8,7 +9,8 @@ import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
 import { Steps } from '@/components/HcmSectionView'
 import LogoMarquee from '@/components/LogoMarquee'
-import { tsoClients } from '@/data/tsoClients'
+import { tsoClients, tsoTechPartners } from '@/data/tsoClients'
+import { tsoPhoto } from '@/data/tsoImages'
 import type { TsoBlock, TsoSection } from '@/data/tsoPages'
 
 type SectionBlock = Extract<TsoBlock, { type: 'section' }>
@@ -90,52 +92,114 @@ function Prose({ paragraphs }: { paragraphs: string[] }) {
   )
 }
 
-function Rows({ items, featured = false }: { items: NonNullable<SectionBlock['items']>; featured?: boolean }) {
+function PhotoMedia({ id }: { id: string }) {
   return (
-    <ol className={featured ? 'hcm-why' : 'hcm-stack'}>
+    <figure className="tso-media" data-curtain>
+      <img src={tsoPhoto(id)} alt="" />
+    </figure>
+  )
+}
+
+function Cards({
+  items,
+  withPhoto = false,
+  title,
+  lead,
+  heading = 'h3',
+}: {
+  items: NonNullable<SectionBlock['items']>
+  withPhoto?: boolean
+  title?: string
+  lead?: string[]
+  heading?: 'h2' | 'h3'
+}) {
+  const scroller = useRef<HTMLUListElement>(null)
+  const swipe = withPhoto && items.length > 1
+  const Heading = heading
+
+  const move = (direction: -1 | 1) => {
+    const node = scroller.current
+    if (!node) return
+    const card = node.querySelector<HTMLElement>('.tso-card')
+    const step = (card?.offsetWidth ?? 320) + 16
+    node.scrollBy({ left: step * direction, behavior: 'smooth' })
+  }
+
+  return (
+    <div className={swipe ? 'tso-swipe' : undefined}>
+      {title || swipe ? (
+        <div className="tso-swipe-head">
+          {title ? <Heading>{title}</Heading> : <span />}
+          {swipe ? (
+            <div className="work-scroll-nav tso-swipe-nav">
+              <button type="button" aria-label="Previous" onClick={() => move(-1)}><Arrow dir="left" /></button>
+              <button type="button" aria-label="Next" onClick={() => move(1)}><Arrow dir="right" /></button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {lead?.length ? (
+        <div className="tso-sub-lead">
+          {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      ) : null}
+      <ul ref={scroller} className={swipe ? 'tso-cards is-swipe' : 'tso-cards'}>
+        {items.map((item, index) => (
+          <li key={item.title} className="tso-card">
+            {withPhoto ? (
+              <div className="tso-card-media" data-curtain>
+                <img src={tsoPhoto(item.href?.replace('#', '') || item.title)} alt="" />
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </div>
+            ) : (
+              <span className="tso-card-num">{String(index + 1).padStart(2, '0')}</span>
+            )}
+            <div className="tso-card-body">
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+              {item.href && item.cta ? (
+                <a className="text-link" href={item.href}>
+                  {item.cta} <Arrow />
+                </a>
+              ) : null}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function WhyBoxes({ items }: { items: NonNullable<SectionBlock['why']> }) {
+  return (
+    <ol className="tso-why">
       {items.map((item, index) => (
         <li key={item.title}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.copy}</p>
-          </div>
+          <h3>{item.title}</h3>
+          <p>{item.copy}</p>
         </li>
       ))}
     </ol>
   )
 }
 
-function Directory({ items }: { items: NonNullable<SectionBlock['items']> }) {
-  return (
-    <ul className="tso-directory">
-      {items.map((item) => (
-        <li key={item.title}>
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.copy}</p>
-          </div>
-          {item.href && item.cta ? (
-            <a className="text-link" href={item.href}>
-              {item.cta} <Arrow />
-            </a>
-          ) : null}
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-function BlockView({ block }: { block: TsoBlock }) {
-  if (block.type === 'prose') return <Prose paragraphs={block.paragraphs} />
+function BlockView({ block, photoKey }: { block: TsoBlock; photoKey: string }) {
+  if (block.type === 'prose') {
+    return (
+      <div className="tso-lead">
+        <PhotoMedia id={photoKey} />
+        <Prose paragraphs={block.paragraphs} />
+      </div>
+    )
+  }
 
   if (block.type === 'stats') {
-    const items = [...block.items].sort((a, b) => Number(a.value.replace(/[^\d.]/g, '')) - Number(b.value.replace(/[^\d.]/g, '')))
     return (
       <section className="work-block">
         <h2>{block.title}</h2>
         <dl className="hcm-stats">
-          {items.map((item) => (
+          {block.items.map((item) => (
             <div key={item.label}>
               <dd>{item.value}</dd>
               <dt>{item.label}</dt>
@@ -167,7 +231,12 @@ function BlockView({ block }: { block: TsoBlock }) {
     return (
       <section className="work-block hcm-trust">
         <h2>{block.title}</h2>
-        <LogoMarquee items={tsoClients} />
+        {block.groups.map((group) => (
+          <div key={group.title}>
+            <h3>{group.title}</h3>
+            <LogoMarquee items={group.kind === 'tech' ? tsoTechPartners : tsoClients} />
+          </div>
+        ))}
       </section>
     )
   }
@@ -187,18 +256,22 @@ function BlockView({ block }: { block: TsoBlock }) {
     return (
       <section className="work-block">
         <h2>{block.title}</h2>
-        <Rows items={block.why} featured />
+        <WhyBoxes items={block.why} />
       </section>
     )
   }
 
   if (block.items) {
-    const linked = block.items.some((item) => item.href)
+    const pictured = block.items.some((item) => item.href)
     return (
       <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
-        <h2>{block.title}</h2>
-        {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
-        {linked ? <Directory items={block.items} /> : <Rows items={block.items} />}
+        <Cards
+          title={block.title}
+          heading="h2"
+          lead={block.paragraphs}
+          items={block.items}
+          withPhoto={pictured}
+        />
         {block.link ? (
           <Link className="text-link" to={block.link.to}>
             {block.link.label} <Arrow />
@@ -210,9 +283,9 @@ function BlockView({ block }: { block: TsoBlock }) {
 
   return (
     <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
-      <div className="tso-split">
+      <div className="tso-note">
         <h2>{block.title}</h2>
-        {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
+        {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
       </div>
     </section>
   )
@@ -233,27 +306,39 @@ function CtaBand({ block }: { block: CtaBlock }) {
 function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) {
   const cta = group.parts.find((part): part is CtaBlock => part.type === 'cta')
   const parts = group.parts.filter((part) => part.type !== 'cta')
+  let picturedList = false
 
   return (
     <section id={group.lead.id} className="work-block tso-service tso-anchor">
-      <header className="tso-service-head">
-        <span>{String(group.index).padStart(2, '0')}</span>
-        <div>
-          <h2>{group.lead.title}</h2>
-          {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
-        </div>
-      </header>
+      <div className="tso-lead">
+        <PhotoMedia id={group.lead.id || group.lead.title} />
+        <header className="tso-service-head">
+          <span>{String(group.index).padStart(2, '0')}</span>
+          <div>
+            <h2>{group.lead.title}</h2>
+            {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
+          </div>
+        </header>
+      </div>
       {parts.map((part) => {
         if (!isSection(part)) return null
+        const showPhotos = Boolean(part.items) && !picturedList
+        if (showPhotos) picturedList = true
         return (
           <div key={part.title} className="tso-sub">
-            <h3>{part.title}</h3>
-            {part.paragraphs?.length ? (
-              <div className={part.items ? 'tso-sub-lead' : 'hcm-prose'}>
-                {part.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            {part.items ? (
+              <Cards
+                title={part.title}
+                lead={part.paragraphs}
+                items={part.items}
+                withPhoto={showPhotos}
+              />
+            ) : (
+              <div className="tso-note">
+                <h3>{part.title}</h3>
+                {part.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
-            ) : null}
-            {part.items ? <Rows items={part.items} /> : null}
+            )}
           </div>
         )
       })}
@@ -269,23 +354,24 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
 
 function Offers({ blocks }: { blocks: SectionBlock[] }) {
   return (
-    <div className="tso-lines">
+    <div className="tso-offers">
       {blocks.map((block) => (
-        <article key={block.title} className="tso-line">
-          <div>
-            <h2>{block.title}</h2>
-            {block.link ? (
-              <Link className="text-link" to={block.link.to}>
-                {block.link.label} <Arrow />
-              </Link>
-            ) : null}
+        <article key={block.title} className="tso-card">
+          <div className="tso-card-media is-tall" data-curtain>
+            <img src={tsoPhoto(block.title)} alt="" />
           </div>
-          <div>
+          <div className="tso-card-body">
+            <h2>{block.title}</h2>
             {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
             {block.chips ? (
               <div className="hcm-chips">
                 {block.chips.map((chip) => <span key={chip}>{chip}</span>)}
               </div>
+            ) : null}
+            {block.link ? (
+              <Link className="text-link" to={block.link.to}>
+                {block.link.label} <Arrow />
+              </Link>
             ) : null}
           </div>
         </article>
@@ -301,7 +387,7 @@ export default function TsoSectionView({ section }: { section: TsoSection }) {
       {groups.map((group, index) => {
         if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
         if (group.kind === 'service') return <ServiceView key={group.lead.id} group={group} />
-        return <BlockView key={`${group.block.type}-${index}`} block={group.block} />
+        return <BlockView key={`${group.block.type}-${index}`} block={group.block} photoKey={section.id} />
       })}
     </div>
   )

@@ -6,7 +6,7 @@ export type TsoBlock =
   | { type: 'prose'; paragraphs: string[] }
   | { type: 'stats'; title: string; items: { value: string; label: string }[] }
   | { type: 'certs'; title: string }
-  | { type: 'partners'; title: string }
+  | { type: 'partners'; title: string; groups: { title: string; kind: 'clients' | 'tech' }[] }
   | { type: 'cta'; title?: string; copy?: string; label: string }
   | {
       type: 'section'
@@ -60,11 +60,11 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         type: 'stats',
         title: 'TSO at a Glance',
         items: [
-          { value: '15+', label: 'Clients Served' },
           { value: '19+', label: 'Years of Excellence' },
-          { value: '22+', label: 'Projects' },
-          { value: '46+', label: 'Active Teams' },
           { value: '1,850+', label: 'Daily Operations' },
+          { value: '46+', label: 'Active Teams' },
+          { value: '22+', label: 'Projects' },
+          { value: '15+', label: 'Clients Served' },
         ],
       },
       {
@@ -93,7 +93,14 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
           { title: 'Delivery Models That Flex', copy: 'Specialist crew for a two-week drive test campaign. Embedded team on a client program. Managed nationwide O&M. We design the model around the work, not the other way around.' },
         ],
       },
-      { type: 'partners', title: 'Trusted by Leading Organizations' },
+      {
+        type: 'partners',
+        title: 'Clients & Technology Partners',
+        groups: [
+          { title: 'Trusted by Leading Organizations', kind: 'clients' },
+          { title: 'Technology Partners', kind: 'tech' },
+        ],
+      },
       {
         type: 'cta',
         title: "Let's Build Reliable Operations Together",

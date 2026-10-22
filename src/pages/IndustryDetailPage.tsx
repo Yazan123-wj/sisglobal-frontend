@@ -77,7 +77,7 @@ function SupportPanel({ group }: { group: IndustrySupport }) {
   const logo = unit ? brandLogos[unit] : null
 
   return (
-    <section className="industry-support-panel">
+    <section className={unit === 'ict' ? 'industry-support-panel is-paper' : 'industry-support-panel'}>
       <header className="industry-support-head">
         <h3>{group.title}</h3>
         {logo ? <img src={logo.src} alt="" /> : null}
