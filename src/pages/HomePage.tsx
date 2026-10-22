@@ -60,8 +60,8 @@ const services: Record<ServiceKey, { label: string; eyebrow: string; title: stri
 
 function PartnerStrip() {
   return (
-    <div className="partner-strip">
-      <p>Established technology partners</p>
+    <div className="trusted-logos-block">
+      <h2>Established technology partners</h2>
       <LogoMarquee items={techPartners} />
     </div>
   )

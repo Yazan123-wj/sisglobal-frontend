@@ -1,14 +1,15 @@
-import { memo, useMemo, useRef } from 'react'
+import { useId, useMemo, useRef } from 'react'
 
+import DotField from '@/components/DotField'
 import { globalLocations } from '@/data/locations'
 import type { GlobalLocation } from '@/data/locations'
 import regionMap from '@/data/regionMap.json'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { prefersReducedMotion } from '@/lib/motion'
 
-const PIN_W = 32
-const PIN_H = 44
-const HIT_R = 34
+const PIN_W = 44
+const PIN_H = 60
+const HIT_R = 46
 
 type MapLocation = GlobalLocation & { x: number; y: number }
 
@@ -17,26 +18,17 @@ type DottedWorldMapProps = {
   onActivate: (id: string) => void
 }
 
-const LandDots = memo(function LandDots() {
-  return (
-    <g className="region-countries" aria-hidden="true">
-      {regionMap.countries.map((country) => (
-        <path key={country.iso} d={country.d} fill="url(#land-dots)" />
-      ))}
-    </g>
-  )
-})
-
 export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapProps) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const rawId = useId().replace(/:/g, '')
+  const landClipId = `land-clip-${rawId}`
+  const pinShadowId = `map-pin-shadow-${rawId}`
 
   const locations = useMemo<MapLocation[]>(
     () =>
       globalLocations.flatMap((location) => {
         const point = regionMap.locations[location.id as keyof typeof regionMap.locations]
-        if (!point || point.x < -20 || point.x > regionMap.width + 20 || point.y < -20 || point.y > regionMap.height + 20) {
-          return []
-        }
+        if (!point) return []
         return [{ ...location, ...point }]
       }),
     [],
@@ -77,17 +69,58 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
           aria-label="Map of SIS Global locations across the Middle East, Africa and Europe"
         >
           <defs>
-            <pattern id="land-dots" width="9" height="9" patternUnits="userSpaceOnUse">
-              <circle cx="4.5" cy="4.5" r="1.35" fill="#b8c5d3" />
-            </pattern>
-            <filter id="map-pin-shadow" x="-40%" y="-20%" width="180%" height="180%">
+            <clipPath id={landClipId}>
+              {regionMap.countries.map((country) => (
+                <path key={country.iso} d={country.d} />
+              ))}
+            </clipPath>
+            <filter id={pinShadowId} x="-40%" y="-20%" width="180%" height="180%">
               <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#092046" floodOpacity="0.22" />
             </filter>
+            <radialGradient id={`${rawId}-side-fade`} cx="42%" cy="40%" r="74%">
+              <stop offset="42%" stopColor="#f7f8fa" stopOpacity="0" />
+              <stop offset="66%" stopColor="#f7f8fa" stopOpacity="0.4" />
+              <stop offset="86%" stopColor="#f7f8fa" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#f7f8fa" stopOpacity="1" />
+            </radialGradient>
           </defs>
 
           <rect width={regionMap.width} height={regionMap.height} fill="#f7f8fa" />
 
-          <LandDots />
+          <foreignObject
+            width={regionMap.width}
+            height={regionMap.height}
+            clipPath={`url(#${landClipId})`}
+            pointerEvents="none"
+          >
+            <div className="map-dotfield">
+              <DotField
+                lightMode
+                pattern="grid"
+                gradientFrom="#b8c5d3"
+                gradientTo="#7d90a6"
+                gradientAngle={135}
+                glowColor="#1a6ec4"
+                dotRadius={0.8}
+                dotSpacing={4}
+                cursorRadius={110}
+                bulgeStrength={0.55}
+                glowRadius={80}
+                glowIntensity={0.7}
+                baseOpacity={0.7}
+                holdToZoom={false}
+                intro
+              />
+            </div>
+          </foreignObject>
+
+          <rect
+            className="map-side-fade"
+            width={regionMap.width}
+            height={regionMap.height}
+            fill={`url(#${rawId}-side-fade)`}
+            pointerEvents="none"
+          />
 
           <g className="sis-locations">
             {locations.map((location) => {
@@ -95,24 +128,30 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
               const pinFill = selected || location.headquarters ? '#092046' : '#1a6ec4'
 
               return (
-                <g key={location.id} transform={`translate(${location.x - PIN_W / 2} ${location.y - PIN_H})`}>
+                <g
+                  key={location.id}
+                  className={selected ? 'map-pin-group is-active' : 'map-pin-group'}
+                  transform={`translate(${location.x - PIN_W / 2} ${location.y - PIN_H})`}
+                >
                   {selected ? (
-                    <circle cx={PIN_W / 2} cy={PIN_H} r="26" fill="#092046" opacity="0.12" pointerEvents="none" />
+                    <circle cx={PIN_W / 2} cy={PIN_H} r="34" fill="#092046" opacity="0.12" pointerEvents="none" />
                   ) : null}
-                  <g
-                    data-map-pin={location.id}
-                    className={selected ? 'map-pin is-active' : 'map-pin'}
-                    pointerEvents="none"
-                    filter="url(#map-pin-shadow)"
-                  >
-                    <path
-                      d={`M${PIN_W / 2} ${PIN_H}C${PIN_W / 2} ${PIN_H} 0 ${PIN_H * 0.58} 0 ${PIN_H * 0.36}A${PIN_W / 2} ${PIN_W / 2} 0 1 1 ${PIN_W} ${PIN_H * 0.36}C${PIN_W} ${PIN_H * 0.58} ${PIN_W / 2} ${PIN_H} ${PIN_W / 2} ${PIN_H}Z`}
-                      fill={pinFill}
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                      strokeLinejoin="round"
-                    />
-                    <circle cx={PIN_W / 2} cy={PIN_H * 0.34} r="4.5" fill="#ffffff" />
+                  <g className={selected ? 'map-pin-wrap is-active' : 'map-pin-wrap'}>
+                    <g
+                      data-map-pin={location.id}
+                      className={selected ? 'map-pin is-active' : 'map-pin'}
+                      pointerEvents="none"
+                      filter={`url(#${pinShadowId})`}
+                    >
+                      <path
+                        d={`M${PIN_W / 2} ${PIN_H}C${PIN_W / 2} ${PIN_H} 0 ${PIN_H * 0.58} 0 ${PIN_H * 0.36}A${PIN_W / 2} ${PIN_W / 2} 0 1 1 ${PIN_W} ${PIN_H * 0.36}C${PIN_W} ${PIN_H * 0.58} ${PIN_W / 2} ${PIN_H} ${PIN_W / 2} ${PIN_H}Z`}
+                        fill={pinFill}
+                        stroke="#ffffff"
+                        strokeWidth="2.4"
+                        strokeLinejoin="round"
+                      />
+                      <circle cx={PIN_W / 2} cy={PIN_H * 0.34} r="6" fill="#ffffff" />
+                    </g>
                   </g>
                   <circle
                     cx={PIN_W / 2}
