@@ -1513,7 +1513,13 @@ textarea:focus-visible {
   overflow: visible;
 }
 
-.map-hit { cursor: pointer; }
+.map-hit,
+.map-country-hit { cursor: pointer; }
+
+.map-country-glow {
+  fill: #8fd4ff;
+  fill-opacity: 0.28;
+}
 
 .region-countries path {
   stroke: none;
@@ -1547,23 +1553,13 @@ textarea:focus-visible {
 
 .map-pin-wrap {
   transform-origin: 50% 100%;
-  transition: transform 250ms ease;
-}
-
-.map-pin-group.is-active .map-pin-wrap,
-.map-pin-group:hover .map-pin-wrap {
-  transform: scale(1.18);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .map-pin path,
   .map-pin-halo,
-  .map-pin-wrap,
   .map-country,
   .map-country::after { transition: none; }
-
-  .map-pin-group.is-active .map-pin-wrap,
-  .map-pin-group:hover .map-pin-wrap { transform: none; }
 }
 
 .map-pin-label {
@@ -2983,7 +2979,8 @@ a.work-box:hover {
   align-items: stretch;
 }
 
-.hcm-section > .tso-lead:first-child { margin-top: 8px; }
+.hcm-section > .tso-lead:first-child,
+.hcm-section > .work-block:first-child { margin-top: 8px; }
 
 .tso-media {
   position: relative;

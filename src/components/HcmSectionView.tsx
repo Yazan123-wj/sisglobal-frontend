@@ -1,32 +1,101 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
+import caseWorkforce from '@/assets/case-workforce.jpg'
+import industryEducation from '@/assets/industry-education.jpg'
+import industryFinance from '@/assets/industry-finance.jpg'
+import industryGovernment from '@/assets/industry-government.jpg'
+import industryProfessional from '@/assets/industry-professional.jpg'
 import Arrow from '@/components/Arrow'
 import LogoMarquee from '@/components/LogoMarquee'
 import { hcmClients } from '@/data/hcmClients'
 import type { HcmItem, HcmSection } from '@/data/hcmPages'
 
+const servicePhotos: Record<string, string> = {
+  'Employee Administration': industryProfessional,
+  'Payroll, Compensation & Benefits': industryFinance,
+  'Government Relations, Compliance & Employee Mobility': industryGovernment,
+  'Workforce Management': caseWorkforce,
+  'Offboarding & Final Settlement': industryEducation,
+}
+
 function chips(scope: string) {
   return scope.split(' · ')
 }
 
-function Stack({ items }: { items: HcmItem[] }) {
+function ServiceCards({ title, lead, items }: { title: string; lead?: string[]; items: HcmItem[] }) {
+  const scroller = useRef<HTMLUListElement>(null)
+  const swipe = items.length > 1
+
+  const move = (direction: -1 | 1) => {
+    const node = scroller.current
+    if (!node) return
+    const card = node.querySelector<HTMLElement>('.tso-card')
+    const step = (card?.offsetWidth ?? 320) + 16
+    node.scrollBy({ left: step * direction, behavior: 'smooth' })
+  }
+
   return (
-    <ol className="hcm-stack">
+    <div className={swipe ? 'tso-swipe' : undefined}>
+      <div className="tso-swipe-head">
+        <h2>{title}</h2>
+        {swipe ? (
+          <div className="work-scroll-nav tso-swipe-nav">
+            <button type="button" aria-label="Previous" onClick={() => move(-1)}><Arrow dir="left" /></button>
+            <button type="button" aria-label="Next" onClick={() => move(1)}><Arrow dir="right" /></button>
+          </div>
+        ) : null}
+      </div>
+      {lead?.length ? (
+        <div className="tso-sub-lead">
+          {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      ) : null}
+      <ul ref={scroller} className={swipe ? 'tso-cards is-swipe' : 'tso-cards'}>
+        {items.map((item, index) => (
+          <li key={item.title} className="tso-card">
+            <div className="tso-card-media" data-curtain>
+              <img src={servicePhotos[item.title] ?? industryProfessional} alt="" />
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <div className="tso-card-body">
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function Stack({ items }: { items: HcmItem[] }) {
+  const grid = items.length === 6
+
+  return (
+    <ol className={grid ? 'tso-why' : 'hcm-stack'}>
       {items.map((item, index) => (
         <li key={item.title}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.copy}</p>
-            {item.scope ? (
-              <div className="hcm-scope">
-                <b>Service Scope:</b>
-                <div className="hcm-chips">
-                  {chips(item.scope).map((tag) => <span key={tag}>{tag}</span>)}
+          {grid ? (
+            <>
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+            </>
+          ) : (
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+              {item.scope ? (
+                <div className="hcm-scope">
+                  <b>Service Scope:</b>
+                  <div className="hcm-chips">
+                    {chips(item.scope).map((tag) => <span key={tag}>{tag}</span>)}
+                  </div>
                 </div>
-              </div>
-            ) : null}
-          </div>
+              ) : null}
+            </div>
+          )}
         </li>
       ))}
     </ol>
@@ -52,7 +121,7 @@ export function Steps({ items }: { items: { title: string; copy: string }[] }) {
 export default function HcmSectionView({ section, image }: { section: HcmSection; image?: string }) {
   return (
     <div className={`hcm-section is-${section.id}`}>
-      {section.body.length ? (
+      {section.body.length && section.id !== 'hcm-services' ? (
         <section className="hcm-prose">
           {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </section>
@@ -108,8 +177,14 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
 
       {section.groups?.map((group) => (
         <section key={group.title} className="work-block">
-          <h2>{group.title}</h2>
-          {group.title.startsWith('How We') ? <Steps items={group.items} /> : <Stack items={group.items} />}
+          {group.title === 'Our HCM Services' ? (
+            <ServiceCards title={group.title} lead={section.body} items={group.items} />
+          ) : (
+            <>
+              <h2>{group.title}</h2>
+              {group.title.startsWith('How We') ? <Steps items={group.items} /> : <Stack items={group.items} />}
+            </>
+          )}
         </section>
       ))}
 

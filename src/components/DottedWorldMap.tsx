@@ -11,6 +11,19 @@ const PIN_W = 44
 const PIN_H = 60
 const HIT_R = 46
 
+const officeCountries = regionMap.countries.filter((country) => country.id)
+
+const dots = {
+  lightMode: true as const,
+  pattern: 'grid' as const,
+  dotRadius: 0.8,
+  dotSpacing: 4,
+  bulgeStrength: 0,
+  glowIntensity: 0,
+  interactive: false,
+  holdToZoom: false,
+}
+
 type MapLocation = GlobalLocation & { x: number; y: number }
 
 type DottedWorldMapProps = {
@@ -22,6 +35,7 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
   const rootRef = useRef<HTMLDivElement>(null)
   const rawId = useId().replace(/:/g, '')
   const landClipId = `land-clip-${rawId}`
+  const hotClipId = `hot-clip-${rawId}`
   const pinShadowId = `map-pin-shadow-${rawId}`
 
   const locations = useMemo<MapLocation[]>(
@@ -35,6 +49,7 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
   )
 
   const active = locations.find((location) => location.id === activeId) ?? locations[0]
+  const hotCountry = officeCountries.find((country) => country.id === activeId) ?? officeCountries.find((country) => country.id === active?.id)
 
   useGSAP(
     () => {
@@ -70,9 +85,14 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
         >
           <defs>
             <clipPath id={landClipId}>
-              {regionMap.countries.map((country) => (
-                <path key={country.iso} d={country.d} />
-              ))}
+              {regionMap.countries
+                .filter((country) => country.iso !== hotCountry?.iso)
+                .map((country) => (
+                  <path key={country.iso} d={country.d} />
+                ))}
+            </clipPath>
+            <clipPath id={hotClipId}>
+              {hotCountry ? <path d={hotCountry.d} /> : null}
             </clipPath>
             <filter id={pinShadowId} x="-40%" y="-20%" width="180%" height="180%">
               <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#0B234A" floodOpacity="0.22" />
@@ -100,21 +120,42 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
           >
             <div className="map-dotfield">
               <DotField
-                lightMode
-                pattern="grid"
+                {...dots}
                 gradientFrom="#b8c5d3"
                 gradientTo="#7d90a6"
                 gradientAngle={135}
                 glowColor="#1a6ec4"
-                dotRadius={0.8}
-                dotSpacing={4}
-                cursorRadius={110}
-                bulgeStrength={0.55}
-                glowRadius={80}
-                glowIntensity={0.7}
-                baseOpacity={0.7}
-                holdToZoom={false}
+                baseOpacity={0.5}
                 intro
+              />
+            </div>
+          </foreignObject>
+
+          {hotCountry ? (
+            <path
+              className="map-country-glow"
+              d={hotCountry.d}
+              pointerEvents="none"
+            />
+          ) : null}
+
+          <foreignObject
+            width={regionMap.width}
+            height={regionMap.height}
+            clipPath={`url(#${hotClipId})`}
+            pointerEvents="none"
+          >
+            <div className="map-dotfield">
+              <DotField
+                {...dots}
+                lightMode={false}
+                dotRadius={1.7}
+                gradientFrom="#b7e7ff"
+                gradientTo="#6ed2ff"
+                gradientAngle={135}
+                glowColor="#b7e7ff"
+                baseOpacity={1}
+                intro={false}
               />
             </div>
           </foreignObject>
@@ -126,6 +167,20 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
             fill={`url(#${rawId}-side-fade)`}
             pointerEvents="none"
           />
+
+          <g className="map-country-hits">
+            {officeCountries.map((country) => (
+              <path
+                key={country.iso}
+                className="map-country-hit"
+                d={country.d}
+                fill="transparent"
+                onPointerEnter={() => {
+                  if (country.id) onActivate(country.id)
+                }}
+              />
+            ))}
+          </g>
 
           <g className="sis-locations">
             {locations.map((location) => {
