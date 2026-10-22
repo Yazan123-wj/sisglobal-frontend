@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
@@ -7,10 +7,10 @@ import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
-import PageSubnav from '@/components/PageSubnav'
+import PageSubnav, { PageSubnavPills } from '@/components/PageSubnav'
 import TsoSectionView from '@/components/TsoSectionView'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
-import { getTsoSection, tsoNav } from '@/data/tsoPages'
+import { getTsoSection, tsoInnerNav, tsoNav } from '@/data/tsoPages'
 import { workServices } from '@/data/workContent'
 import type { ServiceKey, WorkAudience, WorkService } from '@/data/workContent'
 
@@ -201,6 +201,7 @@ function ServiceView({
 
 export default function WhatWeDoPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { unit, section } = useParams()
   const [searchParams] = useSearchParams()
   const fromPath = isService(unit) ? unit : null
@@ -237,9 +238,26 @@ export default function WhatWeDoPage() {
   const heroEyebrow = tsoSection?.eyebrow ?? hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
   const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
   const subnavActive = isHcm ? (hcmSection?.id ?? 'overview') : isTso ? (tsoSection?.id ?? 'overview') : pillarId
+  const innerNav = isTso && tsoSection ? tsoInnerNav[tsoSection.id] : undefined
+  const hashId = location.hash.replace('#', '')
+  const activeInner = innerNav?.some((item) => item.id === hashId) ? hashId : innerNav?.[0]?.id
+  const firstInner = useRef(true)
+
+  useEffect(() => {
+    firstInner.current = true
+  }, [tsoSection?.id])
+
+  useEffect(() => {
+    if (!activeInner) return
+    if (firstInner.current) {
+      firstInner.current = false
+      return
+    }
+    document.getElementById('work-content')?.scrollIntoView({ block: 'start' })
+  }, [activeInner])
 
   return (
-    <main className="work-page">
+    <main className={innerNav ? 'work-page has-tso-inner-nav' : 'work-page'}>
       <section className="about-hero" aria-labelledby="work-title">
         <div className="about-hero-visual" style={{ backgroundImage: `url(${images[selected.key]})` }} aria-hidden="true" />
         <div className="container about-hero-inner">
@@ -257,12 +275,26 @@ export default function WhatWeDoPage() {
         items={subnavItems}
         activeId={subnavActive}
         onSelect={(id) => navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)}
+        extra={innerNav && activeInner ? (
+          <PageSubnavPills
+            items={innerNav}
+            label={`${tsoSection?.nav} sections`}
+            activeId={activeInner}
+            onSelect={(id) => {
+              navigate({
+                pathname: location.pathname,
+                search: location.search,
+                hash: id.endsWith('-overview') ? '' : id,
+              }, { replace: true, preventScrollReset: true })
+            }}
+          />
+        ) : null}
       />
 
       <section id="work-content" className="work-content section">
         <div className="container">
           {tsoSection ? (
-            <TsoSectionView section={tsoSection} />
+            <TsoSectionView section={tsoSection} topic={activeInner} />
           ) : hcmSection ? (
             <HcmSectionView section={hcmSection} image={images.hcm} />
           ) : (

@@ -75,14 +75,12 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
       {section.why ? (
         <section className="work-block">
           <h2>Why Idarat HCM?</h2>
-          <ol className="hcm-why">
+          <ol className="tso-why">
             {section.why.map((item, index) => (
               <li key={item.title}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.copy}</p>
-                </div>
+                <h3>{item.title}</h3>
+                <p>{item.copy}</p>
               </li>
             ))}
           </ol>

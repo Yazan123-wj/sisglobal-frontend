@@ -6,7 +6,7 @@ export type TsoBlock =
   | { type: 'prose'; paragraphs: string[] }
   | { type: 'stats'; title: string; items: { value: string; label: string }[] }
   | { type: 'certs'; title: string }
-  | { type: 'partners'; title: string; groups: { title: string; kind: 'clients' | 'tech' }[] }
+  | { type: 'partners'; title: string }
   | { type: 'cta'; title?: string; copy?: string; label: string }
   | {
       type: 'section'
@@ -41,6 +41,49 @@ export const tsoNav: { id: TsoSectionId; label: string }[] = [
   { id: 'logistics-support', label: 'Logistics & Support Services' },
 ]
 
+export const tsoInnerNav: Partial<Record<TsoSectionId, { id: string; label: string }[]>> = {
+  rollout: [
+    { id: 'rollout-overview', label: 'Rollout Overview' },
+    { id: 'ran', label: 'RAN Deployment' },
+    { id: 'transmission', label: 'Transmission Deployment' },
+    { id: 'installation', label: 'Installation & Commissioning' },
+    { id: 'integration', label: 'Site Integration & Acceptance' },
+    { id: 'ibs', label: 'IBS' },
+    { id: 'swap', label: 'Network Swap & Modernization' },
+    { id: 'power', label: 'Power Systems Deployment' },
+  ],
+  'managed-services': [
+    { id: 'managed-services-overview', label: 'Managed Service Overview' },
+    { id: 'noc', label: 'NOC Operations' },
+    { id: 'field', label: 'Field Maintenance' },
+    { id: 'preventive', label: 'Preventive & Corrective Maintenance' },
+    { id: 'civil', label: 'Civil & Site Maintenance' },
+    { id: 'power-energy', label: 'Power & Energy Management' },
+    { id: 'spares', label: 'Spare Parts Management' },
+    { id: 'resources', label: 'Managed Technical Resources' },
+  ],
+  'design-optimization': [
+    { id: 'design-optimization-overview', label: 'Design & Optimization Overview' },
+    { id: 'rf', label: 'RF Planning & Coverage' },
+    { id: 'transmission-planning', label: 'Transmission Planning' },
+    { id: 'capacity', label: 'Planning & Network Dimensioning' },
+    { id: 'surveys', label: 'Site Surveys' },
+    { id: 'drive', label: 'Drive Testing' },
+    { id: 'optimization', label: 'Network Optimization' },
+    { id: 'ibs-design', label: 'IBS / DAS Design' },
+  ],
+  'logistics-support': [
+    { id: 'logistics-support-overview', label: 'Logistics & Support Services Overview' },
+    { id: 'fleet', label: 'Fleet Management' },
+    { id: 'warehousing', label: 'Storage & Warehousing' },
+    { id: 'inventory', label: 'Inventory Management' },
+    { id: 'packing', label: 'Material Packing & Handling' },
+    { id: 'delivery', label: 'Delivery & Transportation' },
+    { id: 'inspection', label: 'Inspection & Quality Assurance' },
+    { id: 'reverse', label: 'Reverse Logistics & RMA Management' },
+  ],
+}
+
 export const tsoSections: Record<TsoSectionId, TsoSection> = {
   overview: {
     id: 'overview',
@@ -60,11 +103,11 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         type: 'stats',
         title: 'TSO at a Glance',
         items: [
-          { value: '19+', label: 'Years of Excellence' },
-          { value: '1,850+', label: 'Daily Operations' },
-          { value: '46+', label: 'Active Teams' },
-          { value: '22+', label: 'Projects' },
           { value: '15+', label: 'Clients Served' },
+          { value: '19+', label: 'Years of Excellence' },
+          { value: '22+', label: 'Projects' },
+          { value: '46+', label: 'Active Teams' },
+          { value: '1,850+', label: 'Daily Operations' },
         ],
       },
       {
@@ -93,14 +136,7 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
           { title: 'Delivery Models That Flex', copy: 'Specialist crew for a two-week drive test campaign. Embedded team on a client program. Managed nationwide O&M. We design the model around the work, not the other way around.' },
         ],
       },
-      {
-        type: 'partners',
-        title: 'Clients & Technology Partners',
-        groups: [
-          { title: 'Trusted by Leading Organizations', kind: 'clients' },
-          { title: 'Technology Partners', kind: 'tech' },
-        ],
-      },
+      { type: 'partners', title: 'Trusted by Leading Organizations' },
       {
         type: 'cta',
         title: "Let's Build Reliable Operations Together",
@@ -1024,28 +1060,6 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
       { type: 'cta', copy: 'Need fleet support for your field operations?', label: 'Talk to Our Logistics & Support Services Team' },
       {
         type: 'section',
-        id: 'inventory',
-        title: 'Inventory Management',
-        paragraphs: [
-          "Technical operations depend on accurate material visibility. Without reliable records, equipment can exist somewhere in the supply chain and still be unavailable to the team that needs it, which is functionally the same as not having it.",
-          'Idarat TSO provides inventory management services maintaining visibility and control over technical materials as they move through storage and into field operations.',
-        ],
-      },
-      {
-        type: 'section',
-        title: 'Inventory Management Capabilities',
-        items: [
-          { title: 'Stock Recording & Control', copy: 'Records maintained across material received, held, issued and transferred including condition and allocation status, not just quantity.' },
-          { title: 'Material Identification & Location', copy: 'Storage location tracked per item, supporting efficient retrieval across the warehouse.' },
-          { title: 'Stock-Level Visibility', copy: 'Available quantities and material status visible across the managed scope, helping identify potential shortfalls before planned field activity.' },
-          { title: 'Inventory Reconciliation', copy: 'Physical stock compared against records with discrepancies investigated to maintain inventory accuracy.' },
-          { title: 'Material Movement Tracking', copy: 'Movement recorded storage locations, projects and operational destinations, maintaining traceability across the managed material flow.' },
-          { title: 'Inventory Reporting', copy: 'Reporting on stock position, movement and consumption to the agreed scope, supporting material planning and operational decisions.' },
-        ],
-      },
-      { type: 'cta', copy: 'Need greater visibility and control over your technical inventory?', label: 'Talk to Our Logistics & Support Services Team' },
-      {
-        type: 'section',
         id: 'warehousing',
         title: 'Storage & Warehousing',
         paragraphs: [
@@ -1066,6 +1080,28 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         ],
       },
       { type: 'cta', copy: 'Looking for warehousing support for technical equipment and materials?', label: 'Talk to Our Logistics & Support Services Team' },
+      {
+        type: 'section',
+        id: 'inventory',
+        title: 'Inventory Management',
+        paragraphs: [
+          "Technical operations depend on accurate material visibility. Without reliable records, equipment can exist somewhere in the supply chain and still be unavailable to the team that needs it, which is functionally the same as not having it.",
+          'Idarat TSO provides inventory management services maintaining visibility and control over technical materials as they move through storage and into field operations.',
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Inventory Management Capabilities',
+        items: [
+          { title: 'Stock Recording & Control', copy: 'Records maintained across material received, held, issued and transferred including condition and allocation status, not just quantity.' },
+          { title: 'Material Identification & Location', copy: 'Storage location tracked per item, supporting efficient retrieval across the warehouse.' },
+          { title: 'Stock-Level Visibility', copy: 'Available quantities and material status visible across the managed scope, helping identify potential shortfalls before planned field activity.' },
+          { title: 'Inventory Reconciliation', copy: 'Physical stock compared against records with discrepancies investigated to maintain inventory accuracy.' },
+          { title: 'Material Movement Tracking', copy: 'Movement recorded storage locations, projects and operational destinations, maintaining traceability across the managed material flow.' },
+          { title: 'Inventory Reporting', copy: 'Reporting on stock position, movement and consumption to the agreed scope, supporting material planning and operational decisions.' },
+        ],
+      },
+      { type: 'cta', copy: 'Need greater visibility and control over your technical inventory?', label: 'Talk to Our Logistics & Support Services Team' },
       {
         type: 'section',
         id: 'packing',
@@ -1098,6 +1134,28 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
       { type: 'cta', copy: 'Need packing and handling support for technical equipment?', label: 'Talk to Our Logistics & Support Services Team' },
       {
         type: 'section',
+        id: 'delivery',
+        title: 'Delivery & Transportation',
+        paragraphs: [
+          'Delivery timing matters as much as delivery itself. Technical equipment needs to reach project and operational locations in line with field requirements and delivery schedules.',
+          'Idarat TSO provides delivery and transportation for technical equipment and materials, coordinating movement between storage locations, project sites and operational facilities.',
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Delivery & Transportation Capabilities',
+        items: [
+          { title: 'Warehouse-to-Site Delivery', copy: 'Material moved from storage to technical and project sites according to site access and delivery requirements.' },
+          { title: 'Inter-Site Transportation', copy: 'Equipment moved between project locations and operational sites, including repositioning stock closer to where it will next be required.' },
+          { title: 'Delivery Coordination', copy: 'Transport planned around destination conditions, material requirements and field schedules, helping align delivery with site requirements.' },
+          { title: 'Loading & Dispatch Support', copy: 'Materials are prepared and loaded for dispatch, with load planning that supports efficient transportation while protecting equipment.' },
+          { title: 'Delivery Documentation', copy: 'Dispatch, receipt and delivery confirmation records maintained, supporting traceability through handover.' },
+          { title: 'Specialized Transportation', copy: 'Transport arranged for equipment requiring specific vehicles, handling or delivery conditions.' },
+        ],
+      },
+      { type: 'cta', copy: 'Need reliable transportation for technical materials and equipment?', label: 'Talk to Our Logistics & Support Services Team' },
+      {
+        type: 'section',
         id: 'inspection',
         title: 'Material Inspection & Quality Assurance',
         paragraphs: [
@@ -1126,28 +1184,6 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         ],
       },
       { type: 'cta', copy: 'Need stronger material inspection and quality controls?', label: 'Talk to Our Logistics & Support Services Team' },
-      {
-        type: 'section',
-        id: 'delivery',
-        title: 'Delivery & Transportation',
-        paragraphs: [
-          'Delivery timing matters as much as delivery itself. Technical equipment needs to reach project and operational locations in line with field requirements and delivery schedules.',
-          'Idarat TSO provides delivery and transportation for technical equipment and materials, coordinating movement between storage locations, project sites and operational facilities.',
-        ],
-      },
-      {
-        type: 'section',
-        title: 'Delivery & Transportation Capabilities',
-        items: [
-          { title: 'Warehouse-to-Site Delivery', copy: 'Material moved from storage to technical and project sites according to site access and delivery requirements.' },
-          { title: 'Inter-Site Transportation', copy: 'Equipment moved between project locations and operational sites, including repositioning stock closer to where it will next be required.' },
-          { title: 'Delivery Coordination', copy: 'Transport planned around destination conditions, material requirements and field schedules, helping align delivery with site requirements.' },
-          { title: 'Loading & Dispatch Support', copy: 'Materials are prepared and loaded for dispatch, with load planning that supports efficient transportation while protecting equipment.' },
-          { title: 'Delivery Documentation', copy: 'Dispatch, receipt and delivery confirmation records maintained, supporting traceability through handover.' },
-          { title: 'Specialized Transportation', copy: 'Transport arranged for equipment requiring specific vehicles, handling or delivery conditions.' },
-        ],
-      },
-      { type: 'cta', copy: 'Need reliable transportation for technical materials and equipment?', label: 'Talk to Our Logistics & Support Services Team' },
       {
         type: 'section',
         id: 'reverse',

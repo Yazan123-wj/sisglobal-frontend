@@ -9,7 +9,7 @@ import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
 import { Steps } from '@/components/HcmSectionView'
 import LogoMarquee from '@/components/LogoMarquee'
-import { tsoClients, tsoTechPartners } from '@/data/tsoClients'
+import { tsoClients } from '@/data/tsoClients'
 import { tsoPhoto } from '@/data/tsoImages'
 import type { TsoBlock, TsoSection } from '@/data/tsoPages'
 
@@ -158,9 +158,9 @@ function Cards({
               <h3>{item.title}</h3>
               <p>{item.copy}</p>
               {item.href && item.cta ? (
-                <a className="text-link" href={item.href}>
+                <Link className="text-link" to={{ hash: item.href.replace('#', '') }} preventScrollReset>
                   {item.cta} <Arrow />
-                </a>
+                </Link>
               ) : null}
             </div>
           </li>
@@ -184,8 +184,17 @@ function WhyBoxes({ items }: { items: NonNullable<SectionBlock['why']> }) {
   )
 }
 
-function BlockView({ block, photoKey }: { block: TsoBlock; photoKey: string }) {
+function BlockView({
+  block,
+  photoKey,
+  withPhoto = true,
+}: {
+  block: TsoBlock
+  photoKey: string
+  withPhoto?: boolean
+}) {
   if (block.type === 'prose') {
+    if (!withPhoto) return <Prose paragraphs={block.paragraphs} />
     return (
       <div className="tso-lead">
         <PhotoMedia id={photoKey} />
@@ -231,12 +240,7 @@ function BlockView({ block, photoKey }: { block: TsoBlock; photoKey: string }) {
     return (
       <section className="work-block hcm-trust">
         <h2>{block.title}</h2>
-        {block.groups.map((group) => (
-          <div key={group.title}>
-            <h3>{group.title}</h3>
-            <LogoMarquee items={group.kind === 'tech' ? tsoTechPartners : tsoClients} />
-          </div>
-        ))}
+        <LogoMarquee items={tsoClients} />
       </section>
     )
   }
@@ -380,15 +384,34 @@ function Offers({ blocks }: { blocks: SectionBlock[] }) {
   )
 }
 
-export default function TsoSectionView({ section }: { section: TsoSection }) {
+function renderGroup(group: Group, index: number, photoKey: string, withPhoto = true) {
+  if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
+  if (group.kind === 'service') return <ServiceView key={group.lead.id} group={group} />
+  return <BlockView key={`${group.block.type}-${index}`} block={group.block} photoKey={photoKey} withPhoto={withPhoto} />
+}
+
+export default function TsoSectionView({
+  section,
+  topic,
+}: {
+  section: TsoSection
+  topic?: string
+}) {
   const groups = groupBlocks(section.blocks)
+  const overviewId = section.id === 'overview' ? undefined : `${section.id}-overview`
+  const split = overviewId ? groups.findIndex((group) => group.kind === 'service') : -1
+  const intro = split >= 0 ? groups.slice(0, split) : groups
+  const rest = split >= 0 ? groups.slice(split) : []
+  const service = rest.find((group) => group.kind === 'service' && group.lead.id === topic)
+  const showOverview = !overviewId || !topic || topic === overviewId || !service
+
   return (
     <div className={`hcm-section is-${section.id}`}>
-      {groups.map((group, index) => {
-        if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
-        if (group.kind === 'service') return <ServiceView key={group.lead.id} group={group} />
-        return <BlockView key={`${group.block.type}-${index}`} block={group.block} photoKey={section.id} />
-      })}
+      {showOverview
+        ? intro.map((group, index) => renderGroup(group, index, section.id, false))
+        : service
+          ? renderGroup(service, 0, section.id)
+          : null}
     </div>
   )
 }

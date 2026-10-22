@@ -2046,6 +2046,7 @@ textarea:focus-visible {
 .page-subnav-pills {
   display: flex;
   flex-wrap: nowrap;
+  justify-content: flex-start;
   align-items: center;
   gap: 22px;
   margin: 0;
@@ -2054,8 +2055,8 @@ textarea:focus-visible {
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
   overscroll-behavior-x: contain;
+  direction: ltr;
 }
 
 .page-subnav-pills::-webkit-scrollbar { display: none; }
@@ -2071,7 +2072,6 @@ textarea:focus-visible {
   font-weight: 600;
   line-height: 1.3;
   white-space: nowrap;
-  scroll-snap-align: start;
   border-radius: 0;
 }
 
@@ -2820,7 +2820,13 @@ a.work-box:hover {
 
 .hcm-trust > div:first-of-type h3 { margin-top: 8px; }
 
-.tso-anchor { scroll-margin-top: calc(var(--header-height) + 88px); }
+.work-page { --subnav-height: 60px; }
+.work-page.has-tso-inner-nav { --subnav-height: 104px; }
+
+.tso-anchor,
+.tso-page-overview {
+  scroll-margin-top: calc(var(--header-height) + var(--subnav-height, 60px) + 8px);
+}
 
 .tso-split {
   display: grid;
@@ -2919,7 +2925,7 @@ a.work-box:hover {
 }
 
 .tso-sub-lead {
-  margin: 0 0 8px;
+  margin: 0 0 32px;
   padding-left: 24px;
   border-left: 2px solid var(--blue-bright);
 }
@@ -2937,7 +2943,7 @@ a.work-box:hover {
 .tso-sub-lead p,
 .tso-note p,
 .tso-sub .hcm-prose p {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
   max-width: none;
   color: var(--muted);
   font-size: 16px;
@@ -3015,9 +3021,13 @@ a.work-box:hover {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
   margin: 8px 0 0;
   padding: 0;
+}
+
+.tso-sub-lead + .tso-cards {
+  margin-top: 0;
 }
 
 .tso-offers { margin-top: 56px; }
@@ -3126,7 +3136,7 @@ a.work-box:hover {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 
 .tso-swipe-head h2,

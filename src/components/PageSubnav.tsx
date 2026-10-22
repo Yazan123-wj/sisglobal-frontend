@@ -121,3 +121,40 @@ export default function PageSubnav({
     </nav>
   )
 }
+
+export function PageSubnavPills({
+  items,
+  label,
+  activeId,
+  onSelect,
+}: {
+  items: PageSectionLink[]
+  label: string
+  activeId: string
+  onSelect: (id: string) => void
+}) {
+  const rowRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const row = rowRef.current
+    const active = row?.querySelector<HTMLElement>('.is-active')
+    if (!row || !active) return
+    const start = items[0]?.id === activeId
+    row.scrollTo({ left: start ? 0 : Math.max(0, active.offsetLeft - 16), behavior: start ? 'auto' : 'smooth' })
+  }, [activeId, items])
+
+  return (
+    <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
+      {items.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          className={cn(item.id === activeId && 'is-active')}
+          onClick={() => onSelect(item.id)}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  )
+}
