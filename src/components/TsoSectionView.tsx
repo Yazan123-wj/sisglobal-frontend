@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import iso14001 from '@/assets/certs/iso-14001.png'
@@ -81,6 +81,65 @@ function ContactLink({ label }: { label: string }) {
     <Link className="text-link" to="/#contact">
       {label} <Arrow />
     </Link>
+  )
+}
+
+const workTitles = [
+  'Site survey and readiness verification',
+  'Installation to vendor specification',
+  'Commissioning and configuration',
+  'Integration and verification',
+]
+
+function splitWork(paragraphs: string[]) {
+  const lead: string[] = []
+  const items: { title: string; copy: string }[] = []
+
+  for (const paragraph of paragraphs) {
+    const title = workTitles.find((item) => paragraph.toLowerCase().startsWith(item.toLowerCase()))
+    if (title) items.push({ title, copy: paragraph.slice(title.length).trim() })
+    else lead.push(paragraph)
+  }
+
+  return { lead, items }
+}
+
+function WorkFaq({ title, paragraphs, heading = 'h3' }: { title: string; paragraphs: string[]; heading?: 'h2' | 'h3' }) {
+  const { lead, items } = splitWork(paragraphs)
+  const [open, setOpen] = useState<number | null>(0)
+  const Heading = heading
+
+  return (
+    <div className="tso-note">
+      <Heading>{title}</Heading>
+      {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      <div className="tso-faq difference-faq">
+        {items.map((item, index) => {
+          const expanded = open === index
+          return (
+            <article key={item.title} className={expanded ? 'is-open' : undefined}>
+              <button
+                type="button"
+                aria-expanded={expanded}
+                onClick={() => setOpen(expanded ? null : index)}
+              >
+                <span className="difference-num">{String(index + 1).padStart(2, '0')}</span>
+                <span className="difference-faq-title">{item.title}</span>
+                <span className="difference-faq-plus" aria-hidden="true">
+                  <span />
+                  <span />
+                </span>
+              </button>
+              <div className="difference-faq-body">
+                <div>
+                  <p>{item.copy}</p>
+                </div>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -287,10 +346,14 @@ function BlockView({
 
   return (
     <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
-      <div className="tso-note">
-        <h2>{block.title}</h2>
-        {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-      </div>
+      {block.title === 'How We Work' && block.paragraphs?.length ? (
+        <WorkFaq title={block.title} paragraphs={block.paragraphs} heading="h2" />
+      ) : (
+        <div className="tso-note">
+          <h2>{block.title}</h2>
+          {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      )}
     </section>
   )
 }
@@ -310,7 +373,6 @@ function CtaBand({ block }: { block: CtaBlock }) {
 function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) {
   const cta = group.parts.find((part): part is CtaBlock => part.type === 'cta')
   const parts = group.parts.filter((part) => part.type !== 'cta')
-  let picturedList = false
 
   return (
     <section id={group.lead.id} className="work-block tso-service tso-anchor">
@@ -326,8 +388,6 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
       </div>
       {parts.map((part) => {
         if (!isSection(part)) return null
-        const showPhotos = Boolean(part.items) && !picturedList
-        if (showPhotos) picturedList = true
         return (
           <div key={part.title} className="tso-sub">
             {part.items ? (
@@ -335,8 +395,10 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
                 title={part.title}
                 lead={part.paragraphs}
                 items={part.items}
-                withPhoto={showPhotos}
+                withPhoto
               />
+            ) : part.title === 'How We Work' && part.paragraphs?.length ? (
+              <WorkFaq title={part.title} paragraphs={part.paragraphs} />
             ) : (
               <div className="tso-note">
                 <h3>{part.title}</h3>

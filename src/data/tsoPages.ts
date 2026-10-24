@@ -379,13 +379,7 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
           { title: 'Cabling & Passive Infrastructure', copy: 'Installation of coaxial cabling, splitters, couplers, antennas and passive components required by the coverage solution.' },
           { title: 'Configuration & Integration', copy: 'Configuration and integration of deployed equipment to solution and network requirements.' },
           { title: 'Coverage Testing & Verification', copy: 'Walk testing and signal verification across floors, stairwells and basement levels to confirm coverage performance before handover.' },
-        ],
-      },
-      {
-        type: 'section',
-        title: 'CEL-FI Deployment',
-        paragraphs: [
-          'Idarat TSO works with Nextivity CEL-FI technology to address in-building mobile coverage requirements through professionally deployed cellular coverage solutions matching system type to building requirement rather than defaulting to a single approach.',
+          { title: 'CEL-FI Deployment', copy: 'Idarat TSO works with Nextivity CEL-FI technology to address in-building mobile coverage requirements through professionally deployed cellular coverage solutions matching system type to building requirement rather than defaulting to a single approach.' },
         ],
       },
       {

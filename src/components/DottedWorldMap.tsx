@@ -13,6 +13,14 @@ const HIT_R = 46
 
 const officeCountries = regionMap.countries.filter((country) => country.id)
 
+function pathMaxY(d: string) {
+  const values = d.match(/-?\d*\.?\d+/g)?.map(Number) ?? []
+  return Math.max(...values.filter((_, index) => index % 2 === 1), 0)
+}
+
+const tanzaniaSouth = pathMaxY(officeCountries.find((country) => country.id === 'tanzania')?.d ?? '')
+const southFadeY = Math.min(regionMap.height - 8, tanzaniaSouth + 8)
+
 const dots = {
   lightMode: true as const,
   pattern: 'grid' as const,
@@ -102,12 +110,28 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
               <stop offset="55%" stopColor="#0B234A" stopOpacity="0.08" />
               <stop offset="100%" stopColor="#0B234A" stopOpacity="0" />
             </radialGradient>
-            <radialGradient id={`${rawId}-side-fade`} cx="38%" cy="36%" r="78%">
-              <stop offset="42%" stopColor="#f7f8fa" stopOpacity="0" />
-              <stop offset="66%" stopColor="#f7f8fa" stopOpacity="0.4" />
-              <stop offset="86%" stopColor="#f7f8fa" stopOpacity="0.85" />
+            <linearGradient
+              id={`${rawId}-top-fade`}
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2={regionMap.height * 0.12}
+            >
+              <stop offset="0%" stopColor="#f7f8fa" stopOpacity="1" />
+              <stop offset="100%" stopColor="#f7f8fa" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id={`${rawId}-south-fade`}
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              y1={southFadeY}
+              x2="0"
+              y2={regionMap.height}
+            >
+              <stop offset="0%" stopColor="#f7f8fa" stopOpacity="0" />
               <stop offset="100%" stopColor="#f7f8fa" stopOpacity="1" />
-            </radialGradient>
+            </linearGradient>
           </defs>
 
           <rect width={regionMap.width} height={regionMap.height} fill="#f7f8fa" />
@@ -161,10 +185,18 @@ export default function DottedWorldMap({ activeId, onActivate }: DottedWorldMapP
           </foreignObject>
 
           <rect
-            className="map-side-fade"
+            className="map-edge-fade"
             width={regionMap.width}
-            height={regionMap.height}
-            fill={`url(#${rawId}-side-fade)`}
+            height={regionMap.height * 0.12}
+            fill={`url(#${rawId}-top-fade)`}
+            pointerEvents="none"
+          />
+          <rect
+            className="map-edge-fade"
+            y={southFadeY}
+            width={regionMap.width}
+            height={regionMap.height - southFadeY}
+            fill={`url(#${rawId}-south-fade)`}
             pointerEvents="none"
           />
 

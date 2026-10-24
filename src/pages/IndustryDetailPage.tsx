@@ -72,12 +72,12 @@ function ItemLinks({ links }: { links: IndustryItem['links'] }) {
   )
 }
 
-function SupportPanel({ group }: { group: IndustrySupport }) {
+function SupportPanel({ group, paper = false }: { group: IndustrySupport; paper?: boolean }) {
   const unit = unitFromTitle(group.title)
   const logo = unit ? brandLogos[unit] : null
 
   return (
-    <section className={unit === 'ict' ? 'industry-support-panel is-paper' : 'industry-support-panel'}>
+    <section className={paper ? 'industry-support-panel is-paper' : 'industry-support-panel'}>
       <header className="industry-support-head">
         <h3>{group.title}</h3>
         {logo ? <img src={logo.src} alt="" /> : null}
@@ -178,8 +178,8 @@ export default function IndustryDetailPage() {
             <p className="about-panel-label">How we help</p>
             <h2>{page.supportTitle}</h2>
           </div>
-          {page.support.map((group) => (
-            <SupportPanel key={group.title} group={group} />
+          {page.support.map((group, index) => (
+            <SupportPanel key={group.title} group={group} paper={index === 1} />
           ))}
           {page.notes?.map((note) => (
             <article key={note.title} className="industry-note">

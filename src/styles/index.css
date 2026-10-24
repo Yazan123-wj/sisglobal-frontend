@@ -1374,18 +1374,13 @@ textarea:focus-visible {
 
 .presence-map-col .map-frame,
 .about-map-panel .map-frame {
-  -webkit-mask-image: radial-gradient(ellipse 90% 86% at 38% 38%, #000 56%, transparent 100%);
-  mask-image: radial-gradient(ellipse 90% 86% at 38% 38%, #000 56%, transparent 100%);
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .presence-map-col::after,
 .about-map-panel .dotted-world-map::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse 88% 84% at 38% 38%, transparent 52%, rgba(247, 248, 250, 0.5) 76%, #f7f8fa 96%);
-  z-index: 1;
+  content: none;
 }
 
 .presence-map-col .dotted-world-map {
@@ -2949,6 +2944,15 @@ a.work-box:hover {
 .tso-sub-lead p:last-child,
 .tso-note p:last-child,
 .tso-sub .hcm-prose p:last-child { margin-bottom: 0; }
+
+.tso-faq {
+  margin-top: 8px;
+}
+
+.tso-note .tso-faq p {
+  margin: 0;
+  max-width: none;
+}
 
 .tso-close {
   display: flex;
