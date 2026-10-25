@@ -96,20 +96,24 @@ export default function PageSubnav({
               key={item.id}
               type="button"
               className={cn(item.id === currentId && 'is-active')}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
-                if (onSelect) {
-                  onSelect(item.id)
-                  return
-                }
-                const target = document.getElementById(item.id)
-                if (!target) return
-                lockId.current = item.id
-                setObservedId(item.id)
-                window.clearTimeout(lockTimer.current)
-                target.scrollIntoView({ block: 'start' })
-                lockTimer.current = window.setTimeout(() => {
-                  lockId.current = null
-                }, 900)
+                const row = navRef.current?.querySelector<HTMLElement>('.page-subnav-inner')
+                keepRowScroll(row ?? null, () => {
+                  if (onSelect) {
+                    onSelect(item.id)
+                    return
+                  }
+                  const target = document.getElementById(item.id)
+                  if (!target) return
+                  lockId.current = item.id
+                  setObservedId(item.id)
+                  window.clearTimeout(lockTimer.current)
+                  target.scrollIntoView({ block: 'start' })
+                  lockTimer.current = window.setTimeout(() => {
+                    lockId.current = null
+                  }, 900)
+                })
               }}
             >
               {item.label}
@@ -120,6 +124,16 @@ export default function PageSubnav({
       </div>
     </nav>
   )
+}
+
+function keepRowScroll(row: HTMLElement | null, run: () => void) {
+  const left = row?.scrollLeft ?? 0
+  run()
+  if (!row) return
+  row.scrollLeft = left
+  requestAnimationFrame(() => {
+    row.scrollLeft = left
+  })
 }
 
 export function PageSubnavPills({
@@ -135,14 +149,6 @@ export function PageSubnavPills({
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const row = rowRef.current
-    const active = row?.querySelector<HTMLElement>('.is-active')
-    if (!row || !active) return
-    const start = items[0]?.id === activeId
-    row.scrollTo({ left: start ? 0 : Math.max(0, active.offsetLeft - 16), behavior: start ? 'auto' : 'smooth' })
-  }, [activeId, items])
-
   return (
     <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
       {items.map((item) => (
@@ -150,7 +156,8 @@ export function PageSubnavPills({
           key={item.id}
           type="button"
           className={cn(item.id === activeId && 'is-active')}
-          onClick={() => onSelect(item.id)}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => keepRowScroll(rowRef.current, () => onSelect(item.id))}
         >
           {item.label}
         </button>

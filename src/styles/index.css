@@ -1986,6 +1986,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 28px;
   overflow-x: auto;
+  overflow-anchor: none;
   scrollbar-width: none;
 }
 
@@ -2044,6 +2045,7 @@ textarea:focus-visible {
   padding: 8px 0 12px;
   border-top: 1px solid var(--line);
   overflow-x: auto;
+  overflow-anchor: none;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
