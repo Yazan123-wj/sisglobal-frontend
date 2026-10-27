@@ -11,7 +11,7 @@
   --paper: #ffffff;
   --mist: #e7eef6;
   --text: #092046;
-  --muted: #5a6b82;
+  --muted: var(--navy);
   --line: #d4e0ec;
   --accent: #1a6ec4;
   --accent-soft: #7eb6e0;
@@ -21,6 +21,7 @@
   --gold: var(--blue-bright);
   --gold-light: var(--accent-soft);
   --content-width: 1180px;
+  --page-pad: 32px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;

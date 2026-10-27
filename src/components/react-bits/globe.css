@@ -1,0 +1,41 @@
+.react-bits-globe {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.react-bits-globe canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: grab;
+}
+
+.react-bits-globe canvas:active {
+  cursor: grabbing;
+}
+
+.globe-pin {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--blue-bright);
+  box-shadow: 0 0 0 5px rgba(26, 110, 196, 0.1);
+  transform: translate(-50%, -50%);
+}
+
+.globe-pin.is-hq {
+  width: 15px;
+  height: 15px;
+  background: var(--navy);
+  box-shadow: 0 0 0 6px rgba(9, 32, 70, 0.1);
+}
+
+.globe-pin.is-active {
+  background: var(--navy);
+  box-shadow: 0 0 0 7px rgba(26, 110, 196, 0.14);
+}

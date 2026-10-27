@@ -376,16 +376,13 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
 
   return (
     <section id={group.lead.id} className="work-block tso-service tso-anchor">
-      <div className="tso-lead">
-        <PhotoMedia id={group.lead.id || group.lead.title} />
-        <header className="tso-service-head">
+      <header className="tso-service-head">
+        <div className="tso-service-title">
           <span>{String(group.index).padStart(2, '0')}</span>
-          <div>
-            <h2>{group.lead.title}</h2>
-            {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
-          </div>
-        </header>
-      </div>
+          <h2>{group.lead.title}</h2>
+        </div>
+        {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
+      </header>
       {parts.map((part) => {
         if (!isSection(part)) return null
         return (
