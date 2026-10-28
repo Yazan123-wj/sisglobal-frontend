@@ -1,8 +1,10 @@
+import { useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import type { FeatureCollection, Geometry, Position } from 'geojson'
 
 import sisCountries from '@/data/sisCountries.json'
 import worldCountries from '@/data/worldCountries.json'
-import { globalLocations } from '@/data/locations'
+import { globalLocations, headquarters } from '@/data/locations'
 
 type CountryProps = { id: string; name: string }
 
@@ -13,12 +15,27 @@ const EAST = 178
 const SOUTH = -48
 const NORTH = 76
 const PAD = 12
+const MIN_ZOOM = 1
+const ZOOM_FACTOR = 1.45
+
+const labelOffset: Record<string, { dx: number; dy: number; short?: string }> = {
+  'united-kingdom': { dx: 14, dy: -8 },
+  'saudi-arabia': { dx: 18, dy: 6 },
+  egypt: { dx: -14, dy: 16 },
+  'united-arab-emirates': { dx: 16, dy: 14, short: 'UAE' },
+  palestine: { dx: -58, dy: -6 },
+  jordan: { dx: 14, dy: 12 },
+  tanzania: { dx: 14, dy: 6 },
+  syria: { dx: 14, dy: -12 },
+}
 
 function project(lon: number, lat: number): [number, number] {
   const x = PAD + ((lon - WEST) / (EAST - WEST)) * (VIEW_W - PAD * 2)
   const y = PAD + ((NORTH - lat) / (NORTH - SOUTH)) * (VIEW_H - PAD * 2)
   return [x, y]
 }
+
+const [HQ_X, HQ_Y] = project(headquarters.lng, headquarters.lat)
 
 function inView(lon: number, lat: number) {
   return lon >= WEST - 4 && lon <= EAST + 4 && lat >= SOUTH - 4 && lat <= NORTH + 4
@@ -47,6 +64,19 @@ function geometryPath(geometry: Geometry) {
   return ''
 }
 
+function clampPan(x: number, y: number, zoom: number) {
+  const maxX = Math.max(HQ_X, VIEW_W - HQ_X) * (zoom - 1)
+  const maxY = Math.max(HQ_Y, VIEW_H - HQ_Y) * (zoom - 1)
+  return {
+    x: Math.max(-maxX, Math.min(maxX, x)),
+    y: Math.max(-maxY, Math.min(maxY, y)),
+  }
+}
+
+function mapped(x: number, y: number, zoom: number, panX: number, panY: number): [number, number] {
+  return [HQ_X + (x - HQ_X) * zoom + panX, HQ_Y + (y - HQ_Y) * zoom + panY]
+}
+
 const worldPaths = (worldCountries as FeatureCollection<Geometry>).features
   .map((feature) => geometryPath(feature.geometry))
   .filter(Boolean)
@@ -65,53 +95,150 @@ type RegionPresenceMapProps = {
 }
 
 export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActivate }: RegionPresenceMapProps) {
+  const svgRef = useRef<SVGSVGElement>(null)
+  const drag = useRef<{ id: number; x: number; y: number; panX: number; panY: number; moved: boolean } | null>(null)
+  const skipClick = useRef(false)
+  const [zoom, setZoom] = useState(MIN_ZOOM)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [grabbing, setGrabbing] = useState(false)
+  const canPan = zoom > MIN_ZOOM
+
+  const viewPoint = (event: ReactPointerEvent) => {
+    const svg = svgRef.current
+    if (!svg) return { x: 0, y: 0 }
+    const rect = svg.getBoundingClientRect()
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * VIEW_W,
+      y: ((event.clientY - rect.top) / rect.height) * VIEW_H,
+    }
+  }
+
+  const zoomTo = (next: number) => {
+    const value = Math.max(MIN_ZOOM, next)
+    setZoom(value)
+    setPan(value <= MIN_ZOOM ? { x: 0, y: 0 } : clampPan(pan.x, pan.y, value))
+  }
+
+  const onPointerDown = (event: ReactPointerEvent<SVGSVGElement>) => {
+    if (!canPan || event.button !== 0) return
+    const point = viewPoint(event)
+    drag.current = { id: event.pointerId, x: point.x, y: point.y, panX: pan.x, panY: pan.y, moved: false }
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const onPointerMove = (event: ReactPointerEvent<SVGSVGElement>) => {
+    const current = drag.current
+    if (!current || current.id !== event.pointerId) return
+    const point = viewPoint(event)
+    const dx = point.x - current.x
+    const dy = point.y - current.y
+    if (!current.moved && dx * dx + dy * dy > 16) {
+      current.moved = true
+      setGrabbing(true)
+    }
+    if (current.moved) setPan(clampPan(current.panX + dx, current.panY + dy, zoom))
+  }
+
+  const onPointerUp = (event: ReactPointerEvent<SVGSVGElement>) => {
+    const current = drag.current
+    if (!current || current.id !== event.pointerId) return
+    skipClick.current = current.moved
+    drag.current = null
+    setGrabbing(false)
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+  }
+
+  const activate = (id: string) => {
+    if (skipClick.current) {
+      skipClick.current = false
+      return
+    }
+    onActivate(id)
+  }
+
   return (
-    <div className="region-presence-map" onPointerLeave={onLeave}>
+    <div
+      className={`region-presence-map${grabbing ? ' is-grabbing' : ''}${canPan ? ' is-pannable' : ''}`}
+      onPointerLeave={() => { if (!drag.current) onLeave() }}
+    >
       <svg
+        ref={svgRef}
         className="presence-world"
         viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
         role="img"
         aria-label="SIS Global countries across Europe, the Middle East, and Africa"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
       >
-        <g className="presence-world-land">
-          {worldPaths.map((d, index) => (
-            <path key={index} d={d} fillRule="evenodd" />
-          ))}
-        </g>
-        <g className="presence-world-hits">
-          {sisPaths.map((country) => (
-            <path
-              key={country.id}
-              d={country.d}
-              fillRule="evenodd"
-              className={country.id === hoveredId ? 'is-active' : undefined}
-              aria-label={country.name}
-              onPointerEnter={() => onHover(country.id)}
-              onFocus={() => onHover(country.id)}
-              onClick={() => onActivate(country.id)}
-            />
-          ))}
+        <g transform={`translate(${HQ_X + pan.x} ${HQ_Y + pan.y}) scale(${zoom}) translate(${-HQ_X} ${-HQ_Y})`}>
+          <g className="presence-world-land">
+            {worldPaths.map((d, index) => (
+              <path key={index} d={d} fillRule="evenodd" />
+            ))}
+          </g>
+          <g className="presence-world-hits">
+            {sisPaths.map((country) => (
+              <path
+                key={country.id}
+                d={country.d}
+                fillRule="evenodd"
+                className={country.id === hoveredId ? 'is-active' : undefined}
+                aria-label={country.name}
+                onPointerEnter={() => onHover(country.id)}
+                onFocus={() => onHover(country.id)}
+                onClick={() => activate(country.id)}
+              />
+            ))}
+          </g>
         </g>
         <g className="presence-pins">
           {globalLocations.map((location) => {
             const [x, y] = project(location.lng, location.lat)
+            const [mx, my] = mapped(x, y, zoom, pan.x, pan.y)
             const active = location.id === hoveredId
+            const hq = Boolean(location.headquarters)
+            const offset = labelOffset[location.id]
+            const label = offset?.short ?? location.country
             return (
               <g
                 key={location.id}
-                className={active ? 'presence-pin is-active' : 'presence-pin'}
-                transform={`translate(${x.toFixed(1)} ${y.toFixed(1)})`}
+                className={`presence-pin${active ? ' is-active' : ''}${hq ? ' is-hq' : ''}`}
+                transform={`translate(${mx.toFixed(1)} ${my.toFixed(1)})`}
                 onPointerEnter={() => onHover(location.id)}
-                onClick={() => onActivate(location.id)}
+                onClick={() => activate(location.id)}
               >
-                <circle className="presence-pin-ring presence-pin-ring-outer" r={location.headquarters ? 26 : 22} />
-                <circle className="presence-pin-ring presence-pin-ring-mid" r={location.headquarters ? 16 : 13} />
-                <circle className="presence-pin-core" r={location.headquarters ? 8 : 6.5} />
+                <circle className="presence-pin-ring presence-pin-ring-outer" r={hq ? 28 : 22} />
+                <circle className="presence-pin-ring presence-pin-ring-mid" r={hq ? 17 : 13} />
+                <circle className="presence-pin-core" r={hq ? 8.5 : 6.5} />
+                {hq ? (
+                  <g className="presence-hq-badge" transform="translate(18 -22)">
+                    <rect x={0} y={-9} width={34} height={18} rx={3} />
+                    <text x={17} y={0} textAnchor="middle" dominantBaseline="middle">HQ</text>
+                  </g>
+                ) : null}
+                {offset ? (
+                  <text
+                    className="presence-country-label"
+                    x={offset.dx}
+                    y={offset.dy}
+                    textAnchor={offset.dx < 0 ? 'end' : 'start'}
+                  >
+                    {label}
+                  </text>
+                ) : null}
               </g>
             )
           })}
         </g>
       </svg>
+      <div className="presence-map-zoom" role="group" aria-label="Map zoom">
+        <button type="button" aria-label="Zoom in" onClick={() => zoomTo(zoom * ZOOM_FACTOR)}>+</button>
+        <button type="button" aria-label="Zoom out" onClick={() => zoomTo(zoom / ZOOM_FACTOR)} disabled={zoom <= MIN_ZOOM}>−</button>
+      </div>
     </div>
   )
 }

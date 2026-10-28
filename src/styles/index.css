@@ -1264,8 +1264,8 @@ textarea:focus-visible {
   background: #d5e4f0;
 }
 
-.case-section .case-art {
-  height: 108px;
+.case-section .case-card:not(.is-featured) .case-art {
+  height: 200px;
 }
 
 .case-card.is-featured .case-art-wrap {
@@ -1611,8 +1611,22 @@ textarea:focus-visible {
   aspect-ratio: 1000 / 740;
   height: auto;
   min-height: 0;
-  overflow: visible;
+  overflow: hidden;
   background: transparent;
+}
+
+.region-presence-map.is-pannable .presence-world {
+  cursor: grab;
+}
+
+.region-presence-map.is-grabbing {
+  user-select: none;
+}
+
+.region-presence-map.is-grabbing .presence-world,
+.region-presence-map.is-grabbing .presence-world-hits path,
+.region-presence-map.is-grabbing .presence-pin {
+  cursor: grabbing;
 }
 
 .presence-world {
@@ -1640,7 +1654,7 @@ textarea:focus-visible {
 }
 
 .presence-world-hits path.is-active {
-  fill: #1c1c1c;
+  fill: var(--navy);
 }
 
 .presence-pin {
@@ -1675,6 +1689,78 @@ textarea:focus-visible {
 
 .presence-pin.is-active .presence-pin-ring-outer {
   fill-opacity: .22;
+}
+
+.presence-pin.is-hq .presence-pin-core {
+  fill: var(--navy);
+}
+
+.presence-pin.is-hq.is-active .presence-pin-core {
+  fill: var(--navy-deep);
+}
+
+.presence-country-label {
+  fill: var(--navy);
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  paint-order: stroke fill;
+  stroke: #fff;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.presence-hq-badge {
+  pointer-events: none;
+}
+
+.presence-hq-badge rect {
+  fill: var(--navy);
+}
+
+.presence-hq-badge text {
+  fill: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.presence-map-zoom {
+  position: absolute;
+  left: 0;
+  bottom: 8px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.presence-map-zoom button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--navy);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(9, 32, 70, .08);
+}
+
+.presence-map-zoom button:hover:not(:disabled),
+.presence-map-zoom button:focus-visible {
+  border-color: var(--navy);
+  background: var(--ice);
+}
+
+.presence-map-zoom button:disabled {
+  opacity: .38;
+  cursor: default;
 }
 
 .map-hit,
@@ -6099,7 +6185,7 @@ a.about-card:hover { border-color: var(--navy); }
   }
 
   .about-do {
-    margin-top: 0;
+    margin-top: var(--space-group);
     padding-top: var(--space-group);
   }
 

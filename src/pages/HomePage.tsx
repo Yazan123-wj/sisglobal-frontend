@@ -60,7 +60,7 @@ const services: Record<ServiceKey, { label: string; eyebrow: string; title: stri
 
 function PartnerStrip() {
   return (
-    <div className="trusted-logos-block">
+    <div className="trusted-logos-block home-logo-strip">
       <h2 className="logo-strip-label">Established Technology Partners</h2>
       <LogoMarquee items={techPartners} />
     </div>
