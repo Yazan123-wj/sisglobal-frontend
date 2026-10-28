@@ -27,8 +27,8 @@ import { clients } from '@/data/clients'
 
 const aboutSections = [
   { id: 'about-who', label: 'About SIS Global' },
-  { id: 'about-story', label: 'Our Story' },
   { id: 'about-mission', label: 'Vision & Mission' },
+  { id: 'about-story', label: 'Our Story' },
   { id: 'about-values', label: 'Our Values' },
   { id: 'about-difference', label: 'What Makes Us Different' },
   { id: 'about-ceo', label: 'CEO Message' },
@@ -74,12 +74,6 @@ export default function AboutPage() {
         <StatisticsBar items={aboutGlance} label="SIS Global at a Glance" />
       </section>
 
-      <section id="about-story" className="about-story-section">
-        <div className="container">
-          <StoryDial items={aboutStory} />
-        </div>
-      </section>
-
       <section id="about-mission" className="about-section section">
         <div className="container">
           <h2>Our Vision & Mission</h2>
@@ -93,6 +87,12 @@ export default function AboutPage() {
               <p>{aboutMission}</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section id="about-story" className="about-story-section">
+        <div className="container">
+          <StoryDial items={aboutStory} />
         </div>
       </section>
 

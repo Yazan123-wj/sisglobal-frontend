@@ -320,7 +320,7 @@ function BlockView({
     return (
       <section className="work-block">
         <h2>{block.title}</h2>
-        <WhyBoxes items={block.why} />
+        <WhyBoxes items={block.title === 'Why Idarat TSO' ? block.why.slice(0, 2) : block.why} />
       </section>
     )
   }
@@ -374,7 +374,6 @@ function CtaBand({ block }: { block: CtaBlock }) {
     <section className="hcm-callout tso-callout">
       <div>
         {block.title ? <h2>{block.title}</h2> : null}
-        {block.copy ? <p>{block.copy}</p> : null}
       </div>
       <ContactLink label={block.label} />
     </section>
@@ -501,6 +500,7 @@ export default function TsoSectionView({
     <div className={`hcm-section is-${section.id}`}>
       {showOverview
         ? intro.map((group, index) => {
+            if (group.kind === 'offers') return null
             if (group.kind === 'block' && group.block.type === 'stats') {
               return (
                 <StatisticsBar

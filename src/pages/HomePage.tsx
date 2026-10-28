@@ -99,7 +99,7 @@ export default function HomePage() {
       </section>
       <section id="about" className="trust-section section"><div className="container">
         <div className="trusted-logos-block home-logo-strip">
-          <h2 className="logo-strip-label">Trusted By</h2>
+          <h2 className="logo-strip-label">Trusted by Leading Organizations</h2>
           <LogoMarquee items={clients} />
         </div>
         <div className="about-do">

@@ -741,10 +741,6 @@ textarea:focus-visible {
   cursor: pointer;
 }
 
-.service-hcm { background: var(--navy-mid); }
-.service-tso { background: #0a3d6e; }
-.service-ict { background: var(--blue); }
-
 .service-card img {
   position: absolute;
   inset: 0;
@@ -3328,8 +3324,7 @@ a.work-box:hover {
 }
 
 .tso-callout {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 0;
 }
 
 .hcm-callout h2 {
@@ -5854,6 +5849,19 @@ a.about-card:hover { border-color: var(--navy); }
     padding-top: calc(var(--space-section-gap) / 2);
   }
 
+  .surface-band:has(+ .surface-navy) {
+    padding-bottom: var(--space-section);
+  }
+
+  .surface-band.surface-navy {
+    padding-top: var(--space-section);
+  }
+
+  .work-block,
+  .surface-band {
+    scroll-margin-top: calc(var(--header-height) + var(--subnav-height, 60px) + var(--space-after-subnav));
+  }
+
   .surface-band > .container > .work-block:first-child,
   .surface-band > .container > .hcm-prose:first-child,
   .surface-band > .container > .tso-service:first-child,
@@ -5919,8 +5927,7 @@ a.about-card:hover { border-color: var(--navy); }
   }
 
   .home-split {
-    margin-top: var(--space-section);
-    margin-bottom: 0;
+    margin-block: var(--space-section);
   }
 
   .about-section > .metrics-section {
