@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
-import DottedWorldMap from '@/components/DottedWorldMap'
+import RegionPresenceMap from '@/components/RegionPresenceMap'
 import { globalLocations } from '@/data/locations'
 import { cn } from '@/lib/cn'
 
@@ -15,13 +15,31 @@ export default function GlobalPresenceSection({
   lead?: string
 }) {
   const [activeId, setActiveId] = useState(globalLocations[1]?.id ?? globalLocations[0].id)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const hoverTimer = useRef<number>(0)
   const active = globalLocations.find((location) => location.id === activeId) ?? globalLocations[0]
+
+  const hover = (id: string) => {
+    window.clearTimeout(hoverTimer.current)
+    setHoveredId(id)
+    setActiveId(id)
+  }
+
+  const leave = () => {
+    window.clearTimeout(hoverTimer.current)
+    hoverTimer.current = window.setTimeout(() => setHoveredId(null), 60)
+  }
 
   return (
     <section id={sectionId} className="presence-section" aria-labelledby="global-presence-heading">
       <div className="presence-shell">
         <div className="presence-map-col">
-          <DottedWorldMap activeId={activeId} onActivate={setActiveId} />
+          <RegionPresenceMap
+            hoveredId={hoveredId}
+            onHover={hover}
+            onLeave={leave}
+            onActivate={setActiveId}
+          />
         </div>
 
         <div className="presence-copy">
@@ -29,17 +47,21 @@ export default function GlobalPresenceSection({
           <h2 id="global-presence-heading">{heading ?? <>Local expertise.<br /><em>International reach.</em></>}</h2>
           {lead ? <p className="presence-lead-copy">{lead}</p> : null}
 
-          <ul className="map-country-list" aria-label="SIS Global operating locations">
+          <ul
+            className="map-country-list"
+            aria-label="SIS Global operating locations"
+            onPointerLeave={leave}
+          >
             {globalLocations.map((location) => {
-              const selected = location.id === activeId
+              const selected = location.id === (hoveredId ?? activeId)
               return (
                 <li key={location.id}>
                   <button
                     type="button"
-                    onPointerEnter={() => setActiveId(location.id)}
-                    onFocus={() => setActiveId(location.id)}
+                    onPointerEnter={() => hover(location.id)}
+                    onFocus={() => hover(location.id)}
                     onClick={() => setActiveId(location.id)}
-                    aria-pressed={selected}
+                    aria-pressed={location.id === activeId}
                     className={cn('map-country', selected && 'is-active')}
                   >
                     {location.country}

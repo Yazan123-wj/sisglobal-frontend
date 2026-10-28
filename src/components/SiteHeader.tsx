@@ -155,7 +155,7 @@ export default function SiteHeader() {
         <NavLink to="/vacancies" className={careerCurrent ? 'is-current' : undefined} onClick={closeMenus}>
           Career
         </NavLink>
-        <button className="nav-cta" type="button" onClick={() => go('/#contact')}>
+        <button className="button button-primary" type="button" onClick={() => go('/#contact')}>
           Contact Us <Arrow />
         </button>
       </nav>

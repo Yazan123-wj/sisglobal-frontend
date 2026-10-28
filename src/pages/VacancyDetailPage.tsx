@@ -25,7 +25,7 @@ export default function VacancyDetailPage() {
           <p className="vacancy-meta">{vacancy.unit} · {vacancy.type} · {vacancy.location}</p>
           <h1>{vacancy.title}</h1>
           <p>{vacancy.summary}</p>
-          <a className="button button-navy" href="#apply">Apply Now</a>
+          <a className="button button-primary" href="#apply">Apply Now</a>
         </div>
       </section>
 
@@ -50,7 +50,7 @@ export default function VacancyDetailPage() {
                 <span>✓</span>
                 <h3>Application received.</h3>
                 <p>Thank you. The SIS Global hiring team will review your application for {vacancy.title}.</p>
-                <button className="button button-outline" type="button" onClick={() => setSent(false)}>Submit another</button>
+                <button className="button button-secondary" type="button" onClick={() => setSent(false)}>Submit another</button>
               </div>
             ) : (
               <form onSubmit={submit}>
@@ -66,7 +66,7 @@ export default function VacancyDetailPage() {
                   <label className="wide">CV / resume *<input required type="file" name="cv" accept=".pdf,.doc,.docx" /></label>
                   <label className="wide">Message<textarea name="message" rows={4} placeholder="A short note about your experience" /></label>
                 </div>
-                <button className="button button-navy form-submit" type="submit">Submit application</button>
+                <button className="button button-primary form-submit" type="submit">Submit application</button>
               </form>
             )}
           </aside>

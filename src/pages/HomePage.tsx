@@ -91,7 +91,7 @@ export default function HomePage() {
           <div className="hero-copy">
             <h1 id="hero-title">{active.title}</h1>
             <div className="hero-actions">
-              <button className="button button-ghost" type="button" onClick={() => goTo('services')}>Explore our services <Arrow /></button>
+              <button className="button button-secondary" type="button" onClick={() => goTo('services')}>Explore our services <Arrow /></button>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function HomePage() {
                 <div className="service-card-copy">
                   <span className="service-card-label">{item.label}</span>
                   <h3>{item.title}</h3>
-                  <span className="service-card-cta">Explore <Arrow /></span>
+                  <span className="text-link">Explore <Arrow /></span>
                   <p>{item.copy}</p>
                 </div>
               </Link>
@@ -134,7 +134,7 @@ export default function HomePage() {
           <DifferenceSection />
           <div id="industries" className="industry-band">
             <div className="industry-band-copy">
-              <p>Expertise across industries</p>
+              <h2>Expertise across industries</h2>
               <Link className="text-link" to="/what-we-do/industries">
                 Explore Industries <Arrow />
               </Link>
@@ -175,7 +175,7 @@ export default function HomePage() {
               </Link>
             ) : null}
             {moreStories.map((story) => (
-              <Link key={story.id} className="case-card" to={`/insights/${story.id}`}>
+              <Link key={story.id} className="case-card" data-art={story.image} to={`/insights/${story.id}`}>
                 <div className="case-art-wrap" data-curtain>
                   <img className="case-art" src={storyImages[story.image]} alt="" />
                 </div>
@@ -202,7 +202,7 @@ export default function HomePage() {
             <p className="eyebrow light">Work with us</p>
             <h2>Build what’s next<br /><em>with us.</em></h2>
             <p>Find your next opportunity. Explore our open vacancies.</p>
-            <span className="button button-gold">Explore Vacancies <Arrow /></span>
+            <span className="button button-primary">Explore Vacancies <Arrow /></span>
           </div>
         </Link>
         <Link id="insights" className="home-split-pane" to="/insights">
@@ -211,11 +211,11 @@ export default function HomePage() {
             <p className="eyebrow light">News & Insights</p>
             <h2>News &amp;<br /><em>Insights.</em></h2>
             <p>Articles, news and success stories in one place.</p>
-            <span className="button button-gold">View All <Arrow /></span>
+            <span className="button button-primary">View All <Arrow /></span>
           </div>
         </Link>
       </section>
-      <section id="contact" className="contact-section section"><div className="container contact-wrap"><div className="contact-copy"><p className="eyebrow light">Get in touch</p><h2>Let’s put your<br /><em>plans into action.</em></h2><p>Tell us what your business needs and the right specialist will get back to you.</p></div><div className="form-card">{formSent ? <div className="success-state"><span>✓</span><h3>Thanks for getting in touch.</h3><p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p><button className="button button-outline" type="button" onClick={() => setFormSent(false)}>Send another enquiry <Arrow /></button></div> : <form onSubmit={submitForm}><div className="form-heading"><h3>How can we help?</h3><p>Fields marked with * are required.</p></div><div className="form-grid"><label>Name *<input required name="name" placeholder="Your full name" /></label><label>Business email *<input required type="email" name="email" placeholder="name@company.com" /></label><label>Company *<input required name="company" placeholder="Your company" /></label><label>Area of interest *<select required name="interest" defaultValue=""><option value="" disabled>Select a service</option><option>Human Capital Management</option><option>Technical Services & Operations</option><option>ICT Infrastructure</option><option>Multiple services</option><option>Not sure yet</option></select></label><label className="wide">Message<textarea name="message" placeholder="A few details about your enquiry" rows={4} /></label></div><button className="button button-gold form-submit" type="submit">Send Enquiry <Arrow /></button></form>}</div></div></section>
+      <section id="contact" className="contact-section section"><div className="container contact-wrap"><div className="contact-copy"><p className="eyebrow light">Get in touch</p><h2>Let’s put your<br /><em>plans into action.</em></h2><p>Tell us what your business needs and the right specialist will get back to you.</p></div><div className="form-card">{formSent ? <div className="success-state"><span>✓</span><h3>Thanks for getting in touch.</h3><p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p><button className="button button-secondary" type="button" onClick={() => setFormSent(false)}>Send another enquiry <Arrow /></button></div> : <form onSubmit={submitForm}><div className="form-heading"><h3>How can we help?</h3><p>Fields marked with * are required.</p></div><div className="form-grid"><label>Name *<input required name="name" placeholder="Your full name" /></label><label>Business email *<input required type="email" name="email" placeholder="name@company.com" /></label><label>Company *<input required name="company" placeholder="Your company" /></label><label>Area of interest *<select required name="interest" defaultValue=""><option value="" disabled>Select a service</option><option>Human Capital Management</option><option>Technical Services & Operations</option><option>ICT Infrastructure</option><option>Multiple services</option><option>Not sure yet</option></select></label><label className="wide">Message<textarea name="message" placeholder="A few details about your enquiry" rows={4} /></label></div><button className="button button-primary form-submit" type="submit">Send Enquiry <Arrow /></button></form>}</div></div></section>
     </main>
   )
 }

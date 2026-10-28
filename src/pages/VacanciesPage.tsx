@@ -73,7 +73,7 @@ export default function VacanciesPage() {
               ))}
             </select>
           </label>
-          <button className="button button-navy" type="submit">Search</button>
+          <button className="button button-primary" type="submit">Search</button>
         </div>
       </form>
 

@@ -32,11 +32,17 @@
   --space-12: 112px;
   --space-tight: var(--space-4); /* 16px — compact related items */
   --space-related: var(--space-6); /* 24px */
-  --space-heading: var(--space-8); /* 32px heading-to-content */
-  --space-section: 64px; /* major section padding, top and bottom */
-  --space-section-gap: var(--space-section); /* section-to-section / stacked band content gap */
-  --space-card: var(--space-related); /* 24px card and grid gaps */
-  --space-after-subnav: var(--space-section);
+  --space-eyebrow: var(--space-3); /* 12px — section label to heading */
+  --space-heading: var(--space-6); /* 24px — heading to supporting text */
+  --space-group: var(--space-8); /* 32px — related content groups in a section */
+  --space-section: 80px; /* major section padding, top and bottom */
+  --space-section-gap: 96px; /* reserved; desktop uses --space-section / --space-group */
+  --space-card: var(--space-related); /* 24px — gap between cards in a grid */
+  --space-card-pad: var(--space-8); /* 32px — card internal padding */
+  --space-card-title: var(--space-4); /* 16px — card title to description */
+  --space-card-cta: var(--space-6); /* 24px — card content to CTA/link */
+  --space-cta: 72px; /* CTA band top and bottom padding */
+  --space-after-subnav: 64px; /* in-page tab bar to first content block */
   --logo-mark-height: 36px;
   --surface-paper: #ffffff;
   --surface-mist: var(--ice);
@@ -50,6 +56,14 @@
   --radius-xs: 8px;
   --radius-sm: 8px;
   --radius-pill: 8px;
+  --btn-height: 48px;
+  --btn-pad-x: 22px;
+  --btn-radius: var(--radius-sm);
+  --btn-font-size: 15px;
+  --btn-font-weight: 700;
+  --btn-gap: 10px;
+  --btn-icon: 13px;
+  --btn-focus: 3px solid var(--sky);
   --shadow-button: 0 8px 18px rgba(9, 32, 70, .16);
   --shadow-card: 0 22px 45px rgba(9, 32, 70, .1);
   --transition: 180ms cubic-bezier(.2, .8, .2, 1);
@@ -65,3 +79,12 @@
   from { transform: scale(1.01) translate3d(0, 0, 0); }
   to { transform: scale(1.05) translate3d(-1.1%, -.6%, 0); }
 }
+
+.space-section { padding-block: var(--space-section); }
+.space-cta { padding-block: var(--space-cta); }
+.space-after-subnav { padding-top: var(--space-after-subnav); }
+.space-group { margin-top: var(--space-group); }
+.space-heading { margin-bottom: var(--space-heading); }
+.space-eyebrow { margin-bottom: var(--space-eyebrow); }
+.space-card-gap { gap: var(--space-card); }
+.space-card-pad { padding: var(--space-card-pad); }
