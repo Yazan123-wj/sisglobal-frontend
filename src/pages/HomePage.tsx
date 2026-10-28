@@ -61,7 +61,7 @@ const services: Record<ServiceKey, { label: string; eyebrow: string; title: stri
 function PartnerStrip() {
   return (
     <div className="trusted-logos-block">
-      <h2>Established technology partners</h2>
+      <h2 className="logo-strip-label">Established Technology Partners</h2>
       <LogoMarquee items={techPartners} />
     </div>
   )
@@ -98,8 +98,8 @@ export default function HomePage() {
         <div className="container service-switcher" role="tablist" aria-label="SIS Global business units">{(Object.keys(services) as ServiceKey[]).map((key, index) => { const service = services[key]; const selected = key === activeService; return <button key={key} type="button" role="tab" aria-selected={selected} className={selected ? 'active' : ''} onClick={() => setActiveService(key)}><span>0{index + 1}</span><b>{service.label}</b><small>{service.eyebrow}</small></button> })}</div>
       </section>
       <section id="about" className="trust-section section"><div className="container">
-        <div className="trusted-logos-block">
-          <h2>Trusted by Leading Organizations</h2>
+        <div className="trusted-logos-block home-logo-strip">
+          <h2 className="logo-strip-label">Trusted By</h2>
           <LogoMarquee items={clients} />
         </div>
         <div className="about-do">
@@ -119,11 +119,11 @@ export default function HomePage() {
               <Link key={item.key} className={`service-card service-${item.key}`} to={item.to}>
                 <img src={item.image} alt="" />
                 <div className="service-card-copy">
-                  <span>{item.label}</span>
+                  <span className="service-card-label">{item.label}</span>
                   <h3>{item.title}</h3>
+                  <span className="service-card-cta">Explore <Arrow /></span>
                   <p>{item.copy}</p>
                 </div>
-                <span className="service-card-arrow" aria-hidden="true"><Arrow /></span>
               </Link>
             ))}
           </div>

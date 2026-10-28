@@ -8,6 +8,8 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
 import PageSubnav, { PageSubnavPills } from '@/components/PageSubnav'
+import StatisticsBar from '@/components/StatisticsBar'
+import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import TsoSectionView from '@/components/TsoSectionView'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
 import { getTsoSection, tsoInnerNav, tsoNav } from '@/data/tsoPages'
@@ -79,43 +81,51 @@ function ServiceView({
   const isOverview = pillarId === 'overview'
   const pillar = service.pillars.find((item) => item.id === pillarId)
 
+  const surfaces = createSurfaceTones()
+
   if (!isOverview && pillar) {
     return (
       <div className="work-service">
         {pillar.approach ? (
-          <section className="work-block" style={{ marginTop: 0 }}>
-            <p className="about-panel-label">How we work</p>
-            <Steps items={pillar.approach} />
-          </section>
+          <SurfaceBand tone={surfaces.next()}>
+            <section className="work-block" style={{ marginTop: 0 }}>
+              <p className="about-panel-label">How we work</p>
+              <Steps items={pillar.approach} />
+            </section>
+          </SurfaceBand>
         ) : null}
         {pillar.items.length ? (
-          <section className="work-block" style={pillar.approach ? undefined : { marginTop: 0 }}>
-            <p className="about-panel-label">Services</p>
-            <ol className="hcm-stack">
-              {pillar.items.map((item, index) => (
-                <li key={item.title}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p>{item.copy}</p>
-                    {item.scope ? <p className="work-scope">{item.scope}</p> : null}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
+          <SurfaceBand tone={surfaces.next()}>
+            <section className="work-block" style={pillar.approach ? undefined : { marginTop: 0 }}>
+              <p className="about-panel-label">Services</p>
+              <ol className="hcm-stack">
+                {pillar.items.map((item, index) => (
+                  <li key={item.title}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.copy}</p>
+                      {item.scope ? <p className="work-scope">{item.scope}</p> : null}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </SurfaceBand>
         ) : null}
         {pillar.notes ? (
-          <section className="work-block">
-            <div className="hcm-models">
-              {pillar.notes.map((note, index) => (
-                <article key={note}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <p>{note}</p>
-                </article>
-              ))}
-            </div>
-          </section>
+          <SurfaceBand tone={surfaces.next()}>
+            <section className="work-block">
+              <div className="hcm-models">
+                {pillar.notes.map((note, index) => (
+                  <article key={note}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <p>{note}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </SurfaceBand>
         ) : null}
       </div>
     )
@@ -123,78 +133,84 @@ function ServiceView({
 
   return (
     <div className="work-service">
-      <dl className="hcm-stats">
-        {service.metrics.map((metric) => (
-          <div key={metric.label}>
-            <dd>{metric.value}</dd>
-            <dt>{metric.label}</dt>
-          </div>
-        ))}
-      </dl>
-
+      {service.metrics.length ? (
+        <StatisticsBar items={service.metrics} label={`${service.label} at a Glance`} />
+      ) : null}
       {service.intro.length > 1 ? (
-        <section className="hcm-prose" style={{ marginTop: 48 }}>
-          {service.intro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        </section>
+        <SurfaceBand tone={surfaces.next()}>
+          <section className="hcm-prose">
+            {service.intro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </section>
+        </SurfaceBand>
       ) : null}
 
-      <section className="work-block">
-        <h2>Why {service.label}?</h2>
-        <ol className="hcm-why">
-          {service.reasons.map((reason, index) => (
-            <li key={reason.title}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <div>
-                <h3>{reason.title}</h3>
-                <p>{reason.copy}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <SurfaceBand tone={surfaces.next()}>
+        <section className="work-block">
+          <h2>Why {service.label}?</h2>
+          <ol className="hcm-why">
+            {service.reasons.map((reason, index) => (
+              <li key={reason.title}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{reason.title}</h3>
+                  <p>{reason.copy}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </SurfaceBand>
 
-      <section id="work-offer" className="work-block">
-        <h2>What we offer</h2>
-        <ol className="hcm-stack">
-          {service.pillars.map((item, index) => (
-            <li key={item.id}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <div>
-                <h3>
-                  <Link className="hcm-offer-link" to={`/what-we-do/${service.key}/${item.id}`}>
-                    {item.label}
-                  </Link>
-                </h3>
-                <p>{item.title}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <SurfaceBand tone={surfaces.next()}>
+        <section id="work-offer" className="work-block">
+          <h2>What we offer</h2>
+          <ol className="hcm-stack">
+            {service.pillars.map((item, index) => (
+              <li key={item.id}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>
+                    <Link className="hcm-offer-link" to={`/what-we-do/${service.key}/${item.id}`}>
+                      {item.label}
+                    </Link>
+                  </h3>
+                  <p>{item.title}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </SurfaceBand>
 
       {service.extra ? (
-        <section className="work-extra">
-          <div className="work-extra-media" data-curtain >
-            <img src={image} alt="" />
-          </div>
-          <div>
-            <h3>{service.extra.title}</h3>
-            {service.extra.copy.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            {service.extra.cta ? <p className="work-extra-cta">{service.extra.cta}</p> : null}
-          </div>
-        </section>
+        <SurfaceBand tone={surfaces.next()}>
+          <section className="work-extra">
+            <div className="work-extra-media" data-curtain >
+              <img src={image} alt="" />
+            </div>
+            <div>
+              <h3>{service.extra.title}</h3>
+              {service.extra.copy.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {service.extra.cta ? <p className="work-extra-cta">{service.extra.cta}</p> : null}
+            </div>
+          </section>
+        </SurfaceBand>
       ) : null}
 
-      <AudienceRow audiences={service.audiences} />
+      <SurfaceBand tone={surfaces.next()}>
+        <AudienceRow audiences={service.audiences} />
+      </SurfaceBand>
 
-      <section className="work-block">
-        <h2>Industries we serve</h2>
-        <ul className="work-industries">
-          {service.industries.map((industry) => (
-            <li key={industry}>{industry}</li>
-          ))}
-        </ul>
-      </section>
+      <SurfaceBand tone={surfaces.next()}>
+        <section className="work-block">
+          <h2>Industries we serve</h2>
+          <ul className="work-industries">
+            {service.industries.map((industry) => (
+              <li key={industry}>{industry}</li>
+            ))}
+          </ul>
+        </section>
+      </SurfaceBand>
     </div>
   )
 }
@@ -292,15 +308,13 @@ export default function WhatWeDoPage() {
       />
 
       <section id="work-content" className="work-content section">
-        <div className="container">
-          {tsoSection ? (
-            <TsoSectionView section={tsoSection} topic={activeInner} />
-          ) : hcmSection ? (
-            <HcmSectionView section={hcmSection} image={images.hcm} />
-          ) : (
-            <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
-          )}
-        </div>
+        {tsoSection ? (
+          <TsoSectionView section={tsoSection} topic={activeInner} />
+        ) : hcmSection ? (
+          <HcmSectionView section={hcmSection} image={images.hcm} />
+        ) : (
+          <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
+        )}
       </section>
       {tsoSection ? null : hcmSection?.close ? (
         <section className="about-cta">

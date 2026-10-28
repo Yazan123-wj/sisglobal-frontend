@@ -3,6 +3,7 @@ import iso22301 from '@/assets/certs/iso-22301.png'
 import iso27001 from '@/assets/certs/iso-27001.png'
 import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
+import { STAT_LABEL } from '@/data/stats'
 
 export const aboutIntro = [
   'SIS Global is a Riyadh-headquartered business solutions group helping organizations manage their people, their technology and their critical operations through specialized, integrated services.',
@@ -12,14 +13,14 @@ export const aboutIntro = [
 ]
 
 export const aboutGlance = [
-  { value: '8+', label: 'Countries of Operation' },
-  { value: '19+', label: 'Years of Excellence' },
-  { value: '40+', label: 'Technology Partners' },
-  { value: '500+', label: 'Enterprise Clients' },
-  { value: '1,850+', label: 'Daily Operations' },
-  { value: '3,000+', label: 'Professionals Managed' },
-  { value: '8,000+', label: 'PCs & Devices Supported' },
-  { value: '8,500+', label: 'Field Jobs Delivered' },
+  { value: '8+', label: STAT_LABEL.countries },
+  { value: '19+', label: STAT_LABEL.years },
+  { value: '40+', label: STAT_LABEL.partners },
+  { value: '500+', label: STAT_LABEL.enterpriseClients },
+  { value: '1,850+', label: STAT_LABEL.dailyOperations },
+  { value: '3,000+', label: STAT_LABEL.professionals },
+  { value: '8,000+', label: STAT_LABEL.devices },
+  { value: '8,500+', label: STAT_LABEL.fieldJobs },
 ]
 
 export const aboutStory = [

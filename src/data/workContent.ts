@@ -1,3 +1,5 @@
+import { STAT_LABEL } from '@/data/stats'
+
 export type ServiceKey = 'hcm' | 'tso' | 'ict'
 
 export type WorkMetric = { value: string; label: string }
@@ -34,8 +36,8 @@ export const workOverview = {
   copy: 'SIS Global is a Saudi-founded business solutions group helping organizations manage their people, their technology and their critical operations through specialized, integrated services.',
   facts: [
     { value: '3', label: 'Specialized capabilities' },
-    { value: '19+', label: 'Years of delivery' },
-    { value: '8+', label: 'Countries of operation' },
+    { value: '19+', label: STAT_LABEL.years },
+    { value: '8+', label: STAT_LABEL.countries },
   ],
   units: [
     {
@@ -116,12 +118,12 @@ export const workServices: Record<ServiceKey, WorkService> = {
       'Combining regional expertise, scalable delivery and a deep understanding of workforce operations, Idarat HCM helps organizations simplify HR processes and focus on their core business.',
     ],
     metrics: [
-      { value: '70+', label: 'Clients served' },
-      { value: '1,200+', label: 'Active resources' },
-      { value: '3,000+', label: 'Resources managed' },
-      { value: '100K+', label: 'HR operations processed' },
-      { value: '230K+', label: 'Helpdesk tickets resolved' },
-      { value: '280K+', label: 'Payslips issued' },
+      { value: '70+', label: STAT_LABEL.clientsServed },
+      { value: '1,200+', label: STAT_LABEL.activeResources },
+      { value: '3,000+', label: STAT_LABEL.professionals },
+      { value: '100K+', label: STAT_LABEL.hrOperations },
+      { value: '230K+', label: STAT_LABEL.helpdeskTickets },
+      { value: '280K+', label: STAT_LABEL.payslips },
     ],
     reasons: [
       { title: 'End-to-end HCM expertise', copy: 'Support across the employee lifecycle, from finding the right talent to managing ongoing workforce requirements.' },
@@ -198,12 +200,12 @@ export const workServices: Record<ServiceKey, WorkService> = {
       'Since 2007, we have supported complex operating environments with the expertise and on-the-ground execution needed to keep projects moving and infrastructure performing. Backed by SIS Global’s regional presence, we mobilize the right teams and capabilities around each engagement — from focused specialist scopes to large-scale, long-running programs.',
     ],
     metrics: [
-      { value: '15+', label: 'Clients served' },
-      { value: '19+', label: 'Years of excellence' },
-      { value: '22+', label: 'Projects' },
-      { value: '46+', label: 'Active teams' },
-      { value: '1,850+', label: 'Daily operations' },
-      { value: '8,500+', label: 'Field jobs delivered' },
+      { value: '15+', label: STAT_LABEL.clientsServed },
+      { value: '19+', label: STAT_LABEL.years },
+      { value: '22+', label: STAT_LABEL.projects },
+      { value: '46+', label: STAT_LABEL.activeTeams },
+      { value: '1,850+', label: STAT_LABEL.dailyOperations },
+      { value: '8,500+', label: STAT_LABEL.fieldJobs },
     ],
     reasons: [
       { title: 'End-to-end, under one roof', copy: 'From network planning and rollout to ongoing O&M and logistics support, capabilities span the technical service lifecycle through one accountable partner.' },
@@ -325,10 +327,10 @@ export const workServices: Record<ServiceKey, WorkService> = {
       'From data centers and workplace devices to networks, cybersecurity and systems integration, Identiti ICT helps organizations build secure technology foundations and keep them supported.',
     ],
     metrics: [
-      { value: '8,000+', label: 'PCs & devices supported' },
-      { value: '40+', label: 'Technology partners' },
-      { value: '19+', label: 'Years of excellence' },
-      { value: '8+', label: 'Countries of operation' },
+      { value: '8,000+', label: STAT_LABEL.devices },
+      { value: '40+', label: STAT_LABEL.partners },
+      { value: '19+', label: STAT_LABEL.years },
+      { value: '8+', label: STAT_LABEL.countries },
     ],
     reasons: [
       { title: 'Vendor-backed delivery', copy: 'Established partnerships with leading technology vendors, used to design and support enterprise environments.' },

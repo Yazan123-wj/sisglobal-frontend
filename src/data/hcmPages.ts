@@ -1,3 +1,5 @@
+import { STAT_LABEL } from '@/data/stats'
+
 export type HcmSectionId = 'overview' | 'search-selection' | 'hcm-services' | 'my-idarat'
 
 export type HcmItem = {
@@ -49,12 +51,12 @@ export const hcmSections: Record<HcmSectionId, HcmSection> = {
       'Combining regional expertise, scalable delivery and a deep understanding of workforce operations, Idarat HCM helps organizations simplify HR processes and focus on their core business.',
     ],
     glance: [
-      { value: '70+', label: 'Clients Served' },
-      { value: '1200+', label: 'Active Resources' },
-      { value: '3000+', label: 'Resources Managed' },
-      { value: '100K+', label: 'HR Operations Processed' },
-      { value: '230K+', label: 'Helpdesk Tickets Resolved' },
-      { value: '280K+', label: 'Payslips Issued' },
+      { value: '70+', label: STAT_LABEL.clientsServed },
+      { value: '1200+', label: STAT_LABEL.activeResources },
+      { value: '3000+', label: STAT_LABEL.professionals },
+      { value: '100K+', label: STAT_LABEL.hrOperations },
+      { value: '230K+', label: STAT_LABEL.helpdeskTickets },
+      { value: '280K+', label: STAT_LABEL.payslips },
     ],
     why: [
       {

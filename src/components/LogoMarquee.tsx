@@ -54,15 +54,12 @@ export default function LogoMarquee({ items }: { items: LogoItem[] }) {
     <div className="logo-swiper" ref={root}>
       <ul className="logo-track" ref={track} aria-hidden="true">
         {loop.map((item, index) => (
-          <li key={`${item.name}-${index}`}>
+          <li key={`${item.name}-${index}`} title={item.name}>
             {item.src ? (
               <img src={item.src} alt="" />
-            ) : (
-              <>
-                {item.mark ? <BrandMark mark={item.mark} /> : null}
-                <span>{item.name}</span>
-              </>
-            )}
+            ) : item.mark ? (
+              <BrandMark mark={item.mark} />
+            ) : null}
           </li>
         ))}
       </ul>

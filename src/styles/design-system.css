@@ -30,6 +30,23 @@
   --space-8: 32px;
   --space-10: 48px;
   --space-12: 112px;
+  --space-tight: var(--space-4); /* 16px — compact related items */
+  --space-related: var(--space-6); /* 24px */
+  --space-heading: var(--space-8); /* 32px heading-to-content */
+  --space-section: 64px; /* major section padding, top and bottom */
+  --space-section-gap: var(--space-section); /* section-to-section / stacked band content gap */
+  --space-card: var(--space-related); /* 24px card and grid gaps */
+  --space-after-subnav: var(--space-section);
+  --logo-mark-height: 36px;
+  --surface-paper: #ffffff;
+  --surface-mist: var(--ice);
+  --surface-navy: var(--navy);
+  --subnav-font-size: 16px;
+  --subnav-font-weight: 500;
+  --subnav-font-weight-active: 700;
+  --subnav-line-height: 1.3;
+  --subnav-pad-x: 0px;
+  --subnav-gap: 28px;
   --radius-xs: 8px;
   --radius-sm: 8px;
   --radius-pill: 8px;

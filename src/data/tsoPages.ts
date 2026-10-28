@@ -1,3 +1,5 @@
+import { STAT_LABEL } from '@/data/stats'
+
 export type TsoSectionId = 'overview' | 'rollout' | 'managed-services' | 'design-optimization' | 'logistics-support'
 
 type Line = { title: string; copy: string; cta?: string; href?: string }
@@ -103,11 +105,11 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         type: 'stats',
         title: 'TSO at a Glance',
         items: [
-          { value: '15+', label: 'Clients Served' },
-          { value: '19+', label: 'Years of Excellence' },
-          { value: '22+', label: 'Projects' },
-          { value: '46+', label: 'Active Teams' },
-          { value: '1,850+', label: 'Daily Operations' },
+          { value: '15+', label: STAT_LABEL.clientsServed },
+          { value: '19+', label: STAT_LABEL.years },
+          { value: '22+', label: STAT_LABEL.projects },
+          { value: '46+', label: STAT_LABEL.activeTeams },
+          { value: '1,850+', label: STAT_LABEL.dailyOperations },
         ],
       },
       {

@@ -4,8 +4,10 @@ import ceoPortrait from '@/assets/ceo-sammer-al-sabawi.jpg'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import Arrow from '@/components/Arrow'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
+import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
 import PageSubnav from '@/components/PageSubnav'
+import StatisticsBar from '@/components/StatisticsBar'
 import StoryDial from '@/components/StoryDial'
 import {
   aboutCeo,
@@ -65,21 +67,11 @@ export default function AboutPage() {
 
       <section id="about-who" className="about-section section">
         <div className="container">
-          <div className="hcm-prose about-prose">
+          <IntroSplit title="About SIS Global">
             {aboutIntro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </div>
-          <div className="work-block">
-            <h2>SIS Global at a Glance</h2>
-            <dl className="hcm-stats about-glance">
-              {aboutGlance.map((metric) => (
-                <div key={metric.label}>
-                  <dd>{metric.value}</dd>
-                  <dt>{metric.label}</dt>
-                </div>
-              ))}
-            </dl>
-          </div>
+          </IntroSplit>
         </div>
+        <StatisticsBar items={aboutGlance} label="SIS Global at a Glance" />
       </section>
 
       <section id="about-story" className="about-story-section">
@@ -157,8 +149,9 @@ export default function AboutPage() {
 
       <section id="about-certs" className="about-section section is-paper">
         <div className="container">
-          <h2>Standards & Certifications</h2>
-          <p className="about-lead">Our commitment to quality, safety, information security and business continuity is supported by internationally recognized management standards.</p>
+          <IntroSplit title="Standards & Certifications">
+            <p>Our commitment to quality, safety, information security and business continuity is supported by internationally recognized management standards.</p>
+          </IntroSplit>
           <div className="about-certs">
             {aboutCerts.map((item) => (
               <article key={item.code}>
@@ -173,7 +166,7 @@ export default function AboutPage() {
 
       <section className="about-section section">
         <div className="container trusted-logos-block">
-          <h2>Trusted by Leading Organizations</h2>
+          <h2 className="logo-strip-label">Trusted by Leading Organizations</h2>
           <LogoMarquee items={clients} />
         </div>
       </section>
@@ -196,8 +189,9 @@ export default function AboutPage() {
 
       <section className="about-section section is-paper">
         <div className="container">
-          <h2>{aboutPresence.officesTitle}</h2>
-          <p className="about-lead">{aboutPresence.officesLead}</p>
+          <IntroSplit title={aboutPresence.officesTitle}>
+            <p>{aboutPresence.officesLead}</p>
+          </IntroSplit>
           <div className="about-offices">
             {aboutOffices.map((office) => (
               <article key={office.country}>

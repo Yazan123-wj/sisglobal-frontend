@@ -8,7 +8,10 @@ import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
 import { Steps } from '@/components/HcmSectionView'
+import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
+import StatisticsBar from '@/components/StatisticsBar'
+import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import { tsoClients } from '@/data/tsoClients'
 import { tsoPhoto } from '@/data/tsoImages'
 import type { TsoBlock, TsoSection } from '@/data/tsoPages'
@@ -185,7 +188,7 @@ function Cards({
   }
 
   return (
-    <div className={swipe ? 'tso-swipe' : undefined}>
+    <div className={swipe ? 'tso-swipe' : 'tso-cards-wrap'}>
       {title || swipe ? (
         <div className="tso-swipe-head">
           {title ? <Heading>{title}</Heading> : <span />}
@@ -247,13 +250,23 @@ function BlockView({
   block,
   photoKey,
   withPhoto = true,
+  introTitle,
 }: {
   block: TsoBlock
   photoKey: string
   withPhoto?: boolean
+  introTitle?: string
 }) {
   if (block.type === 'prose') {
-    if (!withPhoto) return <Prose paragraphs={block.paragraphs} />
+    if (!withPhoto) {
+      return introTitle ? (
+        <IntroSplit title={introTitle}>
+          <Prose paragraphs={block.paragraphs} />
+        </IntroSplit>
+      ) : (
+        <Prose paragraphs={block.paragraphs} />
+      )
+    }
     return (
       <div className="tso-lead">
         <PhotoMedia id={photoKey} />
@@ -263,19 +276,7 @@ function BlockView({
   }
 
   if (block.type === 'stats') {
-    return (
-      <section className="work-block">
-        <h2>{block.title}</h2>
-        <dl className="hcm-stats">
-          {block.items.map((item) => (
-            <div key={item.label}>
-              <dd>{item.value}</dd>
-              <dt>{item.label}</dt>
-            </div>
-          ))}
-        </dl>
-      </section>
-    )
+    return <StatisticsBar items={block.items} label={block.title} />
   }
 
   if (block.type === 'certs') {
@@ -298,7 +299,7 @@ function BlockView({
   if (block.type === 'partners') {
     return (
       <section className="work-block hcm-trust">
-        <h2>{block.title}</h2>
+        <h2 className="logo-strip-label">{block.title}</h2>
         <LogoMarquee items={tsoClients} />
       </section>
     )
@@ -326,12 +327,18 @@ function BlockView({
 
   if (block.items) {
     const pictured = block.items.some((item) => item.href)
+    const swipe = pictured && block.items.length > 1
     return (
       <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
+        {!swipe && block.title ? (
+          <IntroSplit title={block.title}>
+            {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
+          </IntroSplit>
+        ) : null}
         <Cards
-          title={block.title}
+          title={swipe ? block.title : undefined}
           heading="h2"
-          lead={block.paragraphs}
+          lead={swipe ? block.paragraphs : undefined}
           items={block.items}
           withPhoto={pictured}
         />
@@ -348,9 +355,13 @@ function BlockView({
     <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
       {block.title === 'How We Work' && block.paragraphs?.length ? (
         <WorkFaq title={block.title} paragraphs={block.paragraphs} heading="h2" />
+      ) : block.title && block.paragraphs?.length ? (
+        <IntroSplit title={block.title}>
+          <Prose paragraphs={block.paragraphs} />
+        </IntroSplit>
       ) : (
         <div className="tso-note">
-          <h2>{block.title}</h2>
+          {block.title ? <h2>{block.title}</h2> : null}
           {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </div>
       )}
@@ -370,48 +381,61 @@ function CtaBand({ block }: { block: CtaBlock }) {
   )
 }
 
+function isNavyGroup(group: Group) {
+  return group.kind === 'block' && group.block.type === 'cta'
+}
+
 function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) {
   const cta = group.parts.find((part): part is CtaBlock => part.type === 'cta')
   const parts = group.parts.filter((part) => part.type !== 'cta')
+  const surfaces = createSurfaceTones()
 
   return (
-    <section id={group.lead.id} className="work-block tso-service tso-anchor">
-      <header className="tso-service-head">
-        <div className="tso-service-title">
-          <span>{String(group.index).padStart(2, '0')}</span>
-          <h2>{group.lead.title}</h2>
-        </div>
-        {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
-      </header>
+    <>
+      <SurfaceBand tone={surfaces.next()}>
+        <section id={group.lead.id} className="work-block tso-service tso-anchor">
+          <IntroSplit title={group.lead.title} kicker={String(group.index).padStart(2, '0')}>
+            {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
+          </IntroSplit>
+        </section>
+      </SurfaceBand>
       {parts.map((part) => {
         if (!isSection(part)) return null
         return (
-          <div key={part.title} className="tso-sub">
-            {part.items ? (
-              <Cards
-                title={part.title}
-                lead={part.paragraphs}
-                items={part.items}
-                withPhoto
-              />
-            ) : part.title === 'How We Work' && part.paragraphs?.length ? (
-              <WorkFaq title={part.title} paragraphs={part.paragraphs} />
-            ) : (
-              <div className="tso-note">
-                <h3>{part.title}</h3>
-                {part.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-              </div>
-            )}
-          </div>
+          <SurfaceBand key={part.title} tone={surfaces.next()}>
+            <div className="tso-sub">
+              {part.items ? (
+                <Cards
+                  title={part.title}
+                  lead={part.paragraphs}
+                  items={part.items}
+                  withPhoto
+                />
+              ) : part.title === 'How We Work' && part.paragraphs?.length ? (
+                <WorkFaq title={part.title} paragraphs={part.paragraphs} />
+              ) : part.title && part.paragraphs?.length ? (
+                <IntroSplit title={part.title}>
+                  <Prose paragraphs={part.paragraphs} />
+                </IntroSplit>
+              ) : (
+                <div className="tso-note">
+                  {part.title ? <h3>{part.title}</h3> : null}
+                  {part.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                </div>
+              )}
+            </div>
+          </SurfaceBand>
         )
       })}
       {cta ? (
-        <footer className="tso-close">
-          {cta.copy ? <p>{cta.copy}</p> : null}
-          <ContactLink label={cta.label} />
-        </footer>
+        <SurfaceBand tone="navy">
+          <footer className="tso-close">
+            {cta.copy ? <p>{cta.copy}</p> : null}
+            <ContactLink label={cta.label} />
+          </footer>
+        </SurfaceBand>
       ) : null}
-    </section>
+    </>
   )
 }
 
@@ -443,10 +467,18 @@ function Offers({ blocks }: { blocks: SectionBlock[] }) {
   )
 }
 
-function renderGroup(group: Group, index: number, photoKey: string, withPhoto = true) {
+function renderGroup(group: Group, index: number, photoKey: string, withPhoto = true, introTitle?: string) {
   if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
   if (group.kind === 'service') return <ServiceView key={group.lead.id} group={group} />
-  return <BlockView key={`${group.block.type}-${index}`} block={group.block} photoKey={photoKey} withPhoto={withPhoto} />
+  return (
+    <BlockView
+      key={`${group.block.type}-${index}`}
+      block={group.block}
+      photoKey={photoKey}
+      withPhoto={withPhoto}
+      introTitle={introTitle}
+    />
+  )
 }
 
 export default function TsoSectionView({
@@ -463,11 +495,35 @@ export default function TsoSectionView({
   const rest = split >= 0 ? groups.slice(split) : []
   const service = rest.find((group) => group.kind === 'service' && group.lead.id === topic)
   const showOverview = !overviewId || !topic || topic === overviewId || !service
+  const surfaces = createSurfaceTones()
 
   return (
     <div className={`hcm-section is-${section.id}`}>
       {showOverview
-        ? intro.map((group, index) => renderGroup(group, index, section.id, false))
+        ? intro.map((group, index) => {
+            if (group.kind === 'block' && group.block.type === 'stats') {
+              return (
+                <StatisticsBar
+                  key={`${group.kind}-${index}`}
+                  items={group.block.items}
+                  label={group.block.title}
+                />
+              )
+            }
+            return (
+              <SurfaceBand key={`${group.kind}-${index}`} tone={surfaces.next(isNavyGroup(group))}>
+                {renderGroup(
+                  group,
+                  index,
+                  section.id,
+                  false,
+                  index === 0 && group.kind === 'block' && group.block.type === 'prose'
+                    ? section.eyebrow || section.nav
+                    : undefined,
+                )}
+              </SurfaceBand>
+            )
+          })
         : service
           ? renderGroup(service, 0, section.id)
           : null}
