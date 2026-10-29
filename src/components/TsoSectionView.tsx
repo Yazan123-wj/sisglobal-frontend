@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import iso14001 from '@/assets/certs/iso-14001.png'
@@ -94,13 +94,19 @@ const workTitles = [
   'Integration and verification',
 ]
 
+function polishStepCopy(copy: string) {
+  const text = copy.replace(/^[\s.,;:]+/, '').trim()
+  if (!text) return copy
+  return text[0].toUpperCase() + text.slice(1)
+}
+
 function splitWork(paragraphs: string[]) {
   const lead: string[] = []
   const items: { title: string; copy: string }[] = []
 
   for (const paragraph of paragraphs) {
     const title = workTitles.find((item) => paragraph.toLowerCase().startsWith(item.toLowerCase()))
-    if (title) items.push({ title, copy: paragraph.slice(title.length).trim() })
+    if (title) items.push({ title, copy: polishStepCopy(paragraph.slice(title.length)) })
     else lead.push(paragraph)
   }
 
@@ -109,39 +115,13 @@ function splitWork(paragraphs: string[]) {
 
 function WorkFaq({ title, paragraphs, heading = 'h3' }: { title: string; paragraphs: string[]; heading?: 'h2' | 'h3' }) {
   const { lead, items } = splitWork(paragraphs)
-  const [open, setOpen] = useState<number | null>(0)
   const Heading = heading
 
   return (
-    <div className="tso-note">
+    <div className="tso-work">
       <Heading>{title}</Heading>
       {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-      <div className="tso-faq difference-faq">
-        {items.map((item, index) => {
-          const expanded = open === index
-          return (
-            <article key={item.title} className={expanded ? 'is-open' : undefined}>
-              <button
-                type="button"
-                aria-expanded={expanded}
-                onClick={() => setOpen(expanded ? null : index)}
-              >
-                <span className="difference-num">{String(index + 1).padStart(2, '0')}</span>
-                <span className="difference-faq-title">{item.title}</span>
-                <span className="difference-faq-plus" aria-hidden="true">
-                  <span />
-                  <span />
-                </span>
-              </button>
-              <div className="difference-faq-body">
-                <div>
-                  <p>{item.copy}</p>
-                </div>
-              </div>
-            </article>
-          )
-        })}
-      </div>
+      <Steps items={items} vertical />
     </div>
   )
 }
@@ -168,12 +148,14 @@ function Cards({
   title,
   lead,
   heading = 'h3',
+  grid = false,
 }: {
   items: NonNullable<SectionBlock['items']>
   withPhoto?: boolean
   title?: string
   lead?: string[]
   heading?: 'h2' | 'h3'
+  grid?: boolean
 }) {
   const scroller = useRef<HTMLUListElement>(null)
   const swipe = withPhoto && items.length > 1
@@ -188,7 +170,7 @@ function Cards({
   }
 
   return (
-    <div className={swipe ? 'tso-swipe' : 'tso-cards-wrap'}>
+    <div className={swipe ? `tso-swipe${grid ? ' is-service-grid' : ''}` : 'tso-cards-wrap'}>
       {title || swipe ? (
         <div className="tso-swipe-head">
           {title ? <Heading>{title}</Heading> : <span />}
@@ -205,7 +187,7 @@ function Cards({
           {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </div>
       ) : null}
-      <ul ref={scroller} className={swipe ? 'tso-cards is-swipe' : 'tso-cards'}>
+      <ul ref={scroller} className={swipe ? `tso-cards is-swipe${grid ? ' is-service-grid' : ''}` : 'tso-cards'}>
         {items.map((item, index) => (
           <li key={item.title} className="tso-card">
             {withPhoto ? (
@@ -246,6 +228,37 @@ function WhyBoxes({ items }: { items: NonNullable<SectionBlock['why']> }) {
   )
 }
 
+const whyMarks = [
+  'M4 11 12 4l8 7M7 10.5V20h10v-9.5',
+  'M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6zM13.5 13.5h6v6h-6z',
+  'M5 18V11h3v7H5zM10.5 18V7h3v11h-3zM16 18V4h3v14h-3z',
+  'M4 7h16M6 12h12M8 17h8',
+]
+
+function WhyFeature({ items }: { items: NonNullable<SectionBlock['why']> }) {
+  return (
+    <ol className="tso-why-feature">
+      {items.map((item, index) => (
+        <li key={item.title}>
+          <span className="tso-why-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d={whyMarks[index] ?? whyMarks[0]}
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.copy}</p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
 function BlockView({
   block,
   photoKey,
@@ -261,7 +274,7 @@ function BlockView({
     if (!withPhoto) {
       return introTitle ? (
         <IntroSplit title={introTitle}>
-          <Prose paragraphs={block.paragraphs} />
+          {block.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </IntroSplit>
       ) : (
         <Prose paragraphs={block.paragraphs} />
@@ -305,7 +318,14 @@ function BlockView({
     )
   }
 
-  if (block.type === 'cta') return <CtaBand block={block} />
+  if (block.type === 'cta') {
+    return (
+      <CtaBand
+        block={block}
+        stacked={photoKey !== 'overview'}
+      />
+    )
+  }
 
   if (block.steps) {
     return (
@@ -320,7 +340,7 @@ function BlockView({
     return (
       <section className="work-block">
         <h2>{block.title}</h2>
-        <WhyBoxes items={block.title === 'Why Idarat TSO' ? block.why.slice(0, 2) : block.why} />
+        {isWhyFeature(photoKey, block.title) ? <WhyFeature items={block.why} /> : <WhyBoxes items={block.why} />}
       </section>
     )
   }
@@ -328,6 +348,7 @@ function BlockView({
   if (block.items) {
     const pictured = block.items.some((item) => item.href)
     const swipe = pictured && block.items.length > 1
+    const grid = pictured && !block.id
     return (
       <section id={block.id} className={block.id ? 'work-block tso-anchor' : 'work-block'}>
         {!swipe && block.title ? (
@@ -341,6 +362,7 @@ function BlockView({
           lead={swipe ? block.paragraphs : undefined}
           items={block.items}
           withPhoto={pictured}
+          grid={grid}
         />
         {block.link ? (
           <Link className="text-link" to={block.link.to}>
@@ -369,7 +391,21 @@ function BlockView({
   )
 }
 
-function CtaBand({ block }: { block: CtaBlock }) {
+function CtaBand({ block, stacked = false }: { block: CtaBlock; stacked?: boolean }) {
+  if (block.title || stacked) {
+    return (
+      <section className="tso-cta-final">
+        <div className="tso-cta-copy">
+          {block.title ? <h2>{block.title}</h2> : null}
+          {block.copy ? <p>{block.copy}</p> : null}
+        </div>
+        <Link className="button button-primary" to="/#contact">
+          {block.label} <Arrow />
+        </Link>
+      </section>
+    )
+  }
+
   return (
     <section className="hcm-callout tso-callout">
       <div>
@@ -380,11 +416,31 @@ function CtaBand({ block }: { block: CtaBlock }) {
   )
 }
 
-function isNavyGroup(group: Group) {
+function isWhyFeature(_sectionId: string | undefined, title: string) {
+  return title.startsWith('Why Idarat TSO')
+}
+
+function isNavyGroup(group: Group, sectionId?: string) {
+  if (group.kind !== 'block') return false
+  if (group.block.type === 'cta') return true
+  return group.block.type === 'section' && isWhyFeature(sectionId, group.block.title)
+}
+
+function isWhyGroup(group: Group, sectionId?: string) {
+  return group.kind === 'block' && group.block.type === 'section' && isWhyFeature(sectionId, group.block.title)
+}
+
+function isCtaGroup(group: Group) {
   return group.kind === 'block' && group.block.type === 'cta'
 }
 
-function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) {
+function ServiceView({
+  group,
+  stackedCta = false,
+}: {
+  group: Extract<Group, { kind: 'service' }>
+  stackedCta?: boolean
+}) {
   const cta = group.parts.find((part): part is CtaBlock => part.type === 'cta')
   const parts = group.parts.filter((part) => part.type !== 'cta')
   const surfaces = createSurfaceTones()
@@ -393,7 +449,7 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
     <>
       <SurfaceBand tone={surfaces.next()}>
         <section id={group.lead.id} className="work-block tso-service tso-anchor">
-          <IntroSplit title={group.lead.title} kicker={String(group.index).padStart(2, '0')}>
+          <IntroSplit title={group.lead.title}>
             {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
           </IntroSplit>
         </section>
@@ -409,9 +465,10 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
                   lead={part.paragraphs}
                   items={part.items}
                   withPhoto
+                  grid
                 />
               ) : part.title === 'How We Work' && part.paragraphs?.length ? (
-                <WorkFaq title={part.title} paragraphs={part.paragraphs} />
+                <WorkFaq title={part.title} paragraphs={part.paragraphs} heading="h2" />
               ) : part.title && part.paragraphs?.length ? (
                 <IntroSplit title={part.title}>
                   <Prose paragraphs={part.paragraphs} />
@@ -428,10 +485,22 @@ function ServiceView({ group }: { group: Extract<Group, { kind: 'service' }> }) 
       })}
       {cta ? (
         <SurfaceBand tone="navy">
-          <footer className="tso-close">
-            {cta.copy ? <p>{cta.copy}</p> : null}
-            <ContactLink label={cta.label} />
-          </footer>
+          {stackedCta ? (
+            <section className="tso-cta-final">
+              <div className="tso-cta-copy">
+                {cta.title ? <h2>{cta.title}</h2> : null}
+                {cta.copy ? <p>{cta.copy}</p> : null}
+              </div>
+              <Link className="button button-primary" to="/#contact">
+                Talk to our team <Arrow />
+              </Link>
+            </section>
+          ) : (
+            <footer className="tso-close">
+              {cta.copy ? <p>{cta.copy}</p> : null}
+              <ContactLink label={cta.label} />
+            </footer>
+          )}
         </SurfaceBand>
       ) : null}
     </>
@@ -468,7 +537,9 @@ function Offers({ blocks }: { blocks: SectionBlock[] }) {
 
 function renderGroup(group: Group, index: number, photoKey: string, withPhoto = true, introTitle?: string) {
   if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
-  if (group.kind === 'service') return <ServiceView key={group.lead.id} group={group} />
+  if (group.kind === 'service') {
+    return <ServiceView key={group.lead.id} group={group} stackedCta />
+  }
   return (
     <BlockView
       key={`${group.block.type}-${index}`}
@@ -501,6 +572,7 @@ export default function TsoSectionView({
       {showOverview
         ? intro.map((group, index) => {
             if (group.kind === 'offers') return null
+            if (isCtaGroup(group) && isWhyGroup(intro[index - 1], section.id)) return null
             if (group.kind === 'block' && group.block.type === 'stats') {
               return (
                 <StatisticsBar
@@ -510,17 +582,19 @@ export default function TsoSectionView({
                 />
               )
             }
+            const closeCta = isWhyGroup(group, section.id) && isCtaGroup(intro[index + 1]) ? intro[index + 1] : null
             return (
-              <SurfaceBand key={`${group.kind}-${index}`} tone={surfaces.next(isNavyGroup(group))}>
+              <SurfaceBand key={`${group.kind}-${index}`} tone={surfaces.next(isNavyGroup(group, section.id))}>
                 {renderGroup(
                   group,
                   index,
                   section.id,
                   false,
                   index === 0 && group.kind === 'block' && group.block.type === 'prose'
-                    ? section.eyebrow || section.nav
+                    ? (section.id === 'overview' ? section.title : (section.eyebrow || section.nav))
                     : undefined,
                 )}
+                {closeCta ? renderGroup(closeCta, index + 1, section.id, false) : null}
               </SurfaceBand>
             )
           })

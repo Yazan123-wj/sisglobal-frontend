@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/cn'
@@ -35,6 +35,30 @@ export default function PageSubnav({
   useEffect(() => {
     setObservedId(itemKey.split('|')[0] ?? '')
   }, [itemKey])
+
+  useLayoutEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+    const page = nav.closest('.work-page, .about-page') as HTMLElement | null
+
+    const apply = () => {
+      const height = `${Math.round(nav.getBoundingClientRect().height)}px`
+      nav.style.setProperty('--subnav-height', height)
+      page?.style.setProperty('--subnav-height', height)
+    }
+
+    apply()
+    const frame = window.requestAnimationFrame(apply)
+    const observer = new ResizeObserver(apply)
+    observer.observe(nav)
+    nav.querySelectorAll(':scope > *').forEach((node) => observer.observe(node))
+    window.addEventListener('resize', apply)
+    return () => {
+      window.cancelAnimationFrame(frame)
+      observer.disconnect()
+      window.removeEventListener('resize', apply)
+    }
+  }, [extra, itemKey])
 
   useEffect(() => {
     if (onSelect) return

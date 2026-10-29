@@ -7,6 +7,7 @@ import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
+import IntroSplit from '@/components/IntroSplit'
 import PageSubnav, { PageSubnavPills } from '@/components/PageSubnav'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
@@ -138,9 +139,9 @@ function ServiceView({
       ) : null}
       {service.intro.length > 1 ? (
         <SurfaceBand tone={surfaces.next()}>
-          <section className="hcm-prose">
+          <IntroSplit title={service.label}>
             {service.intro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </section>
+          </IntroSplit>
         </SurfaceBand>
       ) : null}
 
@@ -252,6 +253,15 @@ export default function WhatWeDoPage() {
   const heroTitle = tsoSection?.title ?? hcmSection?.title ?? (pillar ? pillar.title : selected.title)
   const heroLead = tsoSection?.lead ?? hcmSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
   const heroEyebrow = tsoSection?.eyebrow ?? hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
+  const tsoHeroCta = {
+    overview: 'Talk to our TSO team',
+    rollout: 'Talk to our rollout team',
+    'managed-services': 'Talk to our managed services team',
+    'design-optimization': 'Talk to our design team',
+    'logistics-support': 'Talk to our logistics team',
+  } as const
+  const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : null
+  const heroProposal = Boolean(tsoSection && tsoSection.id !== 'overview')
   const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
   const subnavActive = isHcm ? (hcmSection?.id ?? 'overview') : isTso ? (tsoSection?.id ?? 'overview') : pillarId
   const innerNav = isTso && tsoSection ? tsoInnerNav[tsoSection.id] : undefined
@@ -281,6 +291,20 @@ export default function WhatWeDoPage() {
             <p className="eyebrow light">{heroEyebrow}</p>
             <h1 id="work-title">{heroTitle}</h1>
             <p>{heroLead}</p>
+            {heroCta || heroProposal ? (
+              <div className="about-hero-actions">
+                {heroCta ? (
+                  <Link className="button button-primary about-hero-cta" to="/#contact">
+                    {heroCta} <Arrow />
+                  </Link>
+                ) : null}
+                {heroProposal ? (
+                  <Link className="button button-secondary about-hero-cta" to="/#contact">
+                    Request a Proposal <Arrow />
+                  </Link>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

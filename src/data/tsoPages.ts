@@ -237,6 +237,12 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         ],
       },
       {
+        type: 'cta',
+        title: "Let's Build Reliable Operations Together",
+        copy: 'Talk to our TSO team about your technical and operational requirements.',
+        label: 'Talk to Our Rollout Team',
+      },
+      {
         type: 'section',
         id: 'ran',
         title: 'RAN Deployment',
@@ -262,7 +268,7 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
         title: 'How We Work',
         paragraphs: [
           'Every RAN site follows the same disciplined sequence consistency is what keeps large programs on schedule.',
-          'Site survey and readiness verification confirms structural capacity, power availability, access arrangements and transmission readiness before crews mobilize. Most rollout delays trace back to something that should have been caught here.',
+          'Site survey and readiness verification The site survey confirms structural capacity, power availability, access arrangements and transmission readiness before crews mobilize. Most rollout delays trace back to something that should have been caught here.',
           'Installation to vendor specification covers equipment mounting, cabling, grounding and antenna work executed by crews with the rigging and working-at-height qualifications the site demands.',
           'Commissioning and configuration bring the node online and verify it performs against the approved design.',
           'Integration and verification connect the site into the live network, confirms cell activation, and validates performance against acceptance criteria before handover.',

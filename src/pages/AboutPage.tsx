@@ -71,8 +71,9 @@ export default function AboutPage() {
             {aboutIntro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </IntroSplit>
         </div>
-        <StatisticsBar items={aboutGlance} label="SIS Global at a Glance" />
       </section>
+
+      <StatisticsBar items={aboutGlance} label="SIS Global at a Glance" />
 
       <section id="about-mission" className="about-section section">
         <div className="container">
@@ -171,16 +172,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-cta">
-        <div className="container">
-          <h2>{aboutCta.title}</h2>
-          <p>{aboutCta.copy}</p>
-          <button className="text-link" type="button" onClick={contact}>
-            {aboutCta.action} <Arrow />
-          </button>
-        </div>
-      </section>
-
       <GlobalPresenceSection
         sectionId="about-presence"
         heading={aboutPresence.heading}
@@ -208,6 +199,16 @@ export default function AboutPage() {
               Contact Us <Arrow />
             </button>
           </p>
+        </div>
+      </section>
+
+      <section className="about-cta">
+        <div className="container">
+          <h2>{aboutCta.title}</h2>
+          <p>{aboutCta.copy}</p>
+          <button className="text-link" type="button" onClick={contact}>
+            {aboutCta.action} <Arrow />
+          </button>
         </div>
       </section>
     </main>

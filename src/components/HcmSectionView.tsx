@@ -7,6 +7,7 @@ import industryFinance from '@/assets/industry-finance.jpg'
 import industryGovernment from '@/assets/industry-government.jpg'
 import industryProfessional from '@/assets/industry-professional.jpg'
 import Arrow from '@/components/Arrow'
+import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
@@ -104,9 +105,15 @@ function Stack({ items }: { items: HcmItem[] }) {
   )
 }
 
-export function Steps({ items }: { items: { title: string; copy: string }[] }) {
+export function Steps({
+  items,
+  vertical = false,
+}: {
+  items: { title: string; copy: string }[]
+  vertical?: boolean
+}) {
   return (
-    <ol className="hcm-steps">
+    <ol className={vertical ? 'hcm-steps is-vertical' : 'hcm-steps'}>
       {items.map((item, index) => (
         <li key={item.title}>
           <div className="hcm-step-rail">
@@ -127,9 +134,9 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
     <div className={`hcm-section is-${section.id}`}>
       {section.body.length && section.id !== 'hcm-services' ? (
         <SurfaceBand tone={surfaces.next()}>
-          <section className="hcm-prose">
+          <IntroSplit title={section.title}>
             {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </section>
+          </IntroSplit>
         </SurfaceBand>
       ) : null}
 
