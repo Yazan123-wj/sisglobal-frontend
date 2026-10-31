@@ -550,6 +550,8 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: var(--btn-gap);
+  width: max-content;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -560,9 +562,17 @@ textarea:focus-visible {
   transition: color var(--transition), box-shadow var(--transition);
 }
 
+.text-link .icon-arrow {
+  transition: transform var(--transition);
+}
+
 .text-link:hover {
   color: var(--navy);
   box-shadow: inset 0 -1px 0 currentColor;
+}
+
+.text-link:hover .icon-arrow {
+  transform: translateX(4px);
 }
 
 :is(.surface-navy, .about-cta, .insight-feature, .insight-aside-cta, .vacancy-detail-hero, .service-card) .text-link {
@@ -3409,31 +3419,54 @@ a.work-box:hover {
 .intro-split + .contact-layout,
 .intro-split + .about-certs,
 .intro-split + .about-offices,
-.intro-split + .tso-preview-services,
+.intro-split + .tso-preview-index,
 .intro-split + .hcm-stack {
   margin-top: 32px;
+}
+
+.tso-preview-index {
+  margin-top: 32px;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--line);
 }
 
 .tso-preview-services {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
-  margin: 32px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .tso-preview-services li {
-  padding: 12px 0;
+  display: grid;
+  grid-template-columns: 2.4em minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 16px 0;
   border-bottom: 1px solid var(--line);
-  color: var(--navy);
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: -.01em;
 }
 
-.tso-preview-services + .button {
-  margin-top: 32px;
+.tso-preview-services li span {
+  color: var(--blue);
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.tso-preview-services li strong {
+  color: var(--navy);
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.35;
+}
+
+.tso-preview-index .button {
+  margin-top: 28px;
 }
 
 .tso-cards-wrap .tso-cards {
@@ -3579,7 +3612,7 @@ a.work-box:hover {
 .tso-card-media.is-tall {
   position: relative;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #061530;
 }
@@ -3616,7 +3649,7 @@ a.work-box:hover {
 
 .tso-card-body {
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   flex-direction: column;
   padding: 16px 16px 18px;
 }
@@ -3635,10 +3668,6 @@ a.work-box:hover {
 
 .tso-card-body h3 {
   font-size: 20px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .tso-card-body h2 { font-size: 26px; letter-spacing: -.45px; }
@@ -3652,17 +3681,13 @@ a.work-box:hover {
   line-height: 1.6;
 }
 
-.tso-card-body p,
-.tso-card-body .hcm-prose p {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 .tso-card-body .hcm-prose { max-width: none; }
 .tso-card-body .hcm-chips { margin-top: 16px; }
-.tso-card-body .text-link { margin-top: 16px; }
+.tso-card-body .text-link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 16px;
+}
 
 .tso-why li { padding: 22px 22px 24px; }
 
@@ -6902,8 +6927,8 @@ a.about-card:hover { border-color: var(--navy); }
   .intro-split + .tso-swipe,
   .intro-split + .contact-layout,
   .intro-split + .hcm-stack,
-  .intro-split + .tso-preview-services,
-  .tso-preview-services + .button,
+  .intro-split + .tso-preview-index,
+  .tso-preview-index .button,
   .hcm-prose + .hcm-chips,
   .hcm-prose + .hcm-steps,
   .hcm-prose + .hcm-why,
@@ -6920,7 +6945,7 @@ a.about-card:hover { border-color: var(--navy); }
 
   .tso-preview-services {
     grid-template-columns: 1fr 1fr;
-    column-gap: 40px;
+    column-gap: 48px;
   }
 
   .tso-cards,
@@ -6974,7 +6999,7 @@ a.about-card:hover { border-color: var(--navy); }
 
   .tso-cards.is-swipe.is-service-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-rows: auto;
     overflow: visible;
     scroll-snap-type: none;
@@ -6984,7 +7009,7 @@ a.about-card:hover { border-color: var(--navy); }
     flex: none;
     width: auto;
     min-width: 0;
-    height: auto;
+    height: 100%;
   }
 
   .tso-why-mark {

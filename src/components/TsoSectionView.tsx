@@ -483,17 +483,24 @@ function ServicePreview({ block }: { block: SectionBlock }) {
         <IntroSplit title={block.title}>
           {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </IntroSplit>
-        {block.chips?.length ? (
-          <ul className="tso-preview-services">
-            {block.chips.map((chip) => (
-              <li key={chip}>{chip}</li>
-            ))}
-          </ul>
-        ) : null}
-        {block.link ? (
-          <Link className="button button-primary" to={block.link.to}>
-            {block.link.label} <Arrow />
-          </Link>
+        {block.chips?.length || block.link ? (
+          <div className="tso-preview-index">
+            {block.chips?.length ? (
+              <ul className="tso-preview-services">
+                {block.chips.map((chip, index) => (
+                  <li key={chip}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{chip}</strong>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {block.link ? (
+              <Link className="button button-primary" to={block.link.to}>
+                {block.link.label} <Arrow />
+              </Link>
+            ) : null}
+          </div>
         ) : null}
       </section>
     </SurfaceBand>
