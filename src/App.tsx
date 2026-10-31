@@ -6,6 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 import SiteHeader from '@/components/SiteHeader'
 import SiteMotion from '@/components/SiteMotion'
 import AboutPage from '@/pages/AboutPage'
+import ContactPage from '@/pages/ContactPage'
 import HomePage from '@/pages/HomePage'
 import IndustriesPage from '@/pages/IndustriesPage'
 import IndustryDetailPage from '@/pages/IndustryDetailPage'
@@ -29,8 +30,9 @@ export default function App() {
         <SiteMotion />
         <SiteHeader />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
           <Route path="/what-we-do" element={<Navigate to="/what-we-do/hcm" replace />} />
           <Route path="/what-we-do/industries" element={<IndustriesPage />} />
           <Route path="/what-we-do/industries/:slug" element={<IndustryDetailPage />} />

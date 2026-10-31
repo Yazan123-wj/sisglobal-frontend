@@ -35,6 +35,7 @@ export default function SiteFooter() {
           </div>
           <div>
             <p className="footer-label">Contact</p>
+            <Link to="/contact">Contact Us</Link>
             <a href="mailto:info@sisglobal.com">info@sisglobal.com</a>
             <a href="https://www.linkedin.com/company/sis-global-hq" target="_blank" rel="noreferrer">LinkedIn</a>
             <a href="https://www.facebook.com/saudiintelligentsolutions" target="_blank" rel="noreferrer">Facebook</a>

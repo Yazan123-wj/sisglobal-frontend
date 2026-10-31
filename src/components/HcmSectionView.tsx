@@ -1,8 +1,7 @@
-import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import caseWorkforce from '@/assets/case-workforce.jpg'
-import industryEducation from '@/assets/industry-education.jpg'
+import homeCareers from '@/assets/home-careers.jpg'
 import industryFinance from '@/assets/industry-finance.jpg'
 import industryGovernment from '@/assets/industry-government.jpg'
 import industryProfessional from '@/assets/industry-professional.jpg'
@@ -14,51 +13,26 @@ import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import { hcmClients } from '@/data/hcmClients'
 import type { HcmItem, HcmSection } from '@/data/hcmPages'
 
-const servicePhotos: Record<string, string> = {
-  'Employee Administration': industryProfessional,
+const hcmServicePhotos: Record<string, string> = {
+  'Employee Administration': caseWorkforce,
   'Payroll, Compensation & Benefits': industryFinance,
   'Government Relations, Compliance & Employee Mobility': industryGovernment,
-  'Workforce Management': caseWorkforce,
-  'Offboarding & Final Settlement': industryEducation,
+  'Workforce Management': industryProfessional,
+  'Offboarding & Final Settlement': homeCareers,
 }
 
 function chips(scope: string) {
   return scope.split(' · ')
 }
 
-function ServiceCards({ title, lead, items }: { title: string; lead?: string[]; items: HcmItem[] }) {
-  const scroller = useRef<HTMLUListElement>(null)
-  const swipe = items.length > 1
-
-  const move = (direction: -1 | 1) => {
-    const node = scroller.current
-    if (!node) return
-    const card = node.querySelector<HTMLElement>('.tso-card')
-    const step = (card?.offsetWidth ?? 320) + 16
-    node.scrollBy({ left: step * direction, behavior: 'smooth' })
-  }
-
+function ServiceCards({ items }: { items: HcmItem[] }) {
   return (
-    <div className={swipe ? 'tso-swipe' : undefined}>
-      <div className="tso-swipe-head">
-        <h2>{title}</h2>
-        {swipe ? (
-          <div className="work-scroll-nav tso-swipe-nav">
-            <button type="button" aria-label="Previous" onClick={() => move(-1)}><Arrow dir="left" /></button>
-            <button type="button" aria-label="Next" onClick={() => move(1)}><Arrow dir="right" /></button>
-          </div>
-        ) : null}
-      </div>
-      {lead?.length ? (
-        <div className="tso-sub-lead">
-          {lead.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        </div>
-      ) : null}
-      <ul ref={scroller} className={swipe ? 'tso-cards is-swipe' : 'tso-cards'}>
+    <div className="tso-swipe is-service-grid">
+      <ul className="tso-cards is-swipe is-service-grid">
         {items.map((item, index) => (
           <li key={item.title} className="tso-card">
             <div className="tso-card-media" data-curtain>
-              <img src={servicePhotos[item.title] ?? industryProfessional} alt="" />
+              <img src={hcmServicePhotos[item.title] ?? caseWorkforce} alt="" />
               <span>{String(index + 1).padStart(2, '0')}</span>
             </div>
             <div className="tso-card-body">
@@ -99,6 +73,43 @@ function Stack({ items }: { items: HcmItem[] }) {
               ) : null}
             </div>
           )}
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+const whyMarks = [
+  'M4 11 12 4l8 7M7 10.5V20h10v-9.5',
+  'M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6zM13.5 13.5h6v6h-6z',
+  'M5 18V11h3v7H5zM10.5 18V7h3v11h-3zM16 18V4h3v14h-3z',
+  'M4 7h16M6 12h12M8 17h8',
+]
+
+export function WhyFeature({
+  items,
+  light = false,
+}: {
+  items: { title: string; copy: string }[]
+  light?: boolean
+}) {
+  return (
+    <ol className={light ? 'tso-why-feature is-light' : 'tso-why-feature'}>
+      {items.map((item, index) => (
+        <li key={item.title}>
+          <span className="tso-why-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d={whyMarks[index] ?? whyMarks[0]}
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.copy}</p>
         </li>
       ))}
     </ol>
@@ -148,15 +159,7 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
         <SurfaceBand tone={surfaces.next()}>
           <section className="work-block">
             <h2>Why Idarat HCM?</h2>
-            <ol className="tso-why">
-              {section.why.map((item, index) => (
-                <li key={item.title}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.copy}</p>
-                </li>
-              ))}
-            </ol>
+            <WhyFeature items={section.why} light />
           </section>
         </SurfaceBand>
       ) : null}
@@ -171,13 +174,13 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
       ) : null}
 
       {section.industries ? (
-        <SurfaceBand tone="navy">
+        <SurfaceBand tone={surfaces.next()}>
           <section className="hcm-callout">
             <div>
               <h2>{section.industries.title}</h2>
               <p>{section.industries.copy}</p>
             </div>
-            <Link className="text-link" to="/what-we-do/industries">
+            <Link className="button button-primary" to="/what-we-do/industries">
               {section.industries.cta} <Arrow />
             </Link>
           </section>
@@ -187,13 +190,19 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
       {section.groups?.map((group) => (
         <SurfaceBand key={group.title} tone={surfaces.next()}>
           <section className="work-block">
-            {group.title === 'Our HCM Services' ? (
-              <ServiceCards title={group.title} lead={section.body} items={group.items} />
+            {section.id === 'hcm-services' && group.title === 'Our HCM Services' ? (
+              <IntroSplit title={group.title}>
+                {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </IntroSplit>
             ) : (
-              <>
-                <h2>{group.title}</h2>
-                {group.title.startsWith('How We') ? <Steps items={group.items} /> : <Stack items={group.items} />}
-              </>
+              <h2>{group.title}</h2>
+            )}
+            {section.id === 'hcm-services' && group.title === 'Our HCM Services' ? (
+              <ServiceCards items={group.items} />
+            ) : group.title.startsWith('How We') ? (
+              <Steps items={group.items} />
+            ) : (
+              <Stack items={group.items} />
             )}
           </section>
         </SurfaceBand>

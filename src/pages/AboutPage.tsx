@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import ceoPortrait from '@/assets/ceo-sammer-al-sabawi.jpg'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
@@ -48,7 +48,7 @@ function telHref(phone: string) {
 
 export default function AboutPage() {
   const navigate = useNavigate()
-  const contact = () => navigate({ pathname: '/', hash: 'contact' })
+  const contact = () => navigate('/contact')
 
   return (
     <main className="about-page">
@@ -206,9 +206,9 @@ export default function AboutPage() {
         <div className="container">
           <h2>{aboutCta.title}</h2>
           <p>{aboutCta.copy}</p>
-          <button className="text-link" type="button" onClick={contact}>
+          <Link className="button button-primary" to="/contact">
             {aboutCta.action} <Arrow />
-          </button>
+          </Link>
         </div>
       </section>
     </main>

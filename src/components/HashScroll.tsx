@@ -1,11 +1,16 @@
 import { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function HashScroll() {
   const location = useLocation()
+  const navigate = useNavigate()
   const path = useRef(location.pathname)
 
   useEffect(() => {
+    if (location.hash === '#contact') {
+      navigate('/contact', { replace: true })
+      return
+    }
     const pathChanged = path.current !== location.pathname
     path.current = location.pathname
     const id = location.hash.replace('#', '')
@@ -18,7 +23,7 @@ export default function HashScroll() {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 60)
     return () => window.clearTimeout(timer)
-  }, [location.pathname, location.hash])
+  }, [location.pathname, location.hash, navigate])
 
   return null
 }

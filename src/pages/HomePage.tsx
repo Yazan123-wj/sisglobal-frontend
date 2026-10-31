@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import { insightsByKind, type InsightImage } from '@/data/insights'
@@ -70,7 +69,6 @@ function PartnerStrip() {
 export default function HomePage() {
   const [searchParams] = useSearchParams()
   const [activeService, setActiveService] = useState<ServiceKey>('tso')
-  const [formSent, setFormSent] = useState(false)
   const active = services[activeService]
 
   useEffect(() => {
@@ -80,7 +78,6 @@ export default function HomePage() {
   const goTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-  const submitForm = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setFormSent(true) }
 
   return (
     <main id="top">
@@ -215,7 +212,13 @@ export default function HomePage() {
           </div>
         </Link>
       </section>
-      <section id="contact" className="contact-section section"><div className="container contact-wrap"><div className="contact-copy"><p className="eyebrow light">Get in touch</p><h2>Let’s put your<br /><em>plans into action.</em></h2><p>Tell us what your business needs and the right specialist will get back to you.</p></div><div className="form-card">{formSent ? <div className="success-state"><span>✓</span><h3>Thanks for getting in touch.</h3><p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p><button className="button button-secondary" type="button" onClick={() => setFormSent(false)}>Send another enquiry <Arrow /></button></div> : <form onSubmit={submitForm}><div className="form-heading"><h3>How can we help?</h3><p>Fields marked with * are required.</p></div><div className="form-grid"><label>Name *<input required name="name" placeholder="Your full name" /></label><label>Business email *<input required type="email" name="email" placeholder="name@company.com" /></label><label>Company *<input required name="company" placeholder="Your company" /></label><label>Area of interest *<select required name="interest" defaultValue=""><option value="" disabled>Select a service</option><option>Human Capital Management</option><option>Technical Services & Operations</option><option>ICT Infrastructure</option><option>Multiple services</option><option>Not sure yet</option></select></label><label className="wide">Message<textarea name="message" placeholder="A few details about your enquiry" rows={4} /></label></div><button className="button button-primary form-submit" type="submit">Send Enquiry <Arrow /></button></form>}</div></div></section>
+      <section className="about-cta">
+        <div className="container">
+          <h2>Let’s put your plans into action.</h2>
+          <p>Tell us what your business needs and the right specialist will get back to you.</p>
+          <Link className="button button-primary" to="/contact">Contact Us <Arrow /></Link>
+        </div>
+      </section>
     </main>
   )
 }

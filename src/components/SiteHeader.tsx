@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
 import { brandForPath } from '@/data/brand'
@@ -28,7 +28,6 @@ export default function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<OpenMenu>(null)
   const hideMenu = useRef(0)
   const location = useLocation()
-  const navigate = useNavigate()
 
   const closeMenus = () => {
     window.clearTimeout(hideMenu.current)
@@ -44,20 +43,6 @@ export default function SiteHeader() {
   const scheduleHideMenu = () => {
     window.clearTimeout(hideMenu.current)
     hideMenu.current = window.setTimeout(() => setOpenMenu(null), 180)
-  }
-
-  const go = (to: string) => {
-    closeMenus()
-    if (to.startsWith('/#')) {
-      const id = to.slice(2)
-      if (location.pathname !== '/') {
-        navigate({ pathname: '/', hash: id })
-        return
-      }
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      return
-    }
-    navigate(to)
   }
 
   const brand = brandForPath(location.pathname)
@@ -155,9 +140,9 @@ export default function SiteHeader() {
         <NavLink to="/vacancies" className={careerCurrent ? 'is-current' : undefined} onClick={closeMenus}>
           Career
         </NavLink>
-        <button className="button button-primary" type="button" onClick={() => go('/#contact')}>
+        <Link className="button button-primary" to="/contact" onClick={closeMenus}>
           Contact Us <Arrow />
-        </button>
+        </Link>
       </nav>
     </header>
   )

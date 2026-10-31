@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
 import PageSubnav from '@/components/PageSubnav'
@@ -100,7 +100,6 @@ function SupportPanel({ group, paper = false }: { group: IndustrySupport; paper?
 
 export default function IndustryDetailPage() {
   const { slug } = useParams()
-  const navigate = useNavigate()
   const listing = slug ? getIndustry(slug) : undefined
   const page = slug ? getIndustryPage(slug) : undefined
 
@@ -221,9 +220,9 @@ export default function IndustryDetailPage() {
       <section className="about-cta industries-cta">
         <div className="container">
           <h2>{page.cta}</h2>
-          <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+          <Link className="button button-primary" to="/contact">
             Contact Us <Arrow dir="right" />
-          </button>
+          </Link>
         </div>
       </section>
     </main>

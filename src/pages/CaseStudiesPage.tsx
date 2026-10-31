@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
@@ -39,7 +39,6 @@ function CaseCard({ item, featured = false }: { item: Insight; featured?: boolea
 }
 
 export default function CaseStudiesPage() {
-  const navigate = useNavigate()
   const studies = insightsByKind('story')
   const featured = studies[0]
   const rest = studies.slice(1)
@@ -89,9 +88,9 @@ export default function CaseStudiesPage() {
       <section id="case-cta" className="about-cta">
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
-          <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+          <Link className="button button-primary" to="/contact">
             Contact Us <Arrow dir="right" />
-          </button>
+          </Link>
         </div>
       </section>
     </main>

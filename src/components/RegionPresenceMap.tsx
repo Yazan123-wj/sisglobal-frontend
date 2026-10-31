@@ -10,13 +10,27 @@ type CountryProps = { id: string; name: string }
 
 const VIEW_W = 1000
 const VIEW_H = 740
-const WEST = -22
-const EAST = 178
-const SOUTH = -48
-const NORTH = 76
-const PAD = 12
-const MIN_ZOOM = 1
+const PAD = 28
+const INNER_W = VIEW_W - PAD * 2
+const INNER_H = VIEW_H - PAD * 2
+const FRAME_SOUTH = -36
+const FRAME_NORTH = 62
+const FRAME_MID_LON = 17
+const FRAME_LAT = FRAME_NORTH - FRAME_SOUTH
+const FRAME_LON = FRAME_LAT * (INNER_W / INNER_H)
+const FRAME_WEST = FRAME_MID_LON - FRAME_LON / 2
+const FRAME_EAST = FRAME_MID_LON + FRAME_LON / 2
+const WORLD_WEST = -170
+const WORLD_EAST = 190
+const WORLD_SOUTH = -58
+const WORLD_NORTH = 84
+const DEFAULT_ZOOM = 1
+const MIN_ZOOM = 0.32
+const MAX_ZOOM = 12
 const ZOOM_FACTOR = 1.45
+const DEGREE = INNER_H / FRAME_LAT
+const ORIGIN_X = PAD
+const ORIGIN_Y = PAD
 
 const labelOffset: Record<string, { dx: number; dy: number; short?: string }> = {
   'united-kingdom': { dx: 14, dy: -8 },
@@ -30,25 +44,21 @@ const labelOffset: Record<string, { dx: number; dy: number; short?: string }> = 
 }
 
 function project(lon: number, lat: number): [number, number] {
-  const x = PAD + ((lon - WEST) / (EAST - WEST)) * (VIEW_W - PAD * 2)
-  const y = PAD + ((NORTH - lat) / (NORTH - SOUTH)) * (VIEW_H - PAD * 2)
-  return [x, y]
+  return [ORIGIN_X + (lon - FRAME_WEST) * DEGREE, ORIGIN_Y + (FRAME_NORTH - lat) * DEGREE]
 }
 
 const [HQ_X, HQ_Y] = project(headquarters.lng, headquarters.lat)
-
-function inView(lon: number, lat: number) {
-  return lon >= WEST - 4 && lon <= EAST + 4 && lat >= SOUTH - 4 && lat <= NORTH + 4
-}
+const [WORLD_X0, WORLD_Y0] = project(WORLD_WEST, WORLD_NORTH)
+const [WORLD_X1, WORLD_Y1] = project(WORLD_EAST, WORLD_SOUTH)
 
 function ringPath(ring: Position[]) {
-  if (ring.length < 3 || !inView(ring[0][0], ring[0][1])) return ''
+  if (ring.length < 3) return ''
+  const avgLat = ring.reduce((sum, point) => sum + point[1], 0) / ring.length
+  if (avgLat < -56) return ''
   const [sx, sy] = project(ring[0][0], ring[0][1])
   let d = `M${sx.toFixed(1)} ${sy.toFixed(1)}`
   for (let i = 1; i < ring.length; i++) {
-    const [lon, lat] = ring[i]
-    if (!inView(lon, lat)) continue
-    const [x, y] = project(lon, lat)
+    const [x, y] = project(ring[i][0], ring[i][1])
     d += `L${x.toFixed(1)} ${y.toFixed(1)}`
   }
   return `${d}Z`
@@ -64,12 +74,19 @@ function geometryPath(geometry: Geometry) {
   return ''
 }
 
+function clampAxis(value: number, start: number, end: number, view: number) {
+  const margin = Math.min(120, Math.max(40, (end - start) * 0.15))
+  return Math.max(-end + margin, Math.min(view - start - margin, value))
+}
+
 function clampPan(x: number, y: number, zoom: number) {
-  const maxX = Math.max(HQ_X, VIEW_W - HQ_X) * (zoom - 1)
-  const maxY = Math.max(HQ_Y, VIEW_H - HQ_Y) * (zoom - 1)
+  const left = HQ_X + (WORLD_X0 - HQ_X) * zoom
+  const right = HQ_X + (WORLD_X1 - HQ_X) * zoom
+  const top = HQ_Y + (WORLD_Y0 - HQ_Y) * zoom
+  const bottom = HQ_Y + (WORLD_Y1 - HQ_Y) * zoom
   return {
-    x: Math.max(-maxX, Math.min(maxX, x)),
-    y: Math.max(-maxY, Math.min(maxY, y)),
+    x: clampAxis(x, left, right, VIEW_W),
+    y: clampAxis(y, top, bottom, VIEW_H),
   }
 }
 
@@ -98,10 +115,9 @@ export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActiv
   const svgRef = useRef<SVGSVGElement>(null)
   const drag = useRef<{ id: number; x: number; y: number; panX: number; panY: number; moved: boolean } | null>(null)
   const skipClick = useRef(false)
-  const [zoom, setZoom] = useState(MIN_ZOOM)
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [grabbing, setGrabbing] = useState(false)
-  const canPan = zoom > MIN_ZOOM
 
   const viewPoint = (event: ReactPointerEvent) => {
     const svg = svgRef.current
@@ -114,13 +130,13 @@ export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActiv
   }
 
   const zoomTo = (next: number) => {
-    const value = Math.max(MIN_ZOOM, next)
+    const value = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, next))
     setZoom(value)
-    setPan(value <= MIN_ZOOM ? { x: 0, y: 0 } : clampPan(pan.x, pan.y, value))
+    setPan(clampPan(pan.x, pan.y, value))
   }
 
   const onPointerDown = (event: ReactPointerEvent<SVGSVGElement>) => {
-    if (!canPan || event.button !== 0) return
+    if (event.button !== 0) return
     const point = viewPoint(event)
     drag.current = { id: event.pointerId, x: point.x, y: point.y, panX: pan.x, panY: pan.y, moved: false }
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -160,7 +176,7 @@ export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActiv
 
   return (
     <div
-      className={`region-presence-map${grabbing ? ' is-grabbing' : ''}${canPan ? ' is-pannable' : ''}`}
+      className={`region-presence-map is-pannable${grabbing ? ' is-grabbing' : ''}`}
       onPointerLeave={() => { if (!drag.current) onLeave() }}
     >
       <svg
@@ -236,7 +252,7 @@ export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActiv
         </g>
       </svg>
       <div className="presence-map-zoom" role="group" aria-label="Map zoom">
-        <button type="button" aria-label="Zoom in" onClick={() => zoomTo(zoom * ZOOM_FACTOR)}>+</button>
+        <button type="button" aria-label="Zoom in" onClick={() => zoomTo(zoom * ZOOM_FACTOR)} disabled={zoom >= MAX_ZOOM}>+</button>
         <button type="button" aria-label="Zoom out" onClick={() => zoomTo(zoom / ZOOM_FACTOR)} disabled={zoom <= MIN_ZOOM}>−</button>
       </div>
     </div>

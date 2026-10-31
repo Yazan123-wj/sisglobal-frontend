@@ -131,9 +131,9 @@ export default function InsightDetailPage() {
             <div className="insight-aside-card insight-aside-cta">
               <h2>Talk to the team</h2>
               <p>If this is relevant to a live programme, we can walk through how SIS Global would approach it.</p>
-              <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+              <Link className="button button-primary" to="/contact">
                 Contact Us <Arrow dir="right" />
-              </button>
+              </Link>
             </div>
           </aside>
         </div>
@@ -167,9 +167,9 @@ export default function InsightDetailPage() {
       <section className="about-cta">
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
-          <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+          <Link className="button button-primary" to="/contact">
             Contact Us <Arrow dir="right" />
-          </button>
+          </Link>
         </div>
       </section>
     </main>

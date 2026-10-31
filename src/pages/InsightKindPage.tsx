@@ -128,9 +128,9 @@ export default function InsightKindPage({ kind: kindId }: { kind: InsightKind })
       <section id="insight-cta" className="about-cta">
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
-          <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+          <Link className="button button-primary" to="/contact">
             Contact Us <Arrow dir="right" />
-          </button>
+          </Link>
         </div>
       </section>
     </main>

@@ -7,7 +7,7 @@ import iso27001 from '@/assets/certs/iso-27001.png'
 import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
-import { Steps } from '@/components/HcmSectionView'
+import { Steps, WhyFeature } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
@@ -81,7 +81,7 @@ function groupBlocks(blocks: TsoBlock[]): Group[] {
 
 function ContactLink({ label }: { label: string }) {
   return (
-    <Link className="text-link" to="/#contact">
+    <Link className="button button-primary" to="/contact">
       {label} <Arrow />
     </Link>
   )
@@ -220,37 +220,6 @@ function WhyBoxes({ items }: { items: NonNullable<SectionBlock['why']> }) {
       {items.map((item, index) => (
         <li key={item.title}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <h3>{item.title}</h3>
-          <p>{item.copy}</p>
-        </li>
-      ))}
-    </ol>
-  )
-}
-
-const whyMarks = [
-  'M4 11 12 4l8 7M7 10.5V20h10v-9.5',
-  'M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6zM13.5 13.5h6v6h-6z',
-  'M5 18V11h3v7H5zM10.5 18V7h3v11h-3zM16 18V4h3v14h-3z',
-  'M4 7h16M6 12h12M8 17h8',
-]
-
-function WhyFeature({ items }: { items: NonNullable<SectionBlock['why']> }) {
-  return (
-    <ol className="tso-why-feature">
-      {items.map((item, index) => (
-        <li key={item.title}>
-          <span className="tso-why-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path
-                d={whyMarks[index] ?? whyMarks[0]}
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
           <h3>{item.title}</h3>
           <p>{item.copy}</p>
         </li>
@@ -399,7 +368,7 @@ function CtaBand({ block, stacked = false }: { block: CtaBlock; stacked?: boolea
           {block.title ? <h2>{block.title}</h2> : null}
           {block.copy ? <p>{block.copy}</p> : null}
         </div>
-        <Link className="button button-primary" to="/#contact">
+        <Link className="button button-primary" to="/contact">
           {block.label} <Arrow />
         </Link>
       </section>
@@ -491,7 +460,7 @@ function ServiceView({
                 {cta.title ? <h2>{cta.title}</h2> : null}
                 {cta.copy ? <p>{cta.copy}</p> : null}
               </div>
-              <Link className="button button-primary" to="/#contact">
+              <Link className="button button-primary" to="/contact">
                 Talk to our team <Arrow />
               </Link>
             </section>
@@ -504,6 +473,30 @@ function ServiceView({
         </SurfaceBand>
       ) : null}
     </>
+  )
+}
+
+function ServicePreview({ block }: { block: SectionBlock }) {
+  return (
+    <SurfaceBand tone="mist">
+      <section className="work-block tso-service-preview">
+        <IntroSplit title={block.title}>
+          {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </IntroSplit>
+        {block.chips?.length ? (
+          <ul className="tso-preview-services">
+            {block.chips.map((chip) => (
+              <li key={chip}>{chip}</li>
+            ))}
+          </ul>
+        ) : null}
+        {block.link ? (
+          <Link className="button button-primary" to={block.link.to}>
+            {block.link.label} <Arrow />
+          </Link>
+        ) : null}
+      </section>
+    </SurfaceBand>
   )
 }
 
@@ -554,11 +547,26 @@ function renderGroup(group: Group, index: number, photoKey: string, withPhoto = 
 export default function TsoSectionView({
   section,
   topic,
+  previewId,
 }: {
   section: TsoSection
   topic?: string
+  previewId?: string
 }) {
   const groups = groupBlocks(section.blocks)
+  if (section.id === 'overview' && previewId) {
+    const offers = groups.find((group) => group.kind === 'offers')
+    const preview = offers?.kind === 'offers'
+      ? offers.blocks.find((block) => block.link?.to.endsWith(`/${previewId}`))
+      : undefined
+    if (preview) {
+      return (
+        <div className={`hcm-section is-${section.id}`}>
+          <ServicePreview block={preview} />
+        </div>
+      )
+    }
+  }
   const overviewId = section.id === 'overview' ? undefined : `${section.id}-overview`
   const split = overviewId ? groups.findIndex((group) => group.kind === 'service') : -1
   const intro = split >= 0 ? groups.slice(0, split) : groups

@@ -13,7 +13,7 @@ import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import TsoSectionView from '@/components/TsoSectionView'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
-import { getTsoSection, tsoInnerNav, tsoNav } from '@/data/tsoPages'
+import { getTsoSection, tsoInnerNav, tsoNav, type TsoSectionId } from '@/data/tsoPages'
 import { workServices } from '@/data/workContent'
 import type { ServiceKey, WorkAudience, WorkService } from '@/data/workContent'
 
@@ -249,7 +249,6 @@ export default function WhatWeDoPage() {
     ...selected.pillars.map((item) => ({ id: item.id, label: item.label })),
   ]
 
-  const contact = () => navigate({ pathname: '/', hash: 'contact' })
   const heroTitle = tsoSection?.title ?? hcmSection?.title ?? (pillar ? pillar.title : selected.title)
   const heroLead = tsoSection?.lead ?? hcmSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
   const heroEyebrow = tsoSection?.eyebrow ?? hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
@@ -262,10 +261,18 @@ export default function WhatWeDoPage() {
   } as const
   const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : null
   const heroProposal = Boolean(tsoSection && tsoSection.id !== 'overview')
-  const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
-  const subnavActive = isHcm ? (hcmSection?.id ?? 'overview') : isTso ? (tsoSection?.id ?? 'overview') : pillarId
-  const innerNav = isTso && tsoSection ? tsoInnerNav[tsoSection.id] : undefined
+  const tsoPreviewIds = tsoNav.filter((item) => item.id !== 'overview').map((item) => item.id)
   const hashId = location.hash.replace('#', '')
+  const tsoPreview = isTso && tsoSection?.id === 'overview' && tsoPreviewIds.includes(hashId as TsoSectionId)
+    ? hashId
+    : undefined
+  const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
+  const subnavActive = isHcm
+    ? (hcmSection?.id ?? 'overview')
+    : isTso
+      ? (tsoPreview ?? tsoSection?.id ?? 'overview')
+      : pillarId
+  const innerNav = isTso && tsoSection && tsoSection.id !== 'overview' ? tsoInnerNav[tsoSection.id] : undefined
   const activeInner = innerNav?.some((item) => item.id === hashId) ? hashId : innerNav?.[0]?.id
   const firstInner = useRef(true)
 
@@ -282,6 +289,16 @@ export default function WhatWeDoPage() {
     document.getElementById('work-content')?.scrollIntoView({ block: 'start' })
   }, [activeInner])
 
+  const firstPreview = useRef(true)
+  useEffect(() => {
+    if (firstPreview.current) {
+      firstPreview.current = false
+      return
+    }
+    if (!isTso || tsoSection?.id !== 'overview') return
+    document.getElementById('work-content')?.scrollIntoView({ block: 'start' })
+  }, [isTso, tsoPreview, tsoSection?.id])
+
   return (
     <main className={innerNav ? 'work-page has-tso-inner-nav' : 'work-page'}>
       <section className="about-hero" aria-labelledby="work-title">
@@ -294,12 +311,12 @@ export default function WhatWeDoPage() {
             {heroCta || heroProposal ? (
               <div className="about-hero-actions">
                 {heroCta ? (
-                  <Link className="button button-primary about-hero-cta" to="/#contact">
+                  <Link className="button button-primary about-hero-cta" to="/contact">
                     {heroCta} <Arrow />
                   </Link>
                 ) : null}
                 {heroProposal ? (
-                  <Link className="button button-secondary about-hero-cta" to="/#contact">
+                  <Link className="button button-secondary about-hero-cta" to="/contact">
                     Request a Proposal <Arrow />
                   </Link>
                 ) : null}
@@ -314,7 +331,16 @@ export default function WhatWeDoPage() {
         label={`${selected.label} service lines`}
         items={subnavItems}
         activeId={subnavActive}
-        onSelect={(id) => navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)}
+        onSelect={(id) => {
+          if (isTso) {
+            navigate(
+              id === 'overview' ? '/what-we-do/tso' : { pathname: '/what-we-do/tso', hash: id },
+              { preventScrollReset: true },
+            )
+            return
+          }
+          navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)
+        }}
         extra={innerNav && activeInner ? (
           <PageSubnavPills
             items={innerNav}
@@ -333,7 +359,7 @@ export default function WhatWeDoPage() {
 
       <section id="work-content" className="work-content section">
         {tsoSection ? (
-          <TsoSectionView section={tsoSection} topic={activeInner} />
+          <TsoSectionView section={tsoSection} topic={activeInner} previewId={tsoPreview} />
         ) : hcmSection ? (
           <HcmSectionView section={hcmSection} image={images.hcm} />
         ) : (
@@ -345,9 +371,9 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{hcmSection.close.title}</h2>
             {hcmSection.close.copy ? <p className="work-cta-copy">{hcmSection.close.copy}</p> : null}
-            <button className="text-link" type="button" onClick={contact}>
+            <Link className="button button-primary" to="/contact">
               {hcmSection.close.cta} <Arrow dir="right" />
-            </button>
+            </Link>
           </div>
         </section>
       ) : !hcmSection ? (
@@ -355,9 +381,9 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{selected.cta.title}</h2>
             <p className="work-cta-copy">{selected.cta.copy}</p>
-            <button className="text-link" type="button" onClick={contact}>
+            <Link className="button button-primary" to="/contact">
               {selected.cta.label} <Arrow dir="right" />
-            </button>
+            </Link>
           </div>
         </section>
       ) : null}

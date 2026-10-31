@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import caseIct from '@/assets/case-ict.jpg'
@@ -20,8 +20,6 @@ const storyImages: Record<InsightImage, string> = {
 const stories = insightsByKind('story')
 
 export default function IndustriesPage() {
-  const navigate = useNavigate()
-
   return (
     <main className="work-page">
       <section className="about-hero" aria-labelledby="industries-title">
@@ -103,9 +101,9 @@ export default function IndustriesPage() {
         <div className="container">
           <h2>Don’t see your industry?</h2>
           <p>Tell us what you need and the right specialist will get back to you.</p>
-          <button className="text-link" type="button" onClick={() => navigate({ pathname: '/', hash: 'contact' })}>
+          <Link className="button button-primary" to="/contact">
             Send Enquiry <Arrow dir="right" />
-          </button>
+          </Link>
         </div>
       </section>
     </main>
