@@ -162,13 +162,10 @@ export default function AboutPage() {
               </article>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="about-section section">
-        <div className="container trusted-logos-block">
-          <h2 className="logo-strip-label">Trusted by Leading Organizations</h2>
-          <LogoMarquee items={clients} />
+          <div className="trusted-logos-block">
+            <h2 className="logo-strip-label">Trusted by Leading Organizations</h2>
+            <LogoMarquee items={clients} />
+          </div>
         </div>
       </section>
 

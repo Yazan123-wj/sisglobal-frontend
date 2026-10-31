@@ -131,7 +131,7 @@ export default function IndustryDetailPage() {
         </div>
       </section>
 
-      <PageSubnav items={sections} />
+      <PageSubnav className="page-subnav-work" items={sections} />
 
       <section id="industry-overview" className="industry-block section">
         <div className="container">
