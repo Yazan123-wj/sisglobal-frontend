@@ -2661,12 +2661,7 @@ a.work-box:hover {
 }
 
 .work-box span {
-  display: block;
-  margin-bottom: 14px;
-  color: var(--blue-bright);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .1em;
+  margin-bottom: 16px;
 }
 
 .work-box h3 {
@@ -3212,7 +3207,7 @@ a.work-box:hover {
   transition: color .35s ease;
 }
 
-.hcm-models article h3 { margin: 16px 0 12px; }
+.hcm-models article h3 { margin: 0 0 16px; }
 
 .hcm-models article p { max-width: none; }
 
@@ -3236,7 +3231,8 @@ a.work-box:hover {
 
 .hcm-models article:hover span,
 .hcm-models article:focus-visible span {
-  color: var(--accent-soft);
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
 }
 
 .hcm-models article:hover h3,
@@ -3638,13 +3634,34 @@ a.work-box:hover {
   letter-spacing: .12em;
 }
 
-.tso-card-num {
-  padding: 22px 22px 0;
+.tso-card-num,
+.tso-why span,
+.work-box span,
+.hcm-models article > span,
+.about-tiles article > span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sky) 18%, #fff);
   color: var(--blue);
   font-family: 'Manrope', sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: .08em;
+}
+
+.tso-card-num {
+  margin: 16px 16px 0;
+}
+
+.tso-why span,
+.work-box span,
+.hcm-models article > span,
+.about-tiles article > span {
+  margin: 0 0 20px;
 }
 
 .tso-card-body {
@@ -3654,7 +3671,7 @@ a.work-box:hover {
   padding: 16px 16px 18px;
 }
 
-.tso-card:has(.tso-card-num) .tso-card-body { padding-top: 10px; }
+.tso-card:has(.tso-card-num) .tso-card-body { padding-top: 20px; }
 
 .tso-card-body h2,
 .tso-card-body h3,
@@ -3668,6 +3685,10 @@ a.work-box:hover {
 
 .tso-card-body h3 {
   font-size: 20px;
+}
+
+.tso-why h3 {
+  margin-bottom: 16px;
 }
 
 .tso-card-body h2 { font-size: 26px; letter-spacing: -.45px; }
@@ -3689,17 +3710,7 @@ a.work-box:hover {
   padding-top: 16px;
 }
 
-.tso-why li { padding: 22px 22px 24px; }
-
-.tso-why span {
-  display: block;
-  margin-bottom: 14px;
-  color: var(--blue);
-  font-family: 'Manrope', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: .08em;
-}
+.tso-why li { padding: 24px 24px 26px; }
 
 .tso-why-feature {
   list-style: none;
@@ -5083,14 +5094,14 @@ a.about-card:hover { border-color: var(--navy); }
 .about-tiles {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  gap: 24px;
 }
 
 .about-tiles article {
   display: flex;
   flex-direction: column;
   min-height: 240px;
-  padding: 28px 24px 26px;
+  padding: 28px;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -5103,16 +5114,8 @@ a.about-card:hover { border-color: var(--navy); }
   transition: color .35s ease;
 }
 
-.about-tiles article span {
-  font-family: 'Manrope', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  color: var(--blue);
-}
-
 .about-tiles h3 {
-  margin: 16px 0 12px;
+  margin: 0 0 16px;
   font-family: 'Manrope', sans-serif;
   font-size: 24px;
   letter-spacing: -.4px;
@@ -5151,7 +5154,10 @@ a.about-card:hover { border-color: var(--navy); }
 }
 
 .about-tiles article:hover span,
-.about-tiles article:focus-visible span { color: var(--accent-soft); }
+.about-tiles article:focus-visible span {
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+}
 
 .about-tiles article:hover h3,
 .about-tiles article:focus-visible h3 { color: #fff; }
@@ -7041,11 +7047,12 @@ a.about-card:hover { border-color: var(--navy); }
   }
 
   .tso-card:has(.tso-card-num) .tso-card-body {
-    padding-top: 0;
+    padding-top: 20px;
   }
 
   .tso-card-num {
-    padding: var(--space-card-pad) var(--space-card-pad) 0;
+    margin: 16px 16px 0;
+    padding: 0;
   }
 
   .service-card-copy {
@@ -7082,7 +7089,6 @@ a.about-card:hover { border-color: var(--navy); }
   }
 
   .about-card-body span:not(.text-link),
-  .tso-why span,
   .service-card-label,
   .insight-kicker,
   .vacancy-meta {
