@@ -23,10 +23,11 @@ const WORLD_WEST = -170
 const WORLD_EAST = 190
 const WORLD_SOUTH = -58
 const WORLD_NORTH = 84
-const DEFAULT_ZOOM = 1
+const ZOOM_FACTOR = 1.45
+const DEFAULT_ZOOM = ZOOM_FACTOR
+const DEFAULT_PAN = { x: 0, y: 56 }
 const MIN_ZOOM = 0.32
 const MAX_ZOOM = 12
-const ZOOM_FACTOR = 1.45
 const DEGREE = INNER_H / FRAME_LAT
 const ORIGIN_X = PAD
 const ORIGIN_Y = PAD
@@ -36,7 +37,7 @@ const labelOffset: Record<string, { dx: number; dy: number; short?: string }> = 
   'saudi-arabia': { dx: 18, dy: 6 },
   egypt: { dx: -14, dy: 16 },
   'united-arab-emirates': { dx: 16, dy: 14, short: 'UAE' },
-  palestine: { dx: -58, dy: -6 },
+  palestine: { dx: -16, dy: -8 },
   jordan: { dx: 14, dy: 12 },
   tanzania: { dx: 14, dy: 6 },
   syria: { dx: 14, dy: -12 },
@@ -115,7 +116,7 @@ export default function RegionPresenceMap({ hoveredId, onHover, onLeave, onActiv
   const drag = useRef<{ id: number; x: number; y: number; panX: number; panY: number; moved: boolean } | null>(null)
   const skipClick = useRef(false)
   const [zoom, setZoom] = useState(DEFAULT_ZOOM)
-  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [pan, setPan] = useState(() => clampPan(DEFAULT_PAN.x, DEFAULT_PAN.y, DEFAULT_ZOOM))
   const [grabbing, setGrabbing] = useState(false)
 
   const viewPoint = (event: ReactPointerEvent) => {
