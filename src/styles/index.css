@@ -672,7 +672,7 @@ textarea:focus-visible {
 }
 
 .home-logo-strip .logo-track {
-  gap: 56px;
+  gap: 64px;
 }
 
 .trusted-logos-block h2,
@@ -1390,7 +1390,7 @@ textarea:focus-visible {
 .logo-track img,
 .logo-track .brand-logo {
   display: block;
-  height: var(--logo-mark-height);
+  height: auto;
   width: auto;
   max-height: var(--logo-mark-height);
   max-width: 160px;
@@ -6793,7 +6793,14 @@ a.about-card:hover { border-color: var(--navy); }
   .hcm-trust,
   .work-block.hcm-trust,
   .home-logo-strip {
-    --logo-mark-height: 72px;
+    --logo-mark-height: 46px;
+  }
+
+  .trusted-logos-block .logo-track,
+  .hcm-trust .logo-track,
+  .work-block.hcm-trust .logo-track,
+  .home-logo-strip .logo-track {
+    gap: 64px;
   }
 
   .trusted-logos-block h2,

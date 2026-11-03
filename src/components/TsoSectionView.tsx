@@ -12,7 +12,7 @@ import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
-import { tsoClients } from '@/data/tsoClients'
+import { hcmClients } from '@/data/hcmClients'
 import { tsoPhoto } from '@/data/tsoImages'
 import type { TsoBlock, TsoSection } from '@/data/tsoPages'
 
@@ -282,7 +282,7 @@ function BlockView({
     return (
       <section className="work-block hcm-trust">
         <h2 className="logo-strip-label">{block.title}</h2>
-        <LogoMarquee items={tsoClients} />
+        <LogoMarquee items={hcmClients} />
       </section>
     )
   }

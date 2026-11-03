@@ -43,7 +43,7 @@
   --space-card-cta: var(--space-6); /* 24px — card content to CTA/link */
   --space-cta: 72px; /* CTA band top and bottom padding */
   --space-after-subnav: 64px; /* in-page tab bar to first content block */
-  --logo-mark-height: 36px;
+  --logo-mark-height: 34px;
   --surface-paper: #ffffff;
   --surface-mist: var(--ice);
   --surface-navy: var(--navy);
