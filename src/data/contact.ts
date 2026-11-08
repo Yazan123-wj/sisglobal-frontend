@@ -1,3 +1,7 @@
+import { hcmNav, hcmPath } from '@/data/hcmPages'
+import { tsoInnerNav, tsoNav, type TsoSectionId } from '@/data/tsoPages'
+import { workServices } from '@/data/workContent'
+
 export const CONTACT_MESSAGE = 'hello i need help in something'
 
 export const contactInterests = [
@@ -11,23 +15,16 @@ export const contactInterests = [
 export type ContactInterest = (typeof contactInterests)[number]
 export type ContactCta = 'talk' | 'proposal'
 
-const hcmMessages: Record<string, Record<ContactCta, string>> = {
-  '/what-we-do/hcm': {
-    talk: 'I’d like to discuss your technical services and how you can support our requirements.',
-    proposal: 'I’d like to request a proposal for your technical services.',
-  },
-  '/what-we-do/hcm/search-selection': {
-    talk: 'I’d like to speak with your team about Search & Selection.',
-    proposal: 'I’d like to request a proposal for Search & Selection.',
-  },
-  '/what-we-do/hcm/hcm-services': {
-    talk: 'I’d like to speak with your team about HCM Services.',
-    proposal: 'I’d like to request a proposal for HCM Services.',
-  },
-  '/what-we-do/hcm/my-idarat': {
-    talk: 'I’d like to speak with your team about MY Idarat.',
-    proposal: 'I’d like to request a proposal for MY Idarat.',
-  },
+const overviewMessages: Record<ContactCta, string> = {
+  talk: 'I’d like to discuss your technical services and how you can support our requirements.',
+  proposal: 'I’d like to request a proposal for your technical services.',
+}
+
+function namedMessages(name: string): Record<ContactCta, string> {
+  return {
+    talk: `I’d like to speak with your team about ${name}.`,
+    proposal: `I’d like to request a proposal for ${name}.`,
+  }
 }
 
 export function isContactInterest(value: string): value is ContactInterest {
@@ -50,27 +47,61 @@ function normalizePath(pathname: string) {
   return pathname
 }
 
-export function messageFromPath(pathname: string, cta: ContactCta) {
-  return hcmMessages[normalizePath(pathname)]?.[cta]
+function isOverviewPath(path: string) {
+  return path === '/what-we-do/hcm' || path === '/what-we-do/tso' || path === '/what-we-do/ict'
+}
+
+function innerTopic(topic?: string | null) {
+  if (!topic || topic.endsWith('-overview')) return undefined
+  return topic
+}
+
+function serviceNameFrom(pathname: string, topic?: string | null): string | 'overview' | undefined {
+  const path = normalizePath(pathname)
+  if (isOverviewPath(path)) return 'overview'
+
+  for (const item of hcmNav) {
+    if (hcmPath[item.id] === path) return item.id === 'overview' ? 'overview' : item.label
+  }
+
+  if (path.startsWith('/what-we-do/tso/')) {
+    const id = path.slice('/what-we-do/tso/'.length) as TsoSectionId
+    const inner = innerTopic(topic)
+    if (inner) {
+      const match = tsoInnerNav[id]?.find((item) => item.id === inner)
+      if (match) return match.label
+    }
+    return tsoNav.find((item) => item.id === id)?.label
+  }
+
+  if (path.startsWith('/what-we-do/ict/')) {
+    const id = path.slice('/what-we-do/ict/'.length)
+    return workServices.ict.pillars.find((item) => item.id === id)?.label
+  }
+}
+
+export function messageFromPath(pathname: string, cta: ContactCta, topic?: string | null) {
+  const name = serviceNameFrom(pathname, topic)
+  if (!name) return undefined
+  return name === 'overview' ? overviewMessages[cta] : namedMessages(name)[cta]
 }
 
 export function messageFromContact(params: URLSearchParams) {
-  const from = params.get('from') ?? ''
   const cta = params.get('cta')
-  if (isContactCta(cta)) {
-    const mapped = messageFromPath(from, cta)
-    if (mapped) return mapped
-  }
-  return CONTACT_MESSAGE
+  if (!isContactCta(cta)) return CONTACT_MESSAGE
+  return messageFromPath(params.get('from') ?? '', cta, params.get('topic')) ?? CONTACT_MESSAGE
 }
 
-export function contactTo(pathname = '', cta?: ContactCta) {
+export function contactTo(pathname = '', cta?: ContactCta, topic?: string) {
   const params = new URLSearchParams()
-  const interest = interestFromPath(pathname)
+  const path = normalizePath(pathname)
+  const interest = interestFromPath(path)
   if (interest) params.set('interest', interest)
   if (cta) {
     params.set('cta', cta)
-    params.set('from', normalizePath(pathname))
+    params.set('from', path)
+    const inner = innerTopic(topic)
+    if (inner && !isOverviewPath(path)) params.set('topic', inner)
   }
   const query = params.toString()
   return query ? `/contact?${query}` : '/contact'

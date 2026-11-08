@@ -8,15 +8,18 @@ export default function ContactLink({
   children,
   onClick,
   intent,
+  topic,
 }: {
   className?: string
   children: ReactNode
   onClick?: () => void
   intent?: ContactCta
+  topic?: string
 }) {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
+  const fromTopic = topic ?? (hash ? hash.replace('#', '') : undefined)
   return (
-    <Link className={className} to={contactTo(pathname, intent)} onClick={onClick}>
+    <Link className={className} to={contactTo(pathname, intent, fromTopic)} onClick={onClick}>
       {children}
     </Link>
   )

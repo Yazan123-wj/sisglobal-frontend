@@ -266,8 +266,20 @@ export default function WhatWeDoPage() {
     'hcm-services': 'Talk to our HCM services team',
     'my-idarat': 'Talk to our MY Idarat team',
   } as const
-  const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : hcmSection ? hcmHeroCta[hcmSection.id] : null
-  const heroProposal = Boolean(tsoSection || hcmSection)
+  const ictHeroCta: Record<string, string> = {
+    overview: 'Talk to our ICT team',
+    infrastructure: 'Talk to our infrastructure team',
+    networking: 'Talk to our networking team',
+    cybersecurity: 'Talk to our cybersecurity team',
+  }
+  const heroCta = tsoSection
+    ? tsoHeroCta[tsoSection.id]
+    : hcmSection
+      ? hcmHeroCta[hcmSection.id]
+      : fromPath === 'ict'
+        ? ictHeroCta[pillarId]
+        : null
+  const heroProposal = Boolean(tsoSection || hcmSection || fromPath === 'ict')
   const tsoPreviewIds = tsoNav.filter((item) => item.id !== 'overview').map((item) => item.id)
   const hashId = location.hash.replace('#', '')
   const tsoPreview = isTso && tsoSection?.id === 'overview' && tsoPreviewIds.includes(hashId as TsoSectionId)
@@ -397,7 +409,7 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{selected.cta.title}</h2>
             <p className="work-cta-copy">{selected.cta.copy}</p>
-            <ContactLink className="button button-primary">
+            <ContactLink className="button button-primary" intent="talk">
               {selected.cta.label} <Arrow dir="right" />
             </ContactLink>
           </div>

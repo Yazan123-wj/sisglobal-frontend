@@ -80,9 +80,9 @@ function groupBlocks(blocks: TsoBlock[]): Group[] {
   return groups
 }
 
-function CtaLink({ label }: { label: string }) {
+function CtaLink({ label, topic }: { label: string; topic?: string }) {
   return (
-    <ContactLink className="button button-primary">
+    <ContactLink className="button button-primary" intent="talk" topic={topic}>
       {label} <Arrow />
     </ContactLink>
   )
@@ -459,12 +459,12 @@ function ServiceView({
                 {cta.title ? <h2>{cta.title}</h2> : null}
                 {cta.copy ? <p>{cta.copy}</p> : null}
               </div>
-              <CtaLink label="Talk to our team" />
+              <CtaLink label="Talk to our team" topic={group.lead.id} />
             </section>
           ) : (
             <footer className="tso-close">
               {cta.copy ? <p>{cta.copy}</p> : null}
-              <CtaLink label={cta.label} />
+              <CtaLink label={cta.label} topic={group.lead.id} />
             </footer>
           )}
         </SurfaceBand>
