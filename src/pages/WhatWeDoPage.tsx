@@ -267,7 +267,7 @@ export default function WhatWeDoPage() {
     'my-idarat': 'Talk to our MY Idarat team',
   } as const
   const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : hcmSection ? hcmHeroCta[hcmSection.id] : null
-  const heroProposal = Boolean((tsoSection && tsoSection.id !== 'overview') || (hcmSection && hcmSection.id !== 'overview'))
+  const heroProposal = Boolean(tsoSection || hcmSection)
   const tsoPreviewIds = tsoNav.filter((item) => item.id !== 'overview').map((item) => item.id)
   const hashId = location.hash.replace('#', '')
   const tsoPreview = isTso && tsoSection?.id === 'overview' && tsoPreviewIds.includes(hashId as TsoSectionId)
@@ -325,12 +325,12 @@ export default function WhatWeDoPage() {
             {heroCta || heroProposal ? (
               <div className="about-hero-actions">
                 {heroCta ? (
-                  <ContactLink className="button button-primary about-hero-cta">
+                  <ContactLink className="button button-primary about-hero-cta" intent="talk">
                     {heroCta} <Arrow />
                   </ContactLink>
                 ) : null}
                 {heroProposal ? (
-                  <ContactLink className="button button-secondary about-hero-cta">
+                  <ContactLink className="button button-secondary about-hero-cta" intent="proposal">
                     Request a Proposal <Arrow />
                   </ContactLink>
                 ) : null}
@@ -387,7 +387,7 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{hcmSection.close.title}</h2>
             {hcmSection.close.copy ? <p className="work-cta-copy">{hcmSection.close.copy}</p> : null}
-            <ContactLink className="button button-primary">
+            <ContactLink className="button button-primary" intent="talk">
               {hcmSection.close.cta} <Arrow dir="right" />
             </ContactLink>
           </div>

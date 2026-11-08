@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import { CONTACT_MESSAGE, contactInterests, isContactInterest } from '@/data/contact'
+import { contactInterests, isContactInterest, messageFromContact } from '@/data/contact'
 
 const shapes = ['circle', 'square', 'diamond', 'plus'] as const
 type Shape = (typeof shapes)[number]
@@ -69,6 +69,7 @@ export default function ContactForm() {
   const [params] = useSearchParams()
   const requested = params.get('interest') ?? ''
   const interest = isContactInterest(requested) ? requested : ''
+  const message = messageFromContact(params)
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -120,7 +121,7 @@ export default function ContactForm() {
         </label>
         <label className="wide">
           Message
-          <textarea name="message" rows={4} defaultValue={CONTACT_MESSAGE} />
+          <textarea name="message" rows={4} defaultValue={message} key={message} />
         </label>
       </div>
       <button className="button button-primary form-submit" type="submit">Send Enquiry</button>
