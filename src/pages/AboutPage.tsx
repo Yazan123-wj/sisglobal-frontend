@@ -1,8 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import ceoPortrait from '@/assets/ceo-sammer-al-sabawi.jpg'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
@@ -20,9 +21,11 @@ import {
   aboutOffices,
   aboutPresence,
   aboutStory,
+  aboutTeam,
   aboutValues,
   aboutVision,
 } from '@/data/aboutPage'
+import { contactTo } from '@/data/contact'
 import { clients } from '@/data/clients'
 
 const aboutSections = [
@@ -32,6 +35,7 @@ const aboutSections = [
   { id: 'about-values', label: 'Our Values' },
   { id: 'about-difference', label: 'What Makes Us Different' },
   { id: 'about-ceo', label: 'CEO Message' },
+  { id: 'about-team', label: 'Our Team' },
   { id: 'about-certs', label: 'Certifications' },
   { id: 'about-presence', label: 'Global Presence' },
 ]
@@ -46,9 +50,20 @@ function telHref(phone: string) {
   return `tel:${phone.replace(/[^\d+]/g, '')}`
 }
 
+function teamInitials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
+}
+
 export default function AboutPage() {
   const navigate = useNavigate()
-  const contact = () => navigate('/contact')
+  const location = useLocation()
+  const contact = () => navigate(contactTo(location.pathname))
 
   return (
     <main className="about-page">
@@ -148,6 +163,26 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section id="about-team" className="about-section section">
+        <div className="container">
+          <h2>Our Team</h2>
+          <div className="about-team">
+            {aboutTeam.map((member) => (
+              <article key={member.name}>
+                <div className="about-team-photo" aria-hidden="true">
+                  {member.image ? <img src={member.image} alt="" /> : <span>{teamInitials(member.name)}</span>}
+                </div>
+                <div className="about-team-copy">
+                  <h3>{member.name}</h3>
+                  <p>{member.role}</p>
+                  <small>{member.years} years of experience</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="about-certs" className="about-section section is-paper">
         <div className="container">
           <IntroSplit title="Standards & Certifications">
@@ -203,9 +238,9 @@ export default function AboutPage() {
         <div className="container">
           <h2>{aboutCta.title}</h2>
           <p>{aboutCta.copy}</p>
-          <Link className="button button-primary" to="/contact">
+          <ContactLink className="button button-primary">
             {aboutCta.action} <Arrow />
-          </Link>
+          </ContactLink>
         </div>
       </section>
     </main>

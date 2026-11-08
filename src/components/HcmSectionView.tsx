@@ -200,7 +200,7 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
             {section.id === 'hcm-services' && group.title === 'Our HCM Services' ? (
               <ServiceCards items={group.items} />
             ) : group.title.startsWith('How We') ? (
-              <Steps items={group.items} />
+              <Steps items={group.items} vertical />
             ) : (
               <Stack items={group.items} />
             )}

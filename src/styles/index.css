@@ -1194,7 +1194,6 @@ textarea:focus-visible {
 }
 
 .industry-name-list li {
-  padding: 18px 0;
   border-bottom: 1px solid var(--line);
   color: var(--navy);
   font-family: 'Manrope', sans-serif;
@@ -2206,6 +2205,7 @@ textarea:focus-visible {
 
 .contact-page .contact-panel {
   padding-block: var(--space-section);
+  background: var(--mist);
 }
 
 .contact-page .contact-layout {
@@ -2315,6 +2315,58 @@ textarea:focus-visible {
 .form-grid .wide { grid-column: span 2; }
 .form-submit { margin-top: 22px; }
 
+.form-verify {
+  min-height: 344px;
+}
+
+.form-verify-prompt {
+  margin: 0 0 18px;
+  color: var(--navy);
+  font-size: 16px;
+}
+
+.form-verify-prompt b {
+  text-transform: capitalize;
+}
+
+.form-verify-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-verify-tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--mist);
+  color: var(--navy);
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.form-verify-tile svg {
+  width: 42%;
+  height: 42%;
+  fill: currentColor;
+}
+
+.form-verify-tile:hover,
+.form-verify-tile:focus-visible {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  outline: 0;
+}
+
+.form-verify-error {
+  margin: 16px 0 0;
+  color: var(--blue);
+  font-size: 14px;
+}
+
 .success-state { min-height: 344px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 .success-state > span { width: 40px; height: 40px; display: grid; place-items: center; background: var(--blue-bright); color: #fff; border-radius: 50%; font-weight: 700; }
 .success-state h3 { font-size: 31px; margin: 20px 0 8px; }
@@ -2396,15 +2448,66 @@ textarea:focus-visible {
   border-bottom-color: var(--navy);
 }
 
+.page-subnav-pills-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 0 12px;
+  border-top: 1px solid var(--line);
+}
+
+.page-subnav-pills-wrap.is-scroll {
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+}
+
+.page-subnav-pills-wrap:not(.is-scroll) .page-subnav-pills-nav {
+  display: none;
+}
+
+.page-subnav .page-subnav-pills-nav,
+.work-page .page-subnav .page-subnav-pills-nav {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--navy);
+  display: grid;
+  place-items: center;
+  font-size: 0;
+  line-height: 0;
+}
+
+.page-subnav-pills-nav .icon-arrow {
+  width: 12px;
+  height: 12px;
+}
+
+.page-subnav-pills-nav:hover:not(:disabled) {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.page-subnav-pills-nav:disabled {
+  opacity: .28;
+  cursor: default;
+}
+
 .page-subnav-pills {
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
   gap: 22px;
+  min-width: 0;
   margin: 0;
-  padding: 8px 0 12px;
-  border-top: 1px solid var(--line);
+  padding: 0;
   overflow-x: auto;
   overflow-anchor: none;
   scrollbar-width: none;
@@ -2446,6 +2549,7 @@ textarea:focus-visible {
 #about-values,
 #about-difference,
 #about-ceo,
+#about-team,
 #about-certs,
 #work-content,
 #work-offer { scroll-margin-top: calc(var(--header-height) + 52px); }
@@ -2665,7 +2769,7 @@ a.work-box {
 }
 
 a.work-box:hover {
-  border-color: var(--navy);
+  color: inherit;
 }
 
 .work-box span {
@@ -3210,60 +3314,11 @@ a.work-box:hover {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  transition: transform .35s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease;
-}
-
-.hcm-models article span,
-.hcm-models article h3,
-.hcm-models article p {
-  transition: color .35s ease;
 }
 
 .hcm-models article h3 { margin: 0 0 16px; }
 
 .hcm-models article p { max-width: none; }
-
-.hcm-models article:nth-child(1):hover,
-.hcm-models article:nth-child(1):focus-visible {
-  background: var(--navy);
-  border-color: var(--navy);
-}
-
-.hcm-models article:nth-child(2):hover,
-.hcm-models article:nth-child(2):focus-visible {
-  background: var(--blue);
-  border-color: var(--blue);
-}
-
-.hcm-models article:nth-child(3):hover,
-.hcm-models article:nth-child(3):focus-visible {
-  background: var(--blue-bright);
-  border-color: var(--blue-bright);
-}
-
-.hcm-models article:hover span,
-.hcm-models article:focus-visible span {
-  background: rgba(255, 255, 255, .18);
-  color: #fff;
-}
-
-.hcm-models article:hover h3,
-.hcm-models article:focus-visible h3 {
-  color: #fff;
-}
-
-.hcm-models article:hover p,
-.hcm-models article:focus-visible p {
-  color: rgba(255, 255, 255, .82);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .hcm-models article:hover,
-  .hcm-models article:focus-visible {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-card);
-  }
-}
 
 .hcm-models-intro {
   margin: 0 0 32px;
@@ -4293,7 +4348,7 @@ a.work-box:hover {
 
 .about-hero-copy > p:not(.eyebrow) {
   margin: 22px 0 0;
-  max-width: none;
+  max-width: 38rem;
   color: rgba(255, 255, 255, .72);
   font-size: 19px;
   line-height: 1.65;
@@ -4873,6 +4928,8 @@ a.about-card:hover { border-color: var(--navy); }
 }
 
 .industry-name-list a {
+  display: block;
+  padding: 18px 0;
   color: inherit;
   text-decoration: none;
 }
@@ -4955,10 +5012,44 @@ a.about-card:hover { border-color: var(--navy); }
   letter-spacing: -.8px;
 }
 
+.about-dial-board {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 20px 28px;
+  max-width: 720px;
+  margin: 0 auto 4px;
+}
+
+.about-dial-nav {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background .25s ease, border-color .25s ease, color .25s ease;
+}
+
+.about-dial-nav .icon-arrow {
+  width: 14px;
+  height: 14px;
+}
+
+.about-dial-nav:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--navy);
+}
+
 .about-dial-copy {
   height: 132px;
-  margin: 0 auto 4px;
-  max-width: 52ch;
+  margin: 0;
+  max-width: none;
   overflow: hidden;
 }
 
@@ -5127,13 +5218,6 @@ a.about-card:hover { border-color: var(--navy); }
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  transition: transform .35s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease;
-}
-
-.about-tiles article span,
-.about-tiles article h3,
-.about-tiles article p {
-  transition: color .35s ease;
 }
 
 .about-tiles h3 {
@@ -5151,45 +5235,116 @@ a.about-card:hover { border-color: var(--navy); }
   line-height: 1.65;
 }
 
-.about-tiles article:nth-child(1):hover,
-.about-tiles article:nth-child(1):focus-visible {
+.about-tiles article,
+.hcm-models article,
+.tso-why li,
+.work-box,
+.tso-card:has(.tso-card-num),
+.about-vm article {
+  transition: transform .35s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease;
+}
+
+.tso-card:has(.tso-card-num) {
+  overflow: visible;
+}
+
+.about-tiles article span,
+.about-tiles article h3,
+.about-tiles article p,
+.hcm-models article span,
+.hcm-models article h3,
+.hcm-models article p,
+.tso-why span,
+.tso-why h3,
+.tso-why p,
+.work-box span,
+.work-box h3,
+.work-box p,
+.tso-card:has(.tso-card-num) .tso-card-num,
+.tso-card:has(.tso-card-num) h3,
+.tso-card:has(.tso-card-num) p,
+.tso-card:has(.tso-card-num) .text-link,
+.about-vm article h3,
+.about-vm article p {
+  transition: color .35s ease, background .35s ease, box-shadow .35s ease;
+}
+
+.about-tiles article:nth-child(4n + 1):is(:hover, :focus-visible),
+.hcm-models article:nth-child(4n + 1):is(:hover, :focus-visible),
+.tso-why li:nth-child(4n + 1):is(:hover, :focus-visible),
+.work-box:nth-child(4n + 1):is(:hover, :focus-visible),
+.tso-cards > .tso-card:has(.tso-card-num):nth-child(4n + 1):is(:hover, :focus-visible),
+.about-vm article:nth-child(4n + 1):is(:hover, :focus-visible) {
   background: var(--navy);
   border-color: var(--navy);
 }
 
-.about-tiles article:nth-child(2):hover,
-.about-tiles article:nth-child(2):focus-visible {
+.about-tiles article:nth-child(4n + 2):is(:hover, :focus-visible),
+.hcm-models article:nth-child(4n + 2):is(:hover, :focus-visible),
+.tso-why li:nth-child(4n + 2):is(:hover, :focus-visible),
+.work-box:nth-child(4n + 2):is(:hover, :focus-visible),
+.tso-cards > .tso-card:has(.tso-card-num):nth-child(4n + 2):is(:hover, :focus-visible),
+.about-vm article:nth-child(4n + 2):is(:hover, :focus-visible) {
   background: var(--blue);
   border-color: var(--blue);
 }
 
-.about-tiles article:nth-child(3):hover,
-.about-tiles article:nth-child(3):focus-visible {
+.about-tiles article:nth-child(4n + 3):is(:hover, :focus-visible),
+.hcm-models article:nth-child(4n + 3):is(:hover, :focus-visible),
+.tso-why li:nth-child(4n + 3):is(:hover, :focus-visible),
+.work-box:nth-child(4n + 3):is(:hover, :focus-visible),
+.tso-cards > .tso-card:has(.tso-card-num):nth-child(4n + 3):is(:hover, :focus-visible) {
   background: var(--blue-bright);
   border-color: var(--blue-bright);
 }
 
-.about-tiles article:nth-child(4):hover,
-.about-tiles article:nth-child(4):focus-visible {
+.about-tiles article:nth-child(4n + 4):is(:hover, :focus-visible),
+.hcm-models article:nth-child(4n + 4):is(:hover, :focus-visible),
+.tso-why li:nth-child(4n + 4):is(:hover, :focus-visible),
+.work-box:nth-child(4n + 4):is(:hover, :focus-visible),
+.tso-cards > .tso-card:has(.tso-card-num):nth-child(4n + 4):is(:hover, :focus-visible) {
   background: var(--sky);
   border-color: var(--sky);
 }
 
-.about-tiles article:hover span,
-.about-tiles article:focus-visible span {
+.about-tiles article:is(:hover, :focus-visible) span,
+.hcm-models article:is(:hover, :focus-visible) span,
+.tso-why li:is(:hover, :focus-visible) span,
+.work-box:is(:hover, :focus-visible) span,
+.tso-card:has(.tso-card-num):is(:hover, :focus-visible) .tso-card-num {
   background: rgba(255, 255, 255, .18);
   color: #fff;
 }
 
-.about-tiles article:hover h3,
-.about-tiles article:focus-visible h3 { color: #fff; }
+.about-tiles article:is(:hover, :focus-visible) h3,
+.hcm-models article:is(:hover, :focus-visible) h3,
+.tso-why li:is(:hover, :focus-visible) h3,
+.work-box:is(:hover, :focus-visible) h3,
+.tso-card:has(.tso-card-num):is(:hover, :focus-visible) h3,
+.about-vm article:is(:hover, :focus-visible) h3 {
+  color: #fff;
+}
 
-.about-tiles article:hover p,
-.about-tiles article:focus-visible p { color: rgba(255, 255, 255, .82); }
+.about-tiles article:is(:hover, :focus-visible) p,
+.hcm-models article:is(:hover, :focus-visible) p,
+.tso-why li:is(:hover, :focus-visible) p,
+.work-box:is(:hover, :focus-visible) p,
+.tso-card:has(.tso-card-num):is(:hover, :focus-visible) p,
+.about-vm article:is(:hover, :focus-visible) p {
+  color: rgba(255, 255, 255, .82);
+}
+
+.tso-card:has(.tso-card-num):is(:hover, :focus-visible) .text-link {
+  color: #fff;
+}
 
 @media (hover: hover) and (pointer: fine) {
-  .about-tiles article:hover,
-  .about-tiles article:focus-visible {
+  .about-tiles article:is(:hover, :focus-visible),
+  .hcm-models article:is(:hover, :focus-visible),
+  .tso-why li:is(:hover, :focus-visible),
+  .work-box:is(:hover, :focus-visible),
+  .tso-card:has(.tso-card-num):is(:hover, :focus-visible),
+  .about-vm article:is(:hover, :focus-visible) {
     transform: translateY(-8px);
     box-shadow: var(--shadow-card);
   }
@@ -5260,6 +5415,89 @@ a.about-card:hover { border-color: var(--navy); }
   font-family: 'Manrope', sans-serif;
   font-size: 18px;
   font-weight: 700;
+}
+
+.about-team {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-team article {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.about-team-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(9, 32, 70, .08), rgba(9, 32, 70, .22)),
+    var(--ice);
+}
+
+.about-team article:nth-child(5n + 2) .about-team-photo { background-color: color-mix(in srgb, var(--navy) 18%, #fff); }
+.about-team article:nth-child(5n + 3) .about-team-photo { background-color: color-mix(in srgb, var(--blue) 16%, #fff); }
+.about-team article:nth-child(5n + 4) .about-team-photo { background-color: color-mix(in srgb, var(--blue-bright) 16%, #fff); }
+.about-team article:nth-child(5n + 5) .about-team-photo { background-color: color-mix(in srgb, var(--sky) 18%, #fff); }
+
+.about-team-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.about-team-photo span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--navy);
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(28px, 2.4vw, 36px);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.about-team-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 18px;
+}
+
+.about-team h3 {
+  margin: 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  line-height: 1.25;
+}
+
+.about-team p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.about-team small {
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .about-certs {
@@ -5926,7 +6164,7 @@ a.about-card:hover { border-color: var(--navy); }
 }
 
 .vacancy-detail-hero > .container > p:not(.vacancy-meta) {
-  max-width: none;
+  max-width: 38rem;
   color: rgba(255, 255, 255, .7);
   line-height: 1.65;
   margin: 16px 0 28px;
@@ -6053,6 +6291,10 @@ a.about-card:hover { border-color: var(--navy); }
     gap: 32px;
   }
 
+  .about-team {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .about-ceo-visual {
     width: min(100%, 380px);
     aspect-ratio: 4 / 5;
@@ -6116,6 +6358,14 @@ a.about-card:hover { border-color: var(--navy); }
   .about-glance div:nth-child(odd) { border-left: 0; padding-left: 0; }
   .about-glance div:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .about-story-section { padding-top: 64px; }
+  .about-dial-board {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    gap: 12px 16px;
+  }
+  .about-dial-nav {
+    width: 40px;
+    height: 40px;
+  }
   .about-dial-copy { height: 172px; }
   .about-dial-tick b { font-size: 24px; }
   .about-vm,
@@ -6564,6 +6814,14 @@ a.about-card:hover { border-color: var(--navy); }
     border-bottom-color: var(--blue-bright);
   }
 
+  .page-subnav .page-subnav-pills-nav,
+  .work-page .page-subnav .page-subnav-pills-nav {
+    padding: 0;
+    border: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-weight: 400;
+  }
+
   .difference-split {
     align-items: stretch;
   }
@@ -6997,6 +7255,7 @@ a.about-card:hover { border-color: var(--navy); }
   .about-card-grid,
   .about-vm,
   .about-tiles,
+  .about-team,
   .work-glance,
   .work-box-grid,
   .industries-project-grid,

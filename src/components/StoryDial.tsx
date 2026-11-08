@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 
+import Arrow from '@/components/Arrow'
 import { Draggable, gsap, useGSAP } from '@/lib/gsap'
 
 type StoryItem = {
@@ -26,6 +27,7 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
   const wheel = useRef<HTMLDivElement>(null)
   const ticks = useRef<HTMLButtonElement[]>([])
   const activeRef = useRef(0)
+  const goToRef = useRef<(index: number) => void>(() => {})
   const [active, setActive] = useState(0)
   const count = items.length
   const step = 360 / Math.max(count, 1)
@@ -34,9 +36,15 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
   useGSAP(() => {
     const wheelEl = wheel.current
     const stage = wheelEl?.parentElement
-    if (!wheelEl || !stage || count < 2) return
+    const rootEl = root.current
+    if (!wheelEl || !stage || !rootEl || count < 2) return
 
     const nodes = ticks.current.filter(Boolean)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let paused = false
+    let inView = true
+    let autoPlay: gsap.core.Tween | undefined
+    let move: gsap.core.Tween | undefined
 
     const measure = () => {
       const radius = Math.max(240, Math.min(stage.clientWidth * 0.36, 340))
@@ -71,20 +79,37 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
       }
     }
 
-    const goTo = (index: number, drag: Draggable) => {
+    const schedule = () => {
+      autoPlay?.kill()
+      if (reduced.matches || paused || !inView) return
+      autoPlay = gsap.delayedCall(4.2, () => {
+        goTo(wrapIndex(activeRef.current + 1, count))
+      })
+    }
+
+    const goTo = (index: number) => {
       const current = Number(gsap.getProperty(wheelEl, 'rotation')) || 0
-      gsap.to(wheelEl, {
+      move?.kill()
+      move = gsap.to(wheelEl, {
         rotation: shortestRotation(current, -index * step),
         duration: 0.7,
         ease: 'power3.out',
         onUpdate: layout,
-        onComplete: () => drag.update(),
+        onComplete: () => {
+          drag.update()
+          schedule()
+        },
       })
     }
+
+    goToRef.current = goTo
 
     measure()
     gsap.set(wheelEl, { rotation: 0, transformOrigin: '0 0' })
     layout()
+
+    const stillInside = () =>
+      rootEl.matches(':hover') || (document.activeElement instanceof Node && rootEl.contains(document.activeElement))
 
     const [drag] = Draggable.create(wheelEl, {
       type: 'rotation',
@@ -92,27 +117,53 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
       dragClickables: true,
       dragResistance: 0.12,
       snap: (endValue) => Math.round(endValue / step) * step,
+      onPress() {
+        paused = true
+        autoPlay?.kill()
+      },
       onDrag: layout,
       onThrowUpdate: layout,
-      onThrowComplete: layout,
+      onRelease() {
+        if (!this.isThrowing && !stillInside()) {
+          paused = false
+          schedule()
+        }
+      },
+      onThrowComplete() {
+        layout()
+        if (!stillInside()) {
+          paused = false
+          schedule()
+        }
+      },
       onClick(event) {
         const pointer = 'clientX' in event ? event : (event as MouseEvent)
         const originBox = wheelEl.getBoundingClientRect()
         const degrees = (Math.atan2(pointer.clientX - originBox.left, originBox.top - pointer.clientY) * 180) / Math.PI
         const rotation = Number(gsap.getProperty(wheelEl, 'rotation')) || 0
-        goTo(wrapIndex(Math.round((degrees - rotation) / step), count), drag)
+        goTo(wrapIndex(Math.round((degrees - rotation) / step), count))
       },
     })
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
         event.preventDefault()
-        goTo(wrapIndex(activeRef.current + 1, count), drag)
+        goTo(wrapIndex(activeRef.current + 1, count))
       }
       if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
         event.preventDefault()
-        goTo(wrapIndex(activeRef.current - 1, count), drag)
+        goTo(wrapIndex(activeRef.current - 1, count))
       }
+    }
+
+    const pause = () => {
+      paused = true
+      autoPlay?.kill()
+    }
+    const resume = (event?: FocusEvent) => {
+      if (event?.relatedTarget instanceof Node && rootEl.contains(event.relatedTarget)) return
+      paused = false
+      schedule()
     }
 
     const onResize = () => {
@@ -120,25 +171,66 @@ export default function StoryDial({ items }: { items: StoryItem[] }) {
       layout()
     }
 
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting
+      if (inView) schedule()
+      else autoPlay?.kill()
+    }, { threshold: 0.35 })
+
+    observer.observe(rootEl)
     stage.addEventListener('keydown', onKey)
+    rootEl.addEventListener('mouseenter', pause)
+    rootEl.addEventListener('mouseleave', resume)
+    rootEl.addEventListener('focusin', pause)
+    rootEl.addEventListener('focusout', resume)
     window.addEventListener('resize', onResize)
+    schedule()
 
     return () => {
+      autoPlay?.kill()
+      move?.kill()
       drag.kill()
+      observer.disconnect()
       stage.removeEventListener('keydown', onKey)
+      rootEl.removeEventListener('mouseenter', pause)
+      rootEl.removeEventListener('mouseleave', resume)
+      rootEl.removeEventListener('focusin', pause)
+      rootEl.removeEventListener('focusout', resume)
       window.removeEventListener('resize', onResize)
     }
   }, { scope: root, dependencies: [count] })
 
+  const stepBy = (direction: number) => {
+    goToRef.current(wrapIndex(activeRef.current + direction, count))
+  }
+
   return (
     <div ref={root} className="about-dial">
       <h2>Our Story</h2>
-      <div className="about-dial-copy" aria-live="polite">
-        <p className="about-dial-meta">
-          <b>{item.year}</b>
-          <span>{item.title}</span>
-        </p>
-        <p>{item.copy}</p>
+      <div className="about-dial-board">
+        <button
+          className="about-dial-nav"
+          type="button"
+          aria-label="Previous milestone"
+          onClick={() => stepBy(-1)}
+        >
+          <Arrow dir="left" />
+        </button>
+        <div className="about-dial-copy" aria-live="polite">
+          <p className="about-dial-meta">
+            <b>{item.year}</b>
+            <span>{item.title}</span>
+          </p>
+          <p>{item.copy}</p>
+        </div>
+        <button
+          className="about-dial-nav"
+          type="button"
+          aria-label="Next milestone"
+          onClick={() => stepBy(1)}
+        >
+          <Arrow dir="right" />
+        </button>
       </div>
       <div className="about-dial-stage" tabIndex={0} aria-label="Our Story timeline">
         <div ref={wheel} className="about-dial-wheel">

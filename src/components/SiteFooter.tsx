@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 
+import ContactLink from '@/components/ContactLink'
 import { brandForPath } from '@/data/brand'
 
 export default function SiteFooter() {
@@ -35,7 +36,7 @@ export default function SiteFooter() {
           </div>
           <div>
             <p className="footer-label">Contact</p>
-            <Link to="/contact">Contact Us</Link>
+            <ContactLink>Contact Us</ContactLink>
             <a href="mailto:info@sisglobal.com">info@sisglobal.com</a>
             <a href="https://www.linkedin.com/company/sis-global-hq" target="_blank" rel="noreferrer">LinkedIn</a>
             <a href="https://www.facebook.com/saudiintelligentsolutions" target="_blank" rel="noreferrer">Facebook</a>

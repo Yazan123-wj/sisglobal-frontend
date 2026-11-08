@@ -7,6 +7,7 @@ import iso27001 from '@/assets/certs/iso-27001.png'
 import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import { Steps, WhyFeature } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
@@ -79,11 +80,11 @@ function groupBlocks(blocks: TsoBlock[]): Group[] {
   return groups
 }
 
-function ContactLink({ label }: { label: string }) {
+function CtaLink({ label }: { label: string }) {
   return (
-    <Link className="button button-primary" to="/contact">
+    <ContactLink className="button button-primary">
       {label} <Arrow />
-    </Link>
+    </ContactLink>
   )
 }
 
@@ -368,9 +369,7 @@ function CtaBand({ block, stacked = false }: { block: CtaBlock; stacked?: boolea
           {block.title ? <h2>{block.title}</h2> : null}
           {block.copy ? <p>{block.copy}</p> : null}
         </div>
-        <Link className="button button-primary" to="/contact">
-          {block.label} <Arrow />
-        </Link>
+        <CtaLink label={block.label} />
       </section>
     )
   }
@@ -380,7 +379,7 @@ function CtaBand({ block, stacked = false }: { block: CtaBlock; stacked?: boolea
       <div>
         {block.title ? <h2>{block.title}</h2> : null}
       </div>
-      <ContactLink label={block.label} />
+      <CtaLink label={block.label} />
     </section>
   )
 }
@@ -460,14 +459,12 @@ function ServiceView({
                 {cta.title ? <h2>{cta.title}</h2> : null}
                 {cta.copy ? <p>{cta.copy}</p> : null}
               </div>
-              <Link className="button button-primary" to="/contact">
-                Talk to our team <Arrow />
-              </Link>
+              <CtaLink label="Talk to our team" />
             </section>
           ) : (
             <footer className="tso-close">
               {cta.copy ? <p>{cta.copy}</p> : null}
-              <ContactLink label={cta.label} />
+              <CtaLink label={cta.label} />
             </footer>
           )}
         </SurfaceBand>

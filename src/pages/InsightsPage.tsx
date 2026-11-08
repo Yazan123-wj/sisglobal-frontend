@@ -5,6 +5,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import PageSubnav from '@/components/PageSubnav'
 import { insightKindPath, insightKinds, insightsByKind } from '@/data/insights'
 import type { Insight, InsightImage } from '@/data/insights'
@@ -101,9 +102,9 @@ export default function InsightsPage() {
       <section id="insight-cta" className="about-cta">
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
-          <Link className="button button-primary" to="/contact">
+          <ContactLink className="button button-primary">
             Contact Us <Arrow dir="right" />
-          </Link>
+          </ContactLink>
         </div>
       </section>
     </main>

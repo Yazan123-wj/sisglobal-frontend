@@ -8,6 +8,7 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import homeCareersImage from '@/assets/home-careers.jpg'
 import homeInsightsImage from '@/assets/home-insights.jpg'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import DifferenceSection from '@/components/DifferenceSection'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import LogoMarquee from '@/components/LogoMarquee'
@@ -138,7 +139,9 @@ export default function HomePage() {
             </div>
             <ul className="industry-name-list">
               {homeIndustries.map((industry) => (
-                <li key={industry.title}>{industry.title}</li>
+                <li key={industry.slug}>
+                  <Link to={`/what-we-do/industries/${industry.slug}`}>{industry.title}</Link>
+                </li>
               ))}
             </ul>
           </div>
@@ -216,7 +219,7 @@ export default function HomePage() {
         <div className="container">
           <h2>Let’s put your plans into action.</h2>
           <p>Tell us what your business needs and the right specialist will get back to you.</p>
-          <Link className="button button-primary" to="/contact">Contact Us <Arrow /></Link>
+          <ContactLink className="button button-primary">Contact Us <Arrow /></ContactLink>
         </div>
       </section>
     </main>

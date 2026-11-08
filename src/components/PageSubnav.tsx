@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 
+import Arrow from '@/components/Arrow'
 import { cn } from '@/lib/cn'
 
 export type PageSectionLink = {
@@ -172,20 +173,73 @@ export function PageSubnavPills({
   onSelect: (id: string) => void
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
+  const [canPrev, setCanPrev] = useState(false)
+  const [canNext, setCanNext] = useState(false)
+
+  const update = () => {
+    const row = rowRef.current
+    if (!row) return
+    const max = Math.max(0, row.scrollWidth - row.clientWidth)
+    setCanPrev(row.scrollLeft > 4)
+    setCanNext(row.scrollLeft < max - 4)
+  }
+
+  useLayoutEffect(() => {
+    const row = rowRef.current
+    if (!row) return
+    update()
+    row.addEventListener('scroll', update, { passive: true })
+    const observer = new ResizeObserver(update)
+    observer.observe(row)
+    window.addEventListener('resize', update)
+    return () => {
+      row.removeEventListener('scroll', update)
+      observer.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [items.map((item) => item.id).join('|')])
+
+  const move = (direction: -1 | 1) => {
+    const row = rowRef.current
+    if (!row) return
+    row.scrollBy({ left: direction * Math.max(row.clientWidth * 0.65, 160), behavior: 'smooth' })
+  }
+
+  const scrolling = canPrev || canNext
 
   return (
-    <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
-      {items.map((item) => (
-        <button
-          key={item.id}
-          type="button"
-          className={cn(item.id === activeId && 'is-active')}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => keepRowScroll(rowRef.current, () => onSelect(item.id))}
-        >
-          {item.label}
-        </button>
-      ))}
+    <div className={cn('page-subnav-pills-wrap', scrolling && 'is-scroll')}>
+      <button
+        type="button"
+        className="page-subnav-pills-nav"
+        aria-label="Previous services"
+        disabled={!canPrev}
+        onClick={() => move(-1)}
+      >
+        <Arrow dir="left" />
+      </button>
+      <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={cn(item.id === activeId && 'is-active')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => keepRowScroll(rowRef.current, () => onSelect(item.id))}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="page-subnav-pills-nav"
+        aria-label="Next services"
+        disabled={!canNext}
+        onClick={() => move(1)}
+      >
+        <Arrow dir="right" />
+      </button>
     </div>
   )
 }

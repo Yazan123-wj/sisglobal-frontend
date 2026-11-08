@@ -100,6 +100,19 @@ export const aboutCeo = {
   role: 'Founder & CEO, SIS Global',
 }
 
+export const aboutTeam: { name: string; role: string; years: number; image?: string }[] = [
+  { name: 'Noura Al Harbi', role: 'Chief Operating Officer', years: 16 },
+  { name: 'Omar Al Qahtani', role: 'Managing Director, Idarat HCM', years: 14 },
+  { name: 'Layla Haddad', role: 'Managing Director, Idarat TSO', years: 15 },
+  { name: 'Faisal Al Mutairi', role: 'Managing Director, Identiti ICT', years: 12 },
+  { name: 'Hana Al Masri', role: 'Chief People Officer', years: 11 },
+  { name: 'Karim Nasser', role: 'Chief Financial Officer', years: 18 },
+  { name: 'Reem Al Dosari', role: 'Director of Operations', years: 10 },
+  { name: 'Tareq Al Zahrani', role: 'Regional Director, Gulf', years: 13 },
+  { name: 'Dina Khoury', role: 'Director of Client Partnerships', years: 9 },
+  { name: 'Yousef Al Shammari', role: 'Head of Quality & Compliance', years: 12 },
+]
+
 export const aboutCerts = [
   { code: 'ISO 9001', label: 'Quality Management', logo: iso9001 },
   { code: 'ISO 45001', label: 'Occupational Health & Safety', logo: iso45001 },

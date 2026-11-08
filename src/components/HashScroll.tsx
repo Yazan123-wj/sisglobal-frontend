@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { contactTo } from '@/data/contact'
+
 export default function HashScroll() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -8,7 +10,7 @@ export default function HashScroll() {
 
   useEffect(() => {
     if (location.hash === '#contact') {
-      navigate('/contact', { replace: true })
+      navigate(contactTo(location.pathname), { replace: true })
       return
     }
     const pathChanged = path.current !== location.pathname

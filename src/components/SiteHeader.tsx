@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import { brandForPath } from '@/data/brand'
 
 const workLinks = [
@@ -95,7 +96,10 @@ export default function SiteHeader() {
                   key={item.to}
                   to={item.to}
                   className={() => (workLinkCurrent(item.to, location.pathname) ? 'is-current' : undefined)}
-                  onClick={closeMenus}
+                  onClick={() => {
+                    closeMenus()
+                    if (workLinkCurrent(item.to, location.pathname)) window.scrollTo({ top: 0, left: 0 })
+                  }}
                 >
                   <strong>{item.label}</strong>
                   <span>{item.note}</span>
@@ -140,9 +144,9 @@ export default function SiteHeader() {
         <NavLink to="/vacancies" className={careerCurrent ? 'is-current' : undefined} onClick={closeMenus}>
           Career
         </NavLink>
-        <Link className="button button-primary" to="/contact" onClick={closeMenus}>
+        <ContactLink className="button button-primary" onClick={closeMenus}>
           Contact Us <Arrow />
-        </Link>
+        </ContactLink>
       </nav>
     </header>
   )

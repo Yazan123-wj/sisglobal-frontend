@@ -6,6 +6,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
 import PageSubnav, { PageSubnavPills } from '@/components/PageSubnav'
@@ -259,8 +260,14 @@ export default function WhatWeDoPage() {
     'design-optimization': 'Talk to our design team',
     'logistics-support': 'Talk to our logistics team',
   } as const
-  const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : null
-  const heroProposal = Boolean(tsoSection && tsoSection.id !== 'overview')
+  const hcmHeroCta = {
+    overview: 'Talk to our HCM team',
+    'search-selection': 'Talk to our search team',
+    'hcm-services': 'Talk to our HCM services team',
+    'my-idarat': 'Talk to our MY Idarat team',
+  } as const
+  const heroCta = tsoSection ? tsoHeroCta[tsoSection.id] : hcmSection ? hcmHeroCta[hcmSection.id] : null
+  const heroProposal = Boolean((tsoSection && tsoSection.id !== 'overview') || (hcmSection && hcmSection.id !== 'overview'))
   const tsoPreviewIds = tsoNav.filter((item) => item.id !== 'overview').map((item) => item.id)
   const hashId = location.hash.replace('#', '')
   const tsoPreview = isTso && tsoSection?.id === 'overview' && tsoPreviewIds.includes(hashId as TsoSectionId)
@@ -291,11 +298,18 @@ export default function WhatWeDoPage() {
 
   const firstPreview = useRef(true)
   useEffect(() => {
+    if (!isTso || tsoSection?.id !== 'overview') {
+      firstPreview.current = true
+      return
+    }
     if (firstPreview.current) {
       firstPreview.current = false
       return
     }
-    if (!isTso || tsoSection?.id !== 'overview') return
+    if (!tsoPreview) {
+      window.scrollTo({ top: 0, left: 0 })
+      return
+    }
     document.getElementById('work-content')?.scrollIntoView({ block: 'start' })
   }, [isTso, tsoPreview, tsoSection?.id])
 
@@ -311,14 +325,14 @@ export default function WhatWeDoPage() {
             {heroCta || heroProposal ? (
               <div className="about-hero-actions">
                 {heroCta ? (
-                  <Link className="button button-primary about-hero-cta" to="/contact">
+                  <ContactLink className="button button-primary about-hero-cta">
                     {heroCta} <Arrow />
-                  </Link>
+                  </ContactLink>
                 ) : null}
                 {heroProposal ? (
-                  <Link className="button button-secondary about-hero-cta" to="/contact">
+                  <ContactLink className="button button-secondary about-hero-cta">
                     Request a Proposal <Arrow />
-                  </Link>
+                  </ContactLink>
                 ) : null}
               </div>
             ) : null}
@@ -333,10 +347,12 @@ export default function WhatWeDoPage() {
         activeId={subnavActive}
         onSelect={(id) => {
           if (isTso) {
-            navigate(
-              id === 'overview' ? '/what-we-do/tso' : { pathname: '/what-we-do/tso', hash: id },
-              { preventScrollReset: true },
-            )
+            if (id === 'overview') {
+              navigate('/what-we-do/tso')
+              window.scrollTo({ top: 0, left: 0 })
+              return
+            }
+            navigate({ pathname: '/what-we-do/tso', hash: id }, { preventScrollReset: true })
             return
           }
           navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)
@@ -371,9 +387,9 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{hcmSection.close.title}</h2>
             {hcmSection.close.copy ? <p className="work-cta-copy">{hcmSection.close.copy}</p> : null}
-            <Link className="button button-primary" to="/contact">
+            <ContactLink className="button button-primary">
               {hcmSection.close.cta} <Arrow dir="right" />
-            </Link>
+            </ContactLink>
           </div>
         </section>
       ) : !hcmSection ? (
@@ -381,9 +397,9 @@ export default function WhatWeDoPage() {
           <div className="container">
             <h2>{selected.cta.title}</h2>
             <p className="work-cta-copy">{selected.cta.copy}</p>
-            <Link className="button button-primary" to="/contact">
+            <ContactLink className="button button-primary">
               {selected.cta.label} <Arrow dir="right" />
-            </Link>
+            </ContactLink>
           </div>
         </section>
       ) : null}

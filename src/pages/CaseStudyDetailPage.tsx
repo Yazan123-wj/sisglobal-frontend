@@ -5,6 +5,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import PageSubnav from '@/components/PageSubnav'
 import { getCaseStudy, relatedCaseStudies } from '@/data/insights'
 import type { InsightImage } from '@/data/insights'
@@ -121,9 +122,9 @@ export default function CaseStudyDetailPage() {
             <div className="insight-aside-card insight-aside-cta">
               <h2>Talk to the team</h2>
               <p>If this is relevant to a live programme, we can walk through how SIS Global would approach it.</p>
-              <Link className="button button-primary" to="/contact">
+              <ContactLink className="button button-primary">
                 Contact Us <Arrow dir="right" />
-              </Link>
+              </ContactLink>
             </div>
           </aside>
         </div>
@@ -157,9 +158,9 @@ export default function CaseStudyDetailPage() {
       <section className="about-cta">
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
-          <Link className="button button-primary" to="/contact">
+          <ContactLink className="button button-primary">
             Contact Us <Arrow dir="right" />
-          </Link>
+          </ContactLink>
         </div>
       </section>
     </main>

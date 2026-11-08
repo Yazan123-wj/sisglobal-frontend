@@ -5,6 +5,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import { industryImages } from '@/data/industryImages'
 import { insightsByKind, type InsightImage } from '@/data/insights'
 import { globalLocations } from '@/data/locations'
@@ -101,9 +102,9 @@ export default function IndustriesPage() {
         <div className="container">
           <h2>Don’t see your industry?</h2>
           <p>Tell us what you need and the right specialist will get back to you.</p>
-          <Link className="button button-primary" to="/contact">
+          <ContactLink className="button button-primary">
             Send Enquiry <Arrow dir="right" />
-          </Link>
+          </ContactLink>
         </div>
       </section>
     </main>

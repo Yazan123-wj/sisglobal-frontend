@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
+import ContactLink from '@/components/ContactLink'
 import PageSubnav from '@/components/PageSubnav'
 import { brandLogos } from '@/data/brand'
 import { industryImages } from '@/data/industryImages'
@@ -220,9 +221,9 @@ export default function IndustryDetailPage() {
       <section className="about-cta industries-cta">
         <div className="container">
           <h2>{page.cta}</h2>
-          <Link className="button button-primary" to="/contact">
+          <ContactLink className="button button-primary">
             Contact Us <Arrow dir="right" />
-          </Link>
+          </ContactLink>
         </div>
       </section>
     </main>
