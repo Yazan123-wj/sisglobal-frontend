@@ -8,17 +8,20 @@ export type TsoBlock =
   | { type: 'prose'; paragraphs: string[] }
   | { type: 'stats'; title: string; items: { value: string; label: string }[] }
   | { type: 'certs'; title: string }
-  | { type: 'partners'; title: string }
+  | { type: 'partners'; title: string; anchor?: string }
   | { type: 'cta'; title?: string; copy?: string; label: string }
   | {
       type: 'section'
       id?: string
+      anchor?: string
       title: string
       paragraphs?: string[]
       chips?: string[]
       steps?: { title: string; copy: string }[]
       why?: Line[]
       items?: Line[]
+      points?: string[]
+      groups?: { title: string; copy?: string; paragraphs?: string[]; points?: string[] }[]
       note?: string
       cta?: string
       link?: { label: string; to: string }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import { contactInterests, isContactInterest, messageFromContact } from '@/data/contact'
 
@@ -82,7 +82,6 @@ export default function ContactForm() {
         <span>✓</span>
         <h3>Thanks for getting in touch.</h3>
         <p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p>
-        <Link className="text-link" to="/what-we-do">Explore what we do</Link>
       </div>
     )
   }

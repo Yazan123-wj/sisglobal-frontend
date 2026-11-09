@@ -32,7 +32,6 @@ export default function SiteFooter() {
             <Link to="/what-we-do/hcm">Idarat HCM</Link>
             <Link to="/what-we-do/tso">Idarat TSO</Link>
             <Link to="/what-we-do/ict">Identiti ICT</Link>
-            <Link to="/what-we-do">Idarat BPO</Link>
           </div>
           <div>
             <p className="footer-label">Contact</p>

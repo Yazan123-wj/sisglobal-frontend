@@ -34,7 +34,21 @@ export type IndustryPageContent = {
 
 const tso = (pillar: string, label: string): IndustryLink => ({ label, to: `/what-we-do/tso/${pillar}` })
 const hcm = (pillar: string, label: string): IndustryLink => ({ label, to: `/what-we-do/hcm/${pillar}` })
-const ict = (pillar: string, label: string): IndustryLink => ({ label, to: `/what-we-do/ict/${pillar}` })
+function ict(_pillar: string, label: string): IndustryLink {
+  const routes: [string, string][] = [
+    ['Connectivity', 'connectivity'],
+    ['Hardware', 'hardware'],
+    ['Data Centers', 'data-centers'],
+    ['Physical Security', 'physical-security'],
+    ['Smart Cities', 'smart-cities'],
+    ['Intelligent Operations', 'intelligent-ops'],
+    ['Audiovisual', 'audiovisual'],
+    ['Software', 'software'],
+    ['Printing', 'printing'],
+  ]
+  const id = routes.find(([key]) => label.includes(key))?.[1] ?? 'overview'
+  return { label, to: `/what-we-do/ict/${id}` }
+}
 const tsoPage = (label: string): IndustryLink => ({ label, to: '/what-we-do/tso' })
 
 const intros: Record<string, string[]> = {

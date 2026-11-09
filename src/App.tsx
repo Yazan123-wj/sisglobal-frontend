@@ -36,6 +36,7 @@ export default function App() {
           <Route path="/what-we-do" element={<Navigate to="/what-we-do/hcm" replace />} />
           <Route path="/what-we-do/industries" element={<IndustriesPage />} />
           <Route path="/what-we-do/industries/:slug" element={<IndustryDetailPage />} />
+          <Route path="/what-we-do/:unit/:section/:topic" element={<WhatWeDoPage />} />
           <Route path="/what-we-do/:unit/:section" element={<WhatWeDoPage />} />
           <Route path="/what-we-do/:unit" element={<WhatWeDoPage />} />
           <Route path="/case-studies" element={<Navigate to="/insights/stories" replace />} />

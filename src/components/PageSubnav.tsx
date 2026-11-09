@@ -25,13 +25,24 @@ export default function PageSubnav({
   label?: string
 }) {
   const [observedId, setObservedId] = useState(items[0]?.id ?? '')
+  const [canPrev, setCanPrev] = useState(false)
+  const [canNext, setCanNext] = useState(false)
   const currentId = activeId ?? observedId
   const itemKey = items.map((item) => item.id).join('|')
   const navRef = useRef<HTMLElement>(null)
+  const rowRef = useRef<HTMLDivElement>(null)
   const lockId = useRef<string | null>(null)
   const lockTimer = useRef(0)
   const itemsRef = useRef(items)
   itemsRef.current = items
+
+  const updateOverflow = () => {
+    const row = rowRef.current
+    if (!row) return
+    const max = Math.max(0, row.scrollWidth - row.clientWidth)
+    setCanPrev(row.scrollLeft > 4)
+    setCanNext(row.scrollLeft < max - 4)
+  }
 
   useEffect(() => {
     setObservedId(itemKey.split('|')[0] ?? '')
@@ -49,8 +60,15 @@ export default function PageSubnav({
     }
 
     apply()
-    const frame = window.requestAnimationFrame(apply)
-    const observer = new ResizeObserver(apply)
+    updateOverflow()
+    const frame = window.requestAnimationFrame(() => {
+      apply()
+      updateOverflow()
+    })
+    const observer = new ResizeObserver(() => {
+      apply()
+      updateOverflow()
+    })
     observer.observe(nav)
     nav.querySelectorAll(':scope > *').forEach((node) => observer.observe(node))
     window.addEventListener('resize', apply)
@@ -108,6 +126,14 @@ export default function PageSubnav({
     }
   }, [itemKey, onSelect])
 
+  const allowArrows = items.length > 6
+  const scrolling = allowArrows && (canPrev || canNext)
+  const move = (direction: -1 | 1) => {
+    const row = rowRef.current
+    if (!row) return
+    row.scrollBy({ left: direction * Math.max(row.clientWidth * 0.65, 160), behavior: 'smooth' })
+  }
+
   return (
     <nav
       ref={navRef}
@@ -115,35 +141,58 @@ export default function PageSubnav({
       aria-label={label}
     >
       <div className="container">
-        <div className="page-subnav-inner">
-          {items.map((item) => (
+        <div className={cn(allowArrows && 'page-subnav-scroll', scrolling && 'is-overflow')}>
+          {allowArrows ? (
             <button
-              key={item.id}
               type="button"
-              className={cn(item.id === currentId && 'is-active')}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                const row = navRef.current?.querySelector<HTMLElement>('.page-subnav-inner')
-                keepRowScroll(row ?? null, () => {
-                  if (onSelect) {
-                    onSelect(item.id)
-                    return
-                  }
-                  const target = document.getElementById(item.id)
-                  if (!target) return
-                  lockId.current = item.id
-                  setObservedId(item.id)
-                  window.clearTimeout(lockTimer.current)
-                  target.scrollIntoView({ block: 'start' })
-                  lockTimer.current = window.setTimeout(() => {
-                    lockId.current = null
-                  }, 900)
-                })
-              }}
+              className="page-subnav-pills-nav"
+              aria-label="Previous"
+              disabled={!canPrev}
+              onClick={() => move(-1)}
             >
-              {item.label}
+              <Arrow dir="left" />
             </button>
-          ))}
+          ) : null}
+          <div ref={rowRef} className="page-subnav-inner" onScroll={allowArrows ? updateOverflow : undefined}>
+            {items.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={cn(item.id === currentId && 'is-active')}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  keepRowScroll(rowRef.current, () => {
+                    if (onSelect) {
+                      onSelect(item.id)
+                      return
+                    }
+                    const target = document.getElementById(item.id)
+                    if (!target) return
+                    lockId.current = item.id
+                    setObservedId(item.id)
+                    window.clearTimeout(lockTimer.current)
+                    target.scrollIntoView({ block: 'start' })
+                    lockTimer.current = window.setTimeout(() => {
+                      lockId.current = null
+                    }, 900)
+                  })
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          {allowArrows ? (
+            <button
+              type="button"
+              className="page-subnav-pills-nav"
+              aria-label="Next"
+              disabled={!canNext}
+              onClick={() => move(1)}
+            >
+              <Arrow dir="right" />
+            </button>
+          ) : null}
         </div>
         {extra}
       </div>
@@ -205,19 +254,22 @@ export function PageSubnavPills({
     row.scrollBy({ left: direction * Math.max(row.clientWidth * 0.65, 160), behavior: 'smooth' })
   }
 
-  const scrolling = canPrev || canNext
+  const allowArrows = items.length > 3
+  const scrolling = allowArrows && (canPrev || canNext)
 
   return (
     <div className={cn('page-subnav-pills-wrap', scrolling && 'is-scroll')}>
-      <button
-        type="button"
-        className="page-subnav-pills-nav"
-        aria-label="Previous services"
-        disabled={!canPrev}
-        onClick={() => move(-1)}
-      >
-        <Arrow dir="left" />
-      </button>
+      {allowArrows ? (
+        <button
+          type="button"
+          className="page-subnav-pills-nav"
+          aria-label="Previous services"
+          disabled={!canPrev}
+          onClick={() => move(-1)}
+        >
+          <Arrow dir="left" />
+        </button>
+      ) : null}
       <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
         {items.map((item) => (
           <button
@@ -231,15 +283,17 @@ export function PageSubnavPills({
           </button>
         ))}
       </div>
-      <button
-        type="button"
-        className="page-subnav-pills-nav"
-        aria-label="Next services"
-        disabled={!canNext}
-        onClick={() => move(1)}
-      >
-        <Arrow dir="right" />
-      </button>
+      {allowArrows ? (
+        <button
+          type="button"
+          className="page-subnav-pills-nav"
+          aria-label="Next services"
+          disabled={!canNext}
+          onClick={() => move(1)}
+        >
+          <Arrow dir="right" />
+        </button>
+      ) : null}
     </div>
   )
 }

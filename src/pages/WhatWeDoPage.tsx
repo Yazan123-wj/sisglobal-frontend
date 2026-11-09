@@ -14,6 +14,9 @@ import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import TsoSectionView from '@/components/TsoSectionView'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
+import { getIctSection, ictNav, ictOverviewNav, ictProductNav, ictSolutionNav, isIctInner, type IctSectionId } from '@/data/ictPages'
+import { ictPhoto } from '@/data/ictImages'
+import { techPartners } from '@/data/techPartners'
 import { getTsoSection, tsoInnerNav, tsoNav, type TsoSectionId } from '@/data/tsoPages'
 import { workServices } from '@/data/workContent'
 import type { ServiceKey, WorkAudience, WorkService } from '@/data/workContent'
@@ -220,7 +223,7 @@ function ServiceView({
 export default function WhatWeDoPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { unit, section } = useParams()
+  const { unit, section, topic } = useParams()
   const [searchParams] = useSearchParams()
   const fromPath = isService(unit) ? unit : null
 
@@ -234,15 +237,19 @@ export default function WhatWeDoPage() {
   const selected = workServices[fromPath]
   const isHcm = fromPath === 'hcm'
   const isTso = fromPath === 'tso'
+  const isIct = fromPath === 'ict'
   const hcmMatch = hcmNav.some((item) => item.id === section)
   const tsoMatch = tsoNav.some((item) => item.id === section)
+  const ictMatch = ictNav.some((item) => item.id === section) || ictOverviewNav.some((item) => item.id === section)
   if (isHcm && section && !hcmMatch) return <Navigate to="/what-we-do/hcm" replace />
   if (isTso && section && !tsoMatch) return <Navigate to="/what-we-do/tso" replace />
+  if (isIct && section && !ictMatch) return <Navigate to="/what-we-do/ict" replace />
 
   const hcmSection = isHcm ? getHcmSection(section ?? 'overview') : null
   const tsoSection = isTso ? getTsoSection(section ?? 'overview') : null
+  const ictSection = isIct ? getIctSection(section ?? 'overview') : null
   const pillar = selected.pillars.find((item) => item.id === section)
-  if (!isHcm && !isTso && section && !pillar) return <Navigate to={`/what-we-do/${fromPath}`} replace />
+  if (!isHcm && !isTso && !isIct && section && !pillar) return <Navigate to={`/what-we-do/${fromPath}`} replace />
 
   const pillarId = pillar?.id ?? 'overview'
   const sectionNav = [
@@ -250,9 +257,10 @@ export default function WhatWeDoPage() {
     ...selected.pillars.map((item) => ({ id: item.id, label: item.label })),
   ]
 
-  const heroTitle = tsoSection?.title ?? hcmSection?.title ?? (pillar ? pillar.title : selected.title)
-  const heroLead = tsoSection?.lead ?? hcmSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
-  const heroEyebrow = tsoSection?.eyebrow ?? hcmSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
+  const pageSection = tsoSection ?? ictSection ?? hcmSection
+  const heroTitle = pageSection?.title ?? (pillar ? pillar.title : selected.title)
+  const heroLead = pageSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
+  const heroEyebrow = pageSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
   const tsoHeroCta = {
     overview: 'Talk to our TSO team',
     rollout: 'Talk to our rollout team',
@@ -266,38 +274,68 @@ export default function WhatWeDoPage() {
     'hcm-services': 'Talk to our HCM services team',
     'my-idarat': 'Talk to our MY Idarat team',
   } as const
-  const ictHeroCta: Record<string, string> = {
+  const ictHeroCta: Record<IctSectionId, string> = {
     overview: 'Talk to our ICT team',
-    infrastructure: 'Talk to our infrastructure team',
-    networking: 'Talk to our networking team',
-    cybersecurity: 'Talk to our cybersecurity team',
+    'solutions-services': 'Talk to our ICT team',
+    'products-supply': 'Talk to our ICT team',
+    'how-we-deliver': 'Talk to our ICT team',
+    connectivity: 'Talk to our connectivity team',
+    'data-centers': 'Talk to our data centers team',
+    'smart-cities': 'Talk to our smart cities team',
+    'intelligent-ops': 'Talk to our operations team',
+    audiovisual: 'Talk to our audiovisual team',
+    'physical-security': 'Talk to our physical security team',
+    hardware: 'Talk to our hardware team',
+    printing: 'Talk to our printing team',
+    software: 'Talk to our software team',
   }
   const heroCta = tsoSection
     ? tsoHeroCta[tsoSection.id]
-    : hcmSection
-      ? hcmHeroCta[hcmSection.id]
-      : fromPath === 'ict'
-        ? ictHeroCta[pillarId]
+    : ictSection
+      ? ictHeroCta[ictSection.id]
+      : hcmSection
+        ? hcmHeroCta[hcmSection.id]
         : null
-  const heroProposal = Boolean(tsoSection || hcmSection || fromPath === 'ict')
+  const heroProposal = Boolean(tsoSection || hcmSection || ictSection)
   const tsoPreviewIds = tsoNav.filter((item) => item.id !== 'overview').map((item) => item.id)
+  const ictPreviewIds = ictNav.filter((item) => item.id !== 'overview').map((item) => item.id)
   const hashId = location.hash.replace('#', '')
   const tsoPreview = isTso && tsoSection?.id === 'overview' && tsoPreviewIds.includes(hashId as TsoSectionId)
     ? hashId
     : undefined
-  const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : sectionNav
+  const ictPreview = isIct && ictSection?.id === 'overview' && ictPreviewIds.includes(hashId as IctSectionId)
+    ? hashId
+    : undefined
+  const ictOverviewFamily = Boolean(isIct && ictSection && ictOverviewNav.some((item) => item.id === ictSection.id))
+  const ictSolutionsPage = Boolean(isIct && ictSection?.id === 'solutions-services')
+  const ictProductsPage = Boolean(isIct && ictSection?.id === 'products-supply')
+  const ictProductLine = Boolean(isIct && ictSection && ictProductNav.some((item) => item.id === ictSection.id))
+  const ictSolutionLine = Boolean(isIct && ictSection && ictSolutionNav.some((item) => item.id === ictSection.id))
+  const ictAreaPills = ictProductsPage || ictProductLine
+    ? ictProductNav
+    : ictSolutionsPage || ictSolutionLine
+      ? ictSolutionNav
+      : null
+  const subnavItems = isHcm ? hcmNav : isTso ? tsoNav : isIct ? ictOverviewNav : sectionNav
   const subnavActive = isHcm
     ? (hcmSection?.id ?? 'overview')
     : isTso
       ? (tsoPreview ?? tsoSection?.id ?? 'overview')
-      : pillarId
-  const innerNav = isTso && tsoSection && tsoSection.id !== 'overview' ? tsoInnerNav[tsoSection.id] : undefined
+      : isIct
+        ? (ictOverviewFamily
+          ? (ictSection?.id ?? 'overview')
+          : (ictProductLine ? 'products-supply' : 'solutions-services'))
+        : pillarId
+  const innerNav = isTso && tsoSection && tsoSection.id !== 'overview'
+    ? tsoInnerNav[tsoSection.id]
+    : undefined
   const activeInner = innerNav?.some((item) => item.id === hashId) ? hashId : innerNav?.[0]?.id
+  const ictTopic = isIctInner(ictSection?.id, topic) ? topic : undefined
   const firstInner = useRef(true)
 
   useEffect(() => {
     firstInner.current = true
-  }, [tsoSection?.id])
+  }, [tsoSection?.id, ictSection?.id])
 
   useEffect(() => {
     if (!activeInner) return
@@ -310,7 +348,8 @@ export default function WhatWeDoPage() {
 
   const firstPreview = useRef(true)
   useEffect(() => {
-    if (!isTso || tsoSection?.id !== 'overview') {
+    const isOverviewPreview = (isTso && tsoSection?.id === 'overview') || (isIct && ictSection?.id === 'overview')
+    if (!isOverviewPreview) {
       firstPreview.current = true
       return
     }
@@ -318,15 +357,25 @@ export default function WhatWeDoPage() {
       firstPreview.current = false
       return
     }
-    if (!tsoPreview) {
+    if (!tsoPreview && !ictPreview) {
       window.scrollTo({ top: 0, left: 0 })
       return
     }
     document.getElementById('work-content')?.scrollIntoView({ block: 'start' })
-  }, [isTso, tsoPreview, tsoSection?.id])
+  }, [isTso, isIct, tsoPreview, ictPreview, tsoSection?.id, ictSection?.id])
+
+  if (!isIct && topic) {
+    return <Navigate to={section ? `/what-we-do/${fromPath}/${section}` : `/what-we-do/${fromPath}`} replace />
+  }
+  if (isIct && hashId && isIctInner(ictSection?.id, hashId) && !topic) {
+    return <Navigate to={`/what-we-do/ict/${ictSection?.id}/${hashId}`} replace />
+  }
+  if (isIct && topic && !ictTopic) {
+    return <Navigate to={ictSection && !ictOverviewFamily ? `/what-we-do/ict/${ictSection.id}` : '/what-we-do/ict'} replace />
+  }
 
   return (
-    <main className={innerNav ? 'work-page has-tso-inner-nav' : 'work-page'}>
+    <main className={innerNav || ictAreaPills ? 'work-page has-tso-inner-nav' : 'work-page'}>
       <section className="about-hero" aria-labelledby="work-title">
         <div className="about-hero-visual" style={{ backgroundImage: `url(${images[selected.key]})` }} aria-hidden="true" />
         <div className="container about-hero-inner">
@@ -354,47 +403,77 @@ export default function WhatWeDoPage() {
 
       <PageSubnav
         className="page-subnav-work"
-        label={`${selected.label} service lines`}
+        label={isIct ? 'ICT pages' : `${selected.label} service lines`}
         items={subnavItems}
         activeId={subnavActive}
         onSelect={(id) => {
+          if (isIct) {
+            const path = id === 'overview' ? '/what-we-do/ict' : `/what-we-do/ict/${id}`
+            navigate(path)
+            window.scrollTo({ top: 0, left: 0 })
+            return
+          }
           if (isTso) {
+            const base = `/what-we-do/${fromPath}`
             if (id === 'overview') {
-              navigate('/what-we-do/tso')
+              navigate(base)
               window.scrollTo({ top: 0, left: 0 })
               return
             }
-            navigate({ pathname: '/what-we-do/tso', hash: id }, { preventScrollReset: true })
+            navigate({ pathname: base, hash: id }, { preventScrollReset: true })
             return
           }
           navigate(id === 'overview' ? `/what-we-do/${fromPath}` : `/what-we-do/${fromPath}/${id}`)
         }}
-        extra={innerNav && activeInner ? (
-          <PageSubnavPills
-            items={innerNav}
-            label={`${tsoSection?.nav} sections`}
-            activeId={activeInner}
-            onSelect={(id) => {
-              navigate({
-                pathname: location.pathname,
-                search: location.search,
-                hash: id.endsWith('-overview') ? '' : id,
-              }, { replace: true, preventScrollReset: true })
-            }}
-          />
-        ) : null}
+        extra={
+          ictAreaPills || (innerNav && activeInner) ? (
+            <>
+              {ictAreaPills ? (
+                <PageSubnavPills
+                  items={ictAreaPills}
+                  label={ictProductsPage || ictProductLine ? 'Identiti ICT products' : 'Identiti ICT services'}
+                  activeId={ictSolutionLine || ictProductLine ? (ictSection?.id ?? '') : ''}
+                  onSelect={(id) => navigate(`/what-we-do/ict/${id}`)}
+                />
+              ) : null}
+              {innerNav && activeInner ? (
+                <PageSubnavPills
+                  items={innerNav}
+                  label={`${tsoSection?.nav} sections`}
+                  activeId={activeInner}
+                  onSelect={(id) => {
+                    navigate({
+                      pathname: location.pathname,
+                      search: location.search,
+                      hash: id.endsWith('-overview') ? '' : id,
+                    }, { replace: true, preventScrollReset: true })
+                  }}
+                />
+              ) : null}
+            </>
+          ) : null
+        }
       />
 
       <section id="work-content" className="work-content section">
         {tsoSection ? (
           <TsoSectionView section={tsoSection} topic={activeInner} previewId={tsoPreview} />
+        ) : ictSection ? (
+          <TsoSectionView
+            section={ictSection}
+            topic={ictTopic}
+            previewId={ictPreview}
+            partners={techPartners}
+            photo={ictPhoto}
+            photoCards={false}
+          />
         ) : hcmSection ? (
           <HcmSectionView section={hcmSection} image={images.hcm} />
         ) : (
           <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
         )}
       </section>
-      {tsoSection ? null : hcmSection?.close ? (
+      {tsoSection || ictSection ? null : hcmSection?.close ? (
         <section className="about-cta">
           <div className="container">
             <h2>{hcmSection.close.title}</h2>

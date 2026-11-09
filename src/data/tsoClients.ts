@@ -1,24 +1,25 @@
-import atheer from '@/assets/tso-clients/atheer.svg'
-import digisSquared from '@/assets/tso-clients/digis-squared.jpg'
-import ericsson from '@/assets/tso-clients/ericsson.webp'
+import atheer from '@/assets/tso-clients/atheer.png'
+import digisSquared from '@/assets/tso-clients/digis-squared.png'
+import ericsson from '@/assets/tso-clients/ericsson.png'
 import fibertech from '@/assets/tso-clients/fibertech.png'
 import huawei from '@/assets/tso-clients/huawei.png'
-import nokiaAlSaudia from '@/assets/tso-clients/nokia-al-saudia.jpg'
-import nokiaArabia from '@/assets/tso-clients/nokia-arabia.svg'
-import rakuten from '@/assets/tso-clients/rakuten.webp'
+import nokia from '@/assets/tso-clients/nokia.png'
+import rakuten from '@/assets/tso-clients/rakuten.png'
 import relacom from '@/assets/tso-clients/relacom.png'
-import sbm from '@/assets/tso-clients/saudi-business-machines.jpg'
+import sbm from '@/assets/tso-clients/sbm.png'
+import tascTowers from '@/assets/tso-clients/tasc-towers.png'
+import umniah from '@/assets/tso-clients/umniah.png'
 
 export const tsoClients = [
-  { name: 'Atheer', src: atheer },
-  { name: 'Digis Squared', src: digisSquared },
   { name: 'Ericsson', src: ericsson },
-  { name: 'Fibertech', src: fibertech },
+  { name: 'Umniah', src: umniah },
   { name: 'Huawei', src: huawei },
-  { name: 'Nokia Arabia', src: nokiaArabia },
-  { name: 'Nokia Al-Saudia', src: nokiaAlSaudia },
-  { name: 'Rakuten', src: rakuten },
+  { name: 'Nokia', src: nokia },
   { name: 'Relacom', src: relacom },
+  { name: 'Atheer', src: atheer },
+  { name: 'TASC Towers', src: tascTowers },
+  { name: 'Fibertech', src: fibertech },
+  { name: 'Rakuten', src: rakuten },
   { name: 'Saudi Business Machines', src: sbm },
-  { name: 'Nextivity', mark: 'nextivity' },
+  { name: 'Digis Squared', src: digisSquared },
 ]

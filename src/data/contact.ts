@@ -1,8 +1,8 @@
 import { hcmNav, hcmPath } from '@/data/hcmPages'
+import { ictInnerNav, ictNav, ictOverviewNav, type IctSectionId } from '@/data/ictPages'
 import { tsoInnerNav, tsoNav, type TsoSectionId } from '@/data/tsoPages'
-import { workServices } from '@/data/workContent'
 
-export const CONTACT_MESSAGE = 'hello i need help in something'
+export const CONTACT_MESSAGE = 'I’d like to discuss how SIS Global can support our business needs.'
 
 export const contactInterests = [
   'Idarat HCM',
@@ -75,8 +75,14 @@ function serviceNameFrom(pathname: string, topic?: string | null): string | 'ove
   }
 
   if (path.startsWith('/what-we-do/ict/')) {
-    const id = path.slice('/what-we-do/ict/'.length)
-    return workServices.ict.pillars.find((item) => item.id === id)?.label
+    const [id, innerId] = path.slice('/what-we-do/ict/'.length).split('/') as [IctSectionId, string | undefined]
+    const inner = innerTopic(innerId || topic)
+    if (inner) {
+      const match = ictInnerNav[id]?.find((item) => item.id === inner)
+      if (match) return match.label
+    }
+    return ictNav.find((item) => item.id === id)?.label
+      ?? ictOverviewNav.find((item) => item.id === id)?.label
   }
 }
 

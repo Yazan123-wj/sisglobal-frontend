@@ -13,7 +13,9 @@ import DifferenceSection from '@/components/DifferenceSection'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import LogoMarquee from '@/components/LogoMarquee'
 import MetricsBar from '@/components/MetricsBar'
-import { clients } from '@/data/clients'
+import { companyProfiles } from '@/data/companyProfiles'
+import { homeClients } from '@/data/homeClients'
+import { techPartners } from '@/data/techPartners'
 import { workIndustries } from '@/data/workContent'
 
 const homeIndustrySlugs = [
@@ -28,17 +30,6 @@ const homeIndustrySlugs = [
 const homeIndustries = homeIndustrySlugs
   .map((slug) => workIndustries.find((industry) => industry.slug === slug))
   .filter((industry): industry is (typeof workIndustries)[number] => Boolean(industry))
-
-const techPartners = [
-  { name: 'Microsoft', mark: 'microsoft' },
-  { name: 'HP', mark: 'hp' },
-  { name: 'Cisco', mark: 'cisco' },
-  { name: 'Dell', mark: 'dell' },
-  { name: 'Apple', mark: 'apple' },
-  { name: 'Lenovo', mark: 'lenovo' },
-  { name: 'Nextivity', mark: 'nextivity' },
-  { name: 'Fortinet', mark: 'fortinet' },
-]
 
 const stories = insightsByKind('story')
 const featuredStory = stories[0]
@@ -98,7 +89,7 @@ export default function HomePage() {
       <section id="about" className="trust-section section"><div className="container">
         <div className="trusted-logos-block home-logo-strip">
           <h2 className="logo-strip-label">Trusted by Leading Organizations</h2>
-          <LogoMarquee items={clients} />
+          <LogoMarquee items={homeClients} />
         </div>
         <div className="about-do">
           <div className="about-do-heading">
@@ -214,6 +205,22 @@ export default function HomePage() {
             <span className="button button-primary">View All <Arrow /></span>
           </div>
         </Link>
+      </section>
+      <section className="home-profiles section" aria-labelledby="home-profiles-title">
+        <div className="container">
+          <h2 id="home-profiles-title">Company profiles</h2>
+          <ul className="home-profiles-grid">
+            {companyProfiles.map((profile, index) => (
+              <li key={profile.href}>
+                <a className="home-profile-card" href={profile.href} download={profile.filename} aria-label={profile.label}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <h3>{profile.name}</h3>
+                  <span className="text-link">Download <Arrow /></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
       <section className="about-cta">
         <div className="container">
