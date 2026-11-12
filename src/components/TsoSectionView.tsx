@@ -437,7 +437,7 @@ function BlockView({
   withPhoto?: boolean
   introTitle?: string
 }) {
-  const { partners, photoCards = true } = useView()
+  const { partners } = useView()
   const anchor = htmlId(block)
   if (block.type === 'prose') {
     if (!withPhoto) {
