@@ -49,6 +49,15 @@ export default function PageSubnav({
   }, [itemKey])
 
   useLayoutEffect(() => {
+    const row = rowRef.current
+    if (!row || !currentId) return
+    const run = () => scrollChildIntoRow(row, 'button.is-active')
+    run()
+    const frame = window.requestAnimationFrame(run)
+    return () => window.cancelAnimationFrame(frame)
+  }, [currentId, itemKey])
+
+  useLayoutEffect(() => {
     const nav = navRef.current
     if (!nav) return
     const page = nav.closest('.work-page, .about-page') as HTMLElement | null
@@ -210,6 +219,23 @@ function keepRowScroll(row: HTMLElement | null, run: () => void) {
   })
 }
 
+function scrollChildIntoRow(row: HTMLElement | null, selector: string) {
+  const child = row?.querySelector<HTMLElement>(selector)
+  if (!row || !child) return
+  const rowRect = row.getBoundingClientRect()
+  const childRect = child.getBoundingClientRect()
+  const pad = 16
+  let delta = 0
+  if (childRect.left < rowRect.left + pad) {
+    delta = childRect.left - rowRect.left - pad
+  } else if (childRect.right > rowRect.right - pad) {
+    delta = childRect.right - rowRect.right + pad
+  }
+  if (Math.abs(delta) > 1) {
+    row.scrollTo({ left: row.scrollLeft + delta, behavior: 'smooth' })
+  }
+}
+
 export function PageSubnavPills({
   items,
   label,
@@ -233,6 +259,8 @@ export function PageSubnavPills({
     setCanNext(row.scrollLeft < max - 4)
   }
 
+  const itemKey = items.map((item) => item.id).join('|')
+
   useLayoutEffect(() => {
     const row = rowRef.current
     if (!row) return
@@ -246,7 +274,19 @@ export function PageSubnavPills({
       observer.disconnect()
       window.removeEventListener('resize', update)
     }
-  }, [items.map((item) => item.id).join('|')])
+  }, [itemKey])
+
+  useLayoutEffect(() => {
+    const row = rowRef.current
+    if (!row || !activeId) return
+    const run = () => {
+      scrollChildIntoRow(row, 'button.is-active')
+      update()
+    }
+    run()
+    const frame = window.requestAnimationFrame(run)
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeId, itemKey])
 
   const move = (direction: -1 | 1) => {
     const row = rowRef.current

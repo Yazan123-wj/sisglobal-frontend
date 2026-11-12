@@ -8,12 +8,13 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import homeCareersImage from '@/assets/home-careers.jpg'
 import homeInsightsImage from '@/assets/home-insights.jpg'
 import Arrow from '@/components/Arrow'
+import CompanyProfileDownload from '@/components/CompanyProfileDownload'
 import ContactLink from '@/components/ContactLink'
 import DifferenceSection from '@/components/DifferenceSection'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import LogoMarquee from '@/components/LogoMarquee'
 import MetricsBar from '@/components/MetricsBar'
-import { companyProfiles } from '@/data/companyProfiles'
+import { companyProfile } from '@/data/companyProfiles'
 import { homeClients } from '@/data/homeClients'
 import { techPartners } from '@/data/techPartners'
 import { workIndustries } from '@/data/workContent'
@@ -206,22 +207,7 @@ export default function HomePage() {
           </div>
         </Link>
       </section>
-      <section className="home-profiles section" aria-labelledby="home-profiles-title">
-        <div className="container">
-          <h2 id="home-profiles-title">Company profiles</h2>
-          <ul className="home-profiles-grid">
-            {companyProfiles.map((profile, index) => (
-              <li key={profile.href}>
-                <a className="home-profile-card" href={profile.href} download={profile.filename} aria-label={profile.label}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <h3>{profile.name}</h3>
-                  <span className="text-link">Download <Arrow /></span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <CompanyProfileDownload profile={companyProfile('sis')} />
       <section className="about-cta">
         <div className="container">
           <h2>Let’s put your plans into action.</h2>

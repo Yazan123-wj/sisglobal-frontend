@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef } from 'react'
+import { createContext, Fragment, useContext, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import iso14001 from '@/assets/certs/iso-14001.png'
@@ -7,6 +7,7 @@ import iso27001 from '@/assets/certs/iso-27001.png'
 import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
+import CompanyProfileDownload from '@/components/CompanyProfileDownload'
 import ContactLink from '@/components/ContactLink'
 import { Steps, WhyFeature } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
@@ -14,6 +15,7 @@ import LogoMarquee from '@/components/LogoMarquee'
 import type { LogoItem } from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
+import type { CompanyProfile } from '@/data/companyProfiles'
 import { tsoClients } from '@/data/tsoClients'
 import { tsoPhoto } from '@/data/tsoImages'
 import type { TsoBlock } from '@/data/tsoPages'
@@ -66,9 +68,42 @@ function isOffer(block: TsoBlock) {
   return block.type === 'section' && Boolean(block.chips && block.link)
 }
 
+function isEcosystem(block: { title?: string }) {
+  return block.title === 'Technology Ecosystem'
+}
+
+function isScope(block: { title?: string }) {
+  return block.title === 'Typical Solution Scope'
+}
+
+function ScopeBlock({ title, paragraphs }: { title: string; paragraphs: string[] }) {
+  return (
+    <div className="tso-scope">
+      <h2>{title}</h2>
+      <Prose paragraphs={paragraphs} />
+    </div>
+  )
+}
+
+function uniqueItems(items: string[]) {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    if (seen.has(item)) return false
+    seen.add(item)
+    return true
+  })
+}
+
+function ecosystemChips(block: SectionBlock) {
+  return uniqueItems([
+    ...(block.chips ?? []),
+    ...(block.groups ?? []).flatMap((group) => group.points ?? []),
+  ])
+}
+
 function isServicePart(block: TsoBlock) {
   if (block.type === 'cta') return !block.title
-  return isSection(block) && !block.id && !block.steps && !block.why && !block.chips
+  return isSection(block) && !block.id && !block.steps && !block.why && !block.chips && !isEcosystem(block)
 }
 
 function groupBlocks(blocks: TsoBlock[]): Group[] {
@@ -181,11 +216,45 @@ function EcoChips({ items }: { items: string[] }) {
   )
 }
 
+function hasEcoGroups(block: SectionBlock) {
+  return Boolean(block.groups?.some((group) => group.title && group.points?.length))
+}
+
+function EcoGroups({ groups }: { groups: GroupBlock[] }) {
+  return (
+    <div className="tso-eco">
+      {groups.map((group, index) => (
+        <div key={group.title || index} className="tso-eco-group">
+          {group.title ? <h3>{group.title}</h3> : null}
+          {group.points?.length ? <EcoChips items={group.points} /> : null}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function EcoBody({ block }: { block: SectionBlock }) {
+  if (hasEcoGroups(block)) return <EcoGroups groups={block.groups!} />
+  const chips = ecosystemChips(block)
+  return chips.length ? <EcoChips items={chips} /> : null
+}
+
 function partnerTiles(groups: GroupBlock[]) {
   const points = groups.flatMap((group) => group.points ?? [])
   if (!points.length) return false
   const average = points.reduce((total, point) => total + point.length, 0) / points.length
   return average <= 28
+}
+
+function labeledPoint(point: string) {
+  const index = point.indexOf(': ')
+  if (index <= 0) return point
+  return (
+    <>
+      <strong>{point.slice(0, index)}</strong>
+      {point.slice(index)}
+    </>
+  )
 }
 
 function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) {
@@ -214,17 +283,23 @@ function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) 
           <h2>{title}</h2>
         </div>
       ) : null}
-      <ul className={`tso-cards${groups.length === 3 ? ' is-three' : ''}`}>
+      <ul className={`tso-cards${groups.length === 3 ? ' is-three' : ''}${groups.some((group) => group.image) ? ' is-product' : ''}`}>
         {groups.map((group, index) => (
-          <li key={group.title} className="tso-card">
-            <span className="tso-card-num">{String(index + 1).padStart(2, '0')}</span>
+          <li key={group.title} className={group.image ? 'tso-card is-product' : 'tso-card'}>
+            {group.image ? (
+              <div className="tso-card-media is-product">
+                <img src={group.image} alt="" />
+              </div>
+            ) : (
+              <span className="tso-card-num">{String(index + 1).padStart(2, '0')}</span>
+            )}
             <div className="tso-card-body">
               {group.title ? <h3>{group.title}</h3> : null}
               {group.copy ? <p>{group.copy}</p> : null}
               {group.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               {group.points?.length ? (
                 <ul className="tso-card-points">
-                  {group.points.map((point) => <li key={point}>{point}</li>)}
+                  {group.points.map((point) => <li key={point}>{labeledPoint(point)}</li>)}
                 </ul>
               ) : null}
             </div>
@@ -238,14 +313,17 @@ function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) 
 function SectionExtras({ block }: { block: SectionBlock }) {
   return (
     <>
-      {block.chips?.length && !block.paragraphs?.length ? <EcoChips items={block.chips} /> : null}
+      {block.chips?.length && !block.paragraphs?.length && !isEcosystem(block) ? <EcoChips items={block.chips} /> : null}
       {block.points?.length ? <PointList points={block.points} /> : null}
-      {block.groups?.length ? <GroupList groups={block.groups} /> : null}
-      {block.note ? <p className="tso-section-note">{block.note}</p> : null}
+      {block.groups?.length && !isEcosystem(block) ? <GroupList groups={block.groups} /> : null}
+      {block.note && !block.link ? <p className="tso-section-note">{block.note}</p> : null}
       {block.link ? (
-        <Link className="text-link" to={block.link.to}>
-          {block.link.label} <Arrow />
-        </Link>
+        <div className="tso-section-cta">
+          {block.note ? <p>{block.note}</p> : null}
+          <Link className="button button-primary" to={block.link.to}>
+            {block.link.label} <Arrow />
+          </Link>
+        </div>
       ) : null}
     </>
   )
@@ -304,48 +382,42 @@ function Cards({
         {items.map((item, index) => {
           const path = item.href?.startsWith('/') ? item.href : undefined
           const hash = !path && item.href ? item.href.replace('#', '') : undefined
+          const to = path ?? (hash ? { hash } : undefined)
+          const media = withPhoto ? (
+            <div className="tso-card-media" data-curtain>
+              <img src={photo(path?.split('/').pop() || hash || item.title)} alt="" />
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </div>
+          ) : (
+            <span className="tso-card-num">{String(index + 1).padStart(2, '0')}</span>
+          )
+          const body = (
+            <div className="tso-card-body">
+              <h3>{item.title}</h3>
+              {item.copy ? <p>{item.copy}</p> : null}
+              {item.href && item.cta ? (
+                <span className="text-link">{item.cta} <Arrow /></span>
+              ) : null}
+            </div>
+          )
           return (
             <li key={item.title} className="tso-card">
-              {withPhoto ? (
-                <div className="tso-card-media" data-curtain>
-                  <img src={photo(path?.split('/').pop() || hash || item.title)} alt="" />
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                </div>
+              {to ? (
+                <Link className="tso-card-link" to={to} preventScrollReset={!path}>
+                  {media}
+                  {body}
+                </Link>
               ) : (
-                <span className="tso-card-num">{String(index + 1).padStart(2, '0')}</span>
+                <>
+                  {media}
+                  {body}
+                </>
               )}
-              <div className="tso-card-body">
-                <h3>{item.title}</h3>
-                {item.copy ? <p>{item.copy}</p> : null}
-                {item.href && item.cta ? (
-                  <Link
-                    className="text-link"
-                    to={path ?? { hash }}
-                    preventScrollReset={!path}
-                  >
-                    {item.cta} <Arrow />
-                  </Link>
-                ) : null}
-              </div>
             </li>
           )
         })}
       </ul>
     </div>
-  )
-}
-
-function WhyBoxes({ items }: { items: NonNullable<SectionBlock['why']> }) {
-  return (
-    <ol className="tso-why">
-      {items.map((item, index) => (
-        <li key={item.title}>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <h3>{item.title}</h3>
-          <p>{item.copy}</p>
-        </li>
-      ))}
-    </ol>
   )
 }
 
@@ -429,7 +501,7 @@ function BlockView({
       <section id={anchor} className={anchor ? 'work-block tso-anchor' : 'work-block'}>
         {block.title ? <h2>{block.title}</h2> : null}
         {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
-        <Steps items={block.steps} vertical={!photoCards} />
+        <Steps items={block.steps} />
       </section>
     )
   }
@@ -438,11 +510,13 @@ function BlockView({
     return (
       <section id={anchor} className={anchor ? 'work-block tso-anchor' : 'work-block'}>
         <h2>{block.title}</h2>
-        {isWhyFeature(photoKey, block.title) ? (
-          <WhyFeature items={block.why} light={block.title === 'Why Identiti ICT?'} />
-        ) : (
-          <WhyBoxes items={block.why} />
-        )}
+        <WhyFeature
+          items={block.why}
+          light={
+            photoKey !== 'hardware' &&
+            (block.title.startsWith('Why Identiti ICT') || block.title.startsWith('Why Idarat HCM'))
+          }
+        />
       </section>
     )
   }
@@ -475,10 +549,16 @@ function BlockView({
     <section id={anchor} className={anchor ? 'work-block tso-anchor' : 'work-block'}>
       {block.title === 'How We Work' && block.paragraphs?.length ? (
         <WorkFaq title={block.title} paragraphs={block.paragraphs} heading="h2" />
+      ) : isScope(block) && block.paragraphs?.length ? (
+        <ScopeBlock title={block.title} paragraphs={block.paragraphs} />
       ) : block.title && (block.paragraphs?.length || block.points || block.groups || block.chips) ? (
         <IntroSplit title={block.title}>
           {block.paragraphs?.length ? <Prose paragraphs={block.paragraphs} /> : null}
-          {block.chips?.length ? <EcoChips items={block.chips} /> : null}
+          {isEcosystem(block) ? (
+            <EcoBody block={block} />
+          ) : block.chips?.length ? (
+            <EcoChips items={block.chips} />
+          ) : null}
         </IntroSplit>
       ) : (
         <div className="tso-note">
@@ -514,13 +594,13 @@ function CtaBand({ block, stacked = false }: { block: CtaBlock; stacked?: boolea
 }
 
 function isWhyFeature(_sectionId: string | undefined, title: string) {
-  return title.startsWith('Why Idarat TSO') || title === 'Why Identiti ICT?'
+  return title.startsWith('Why Idarat TSO') || title.startsWith('Why Identiti ICT') || title.startsWith('Why Idarat HCM')
 }
 
 function isNavyGroup(group: Group, sectionId?: string) {
   if (group.kind !== 'block') return false
   if (group.block.type === 'cta') return true
-  if (isIctWhy(group)) return false
+  if (isIctWhy(group) && sectionId !== 'hardware') return false
   return group.block.type === 'section' && isWhyFeature(sectionId, group.block.title)
 }
 
@@ -537,7 +617,12 @@ function isPartnersGroup(group: Group | undefined) {
 }
 
 function isIctWhy(group: Group | undefined) {
-  return Boolean(group && group.kind === 'block' && group.block.type === 'section' && group.block.title === 'Why Identiti ICT?')
+  return Boolean(
+    group &&
+    group.kind === 'block' &&
+    group.block.type === 'section' &&
+    group.block.title.startsWith('Why Identiti ICT'),
+  )
 }
 
 function ServiceView({
@@ -578,19 +663,19 @@ function ServiceView({
                 />
               ) : part.title === 'How We Work' && part.paragraphs?.length ? (
                 <WorkFaq title={part.title} paragraphs={part.paragraphs} heading="h2" />
+              ) : isScope(part) && part.paragraphs?.length ? (
+                <ScopeBlock title={part.title} paragraphs={part.paragraphs} />
+              ) : isEcosystem(part) ? (
+                <IntroSplit title={part.title}>
+                  {part.paragraphs?.length ? <Prose paragraphs={part.paragraphs} /> : null}
+                  <EcoBody block={part} />
+                </IntroSplit>
               ) : part.groups?.length && !part.paragraphs?.length ? (
                 <GroupList title={part.title} groups={part.groups} />
               ) : part.title && part.paragraphs?.length ? (
-                photoCards ? (
-                  <IntroSplit title={part.title}>
-                    <Prose paragraphs={part.paragraphs} />
-                  </IntroSplit>
-                ) : (
-                  <div className="tso-sub-stack">
-                    <h2>{part.title}</h2>
-                    <Prose paragraphs={part.paragraphs} />
-                  </div>
-                )
+                <IntroSplit title={part.title}>
+                  <Prose paragraphs={part.paragraphs} />
+                </IntroSplit>
               ) : part.title && part.groups ? (
                 <GroupList title={part.title} groups={part.groups} />
               ) : (
@@ -681,7 +766,7 @@ function Offers({ blocks }: { blocks: SectionBlock[] }) {
               </div>
             ) : null}
             {block.link ? (
-              <Link className="text-link" to={block.link.to}>
+              <Link className="button button-primary" to={block.link.to}>
                 {block.link.label} <Arrow />
               </Link>
             ) : null}
@@ -715,6 +800,7 @@ export default function TsoSectionView({
   partners = tsoClients,
   photo = tsoPhoto,
   photoCards = true,
+  profile,
 }: {
   section: WorkPageSection
   topic?: string
@@ -722,6 +808,7 @@ export default function TsoSectionView({
   partners?: LogoItem[]
   photo?: (key: string) => string
   photoCards?: boolean
+  profile?: CompanyProfile
 }) {
   const groups = groupBlocks(section.blocks)
   const view = { partners, photo, photoCards }
@@ -754,6 +841,16 @@ export default function TsoSectionView({
               if (group.kind === 'offers') return null
               if (isPartnersGroup(group) && isIctWhy(intro[index - 1])) return null
               if (isCtaGroup(group) && isWhyGroup(intro[index - 1], section.id) && !isIctWhy(intro[index - 1])) return null
+              if (isCtaGroup(group) && profile) {
+                return (
+                  <Fragment key={`${group.kind}-${index}`}>
+                    <CompanyProfileDownload profile={profile} />
+                    <SurfaceBand tone="navy">
+                      {renderGroup(group, index, section.id)}
+                    </SurfaceBand>
+                  </Fragment>
+                )
+              }
               if (group.kind === 'block' && group.block.type === 'stats') {
                 return (
                   <StatisticsBar

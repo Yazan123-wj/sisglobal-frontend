@@ -6,6 +6,7 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
+import CompanyProfileDownload from '@/components/CompanyProfileDownload'
 import ContactLink from '@/components/ContactLink'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
@@ -13,6 +14,7 @@ import PageSubnav, { PageSubnavPills } from '@/components/PageSubnav'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import TsoSectionView from '@/components/TsoSectionView'
+import { companyProfile } from '@/data/companyProfiles'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
 import { getIctSection, ictNav, ictOverviewNav, ictProductNav, ictSolutionNav, isIctInner, type IctSectionId } from '@/data/ictPages'
 import { ictPhoto } from '@/data/ictImages'
@@ -457,7 +459,12 @@ export default function WhatWeDoPage() {
 
       <section id="work-content" className="work-content section">
         {tsoSection ? (
-          <TsoSectionView section={tsoSection} topic={activeInner} previewId={tsoPreview} />
+          <TsoSectionView
+            section={tsoSection}
+            topic={activeInner}
+            previewId={tsoPreview}
+            profile={tsoSection.id === 'overview' && !tsoPreview ? companyProfile('tso') : undefined}
+          />
         ) : ictSection ? (
           <TsoSectionView
             section={ictSection}
@@ -466,6 +473,7 @@ export default function WhatWeDoPage() {
             partners={techPartners}
             photo={ictPhoto}
             photoCards={false}
+            profile={ictSection.id === 'overview' && !ictPreview ? companyProfile('ict') : undefined}
           />
         ) : hcmSection ? (
           <HcmSectionView section={hcmSection} image={images.hcm} />
@@ -473,6 +481,7 @@ export default function WhatWeDoPage() {
           <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
         )}
       </section>
+      {hcmSection?.id === 'overview' ? <CompanyProfileDownload profile={companyProfile('hcm')} /> : null}
       {tsoSection || ictSection ? null : hcmSection?.close ? (
         <section className="about-cta">
           <div className="container">

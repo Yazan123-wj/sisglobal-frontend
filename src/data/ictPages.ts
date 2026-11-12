@@ -1,4 +1,7 @@
 import type { TsoBlock } from '@/data/tsoPages'
+import quatra4000e from '@/assets/cel-fi/quatra-4000e.png'
+import quatraEvo from '@/assets/cel-fi/quatra-evo.png'
+import goG43 from '@/assets/cel-fi/go-g43.png'
 
 export type IctSectionId =
   | 'overview'
@@ -126,7 +129,6 @@ export const ictInnerNav: Partial<Record<IctSectionId, { id: string; label: stri
     { id: 'workstations-displays', label: 'Workstations, Displays & Peripherals' },
     { id: 'servers-storage', label: 'Servers, Storage & Data Center Products' },
     { id: 'networking-power', label: 'Networking, Power & Supporting Infrastructure' },
-    { id: 'technology-brands', label: 'Technology Brands' },
   ],
   printing: [
     { id: 'printing-overview', label: 'Overview' },
@@ -134,7 +136,6 @@ export const ictInnerNav: Partial<Record<IctSectionId, { id: string; label: stri
     { id: 'document-scanning', label: 'Document Scanning & Imaging' },
     { id: 'large-format', label: 'Large-Format & Specialized Printing' },
     { id: 'barcode-capture', label: 'Barcode, Label & Data Capture' },
-    { id: 'featured-printing', label: 'Featured Technology' },
   ],
   software: [
     { id: 'software-overview', label: 'Overview' },
@@ -142,7 +143,6 @@ export const ictInnerNav: Partial<Record<IctSectionId, { id: string; label: stri
     { id: 'cloud-platforms', label: 'Cloud Platforms' },
     { id: 'security-protection', label: 'Security & Data Protection' },
     { id: 'infrastructure-apps', label: 'Infrastructure & Business Applications' },
-    { id: 'featured-software', label: 'Featured Platform' },
   ],
 }
 
@@ -174,6 +174,8 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { value: '200+', label: 'Clients Served' },
           { value: '20,000+', label: 'Devices Supplied' },
           { value: '18+', label: 'Technology Brand Partners' },
+          { value: 'xx', label: 'Projects Delivered' },
+          { value: 'xx', label: 'Certified Engineers' },
         ],
       },
       {
@@ -404,16 +406,19 @@ export const ictSections: Record<IctSectionId, IctSection> = {
             title: 'CEL-FI QUATRA 4000e — Multi-Carrier Active DAS Hybrid',
             copy: 'Designed for larger and more complex environments requiring simultaneous multi-carrier coverage. QUATRA 4000e provides scalable indoor 4G and 5G coverage and supports centralized remote management through the Nextivity WAVE platform.',
             points: ['Ideal for: offices, hospitals, hotels, shopping centers and large commercial buildings.'],
+            image: quatra4000e,
           },
           {
             title: 'CEL-FI QUATRA EVO — Flexible Active DAS Hybrid',
             copy: 'A flexible single or dual-operator solution designed to deliver reliable indoor 4G and 5G connectivity. Its category-cabling and Power-over-Ethernet architecture supports scalable deployment across mid-sized enterprise environments.',
             points: ['Ideal for: offices, hotels, hospitals and commercial buildings.'],
+            image: quatraEvo,
           },
           {
             title: 'CEL-FI GO G43 — Multi-Operator Smart Signal Booster',
             copy: 'A compact multi-operator solution designed to improve indoor 3G, 4G and 5G connectivity for up to three mobile network operator signals. It provides a practical option for smaller commercial environments requiring focused coverage enhancement.',
             points: ['Ideal for: retail stores, restaurants, branch offices, convenience stores and other smaller commercial locations.'],
+            image: goG43,
           },
         ],
       },
@@ -455,7 +460,6 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         id: 'structured-cabling',
         title: 'Structured Cabling & Fiber Infrastructure',
         paragraphs: [
-          'Build the Physical Foundation for Reliable Connectivity',
           'Network performance depends on the quality and organization of the physical infrastructure supporting it.',
           'Identiti ICT designs and implements structured cable and fiber infrastructure for new buildings, existing facilities, data centers, offices, campuses and operational environments.',
           'Our solutions are planned around current connectivity requirements while considering future expansion, maintenance access and the long-term manageability of the infrastructure.',
@@ -836,6 +840,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { title: 'From Design to Technical Support', copy: 'Work with Identiti across assessment, architecture, technology supply, device installation, platform integration, testing, handover and ongoing technical support.' },
         ],
       },
+      { type: 'partners', title: 'Technology Ecosystem' },
       talk(),
       {
         type: 'section',
@@ -1077,9 +1082,9 @@ export const ictSections: Record<IctSectionId, IctSection> = {
             title: 'Microsoft Power Platform',
             copy: 'Identiti ICT can use Microsoft Power Platform to develop business applications, automate workflows and create operational dashboards connected with Microsoft 365, Dynamics 365, Azure and other organizational systems.',
             paragraphs: [
-              'Solutions may combine:',
               'Microsoft Power Platform can support focused departmental requirements or broader process-transformation initiatives.',
               'The selected components and solution architecture depend on the organization’s processes, existing systems, users, data environment, licensing and integration requirements.',
+              'Solutions may combine:',
             ],
             points: [
               'Power Apps for custom business applications',
@@ -1486,7 +1491,8 @@ export const ictSections: Record<IctSectionId, IctSection> = {
       {
         type: 'prose',
         paragraphs: [
-          'Identiti ICT supports this process by helping organizations define suitable specifications, compare available technologies and source products through a broad multi-vendor ecosystem. We support individual product requirements, BOQ and RFQ sourcing, bulk procurement, standardized device programs and multi-site deployments. Our services can include device configuration, operating system installation, imaging, asset tagging and pre-deployment staging, followed by coordinated delivery and deployment according to the agreed scope.',
+          'Identiti ICT supports this process by helping organizations define suitable specifications, compare available technologies and source products through a broad multi-vendor ecosystem.',
+          'We support individual product requirements, BOQ and RFQ sourcing, bulk procurement, standardized device programs and multi-site deployments. Our services can include device configuration, operating system installation, imaging, asset tagging and pre-deployment staging, followed by coordinated delivery and deployment according to the agreed scope.',
         ],
       },
       {
@@ -1513,6 +1519,83 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { title: 'Flexible Supply & Deployment', copy: 'Procure individual products, standardized device fleets or complete project requirements, with configuration, deployment and multi-site delivery support available where needed.' },
           { title: 'Procurement & Lifecycle Support', copy: 'Receive support from BOQ and RFQ sourcing through device preparation, delivery, deployment, warranty coordination, manufacturer support renewals and technology refresh planning.' },
         ],
+      },
+      {
+        type: 'section',
+        title: 'Featured Technology Brands',
+        paragraphs: [
+          'Identiti ICT provides access to business computing and infrastructure products from established global technology manufacturers. This multi-brand approach allows products to be selected according to performance, compatibility, availability, budget and organizational standards.',
+          'Our product portfolio may include:',
+        ],
+        groups: [
+          {
+            title: 'HP Business Computing',
+            copy: 'HP technologies support a broad range of end-user and professional computing requirements from everyday business devices to high-performance workstations and displays.',
+            points: [
+              'HP business laptops',
+              'Business desktop and all-in-one computers',
+              'HP professional workstations',
+              'Business and professional monitors',
+              'Docking stations and accessories',
+              'Standardized device configurations',
+            ],
+          },
+          {
+            title: 'Dell Business & Enterprise Technology',
+            copy: 'Dell Technologies provides products across end-user computing, professional workstations and enterprise infrastructure. Depending on the requirement, Dell products can support individual users, standardized device fleets and wider infrastructure deployments.',
+            points: [
+              'Dell business laptops and desktops',
+              'Professional workstations',
+              'Business monitors and accessories',
+              'Dell PowerEdge servers',
+              'Dell enterprise storage products',
+              'Infrastructure components and management products',
+            ],
+          },
+          {
+            title: 'Lenovo Business Technology',
+            copy: 'Lenovo provides business computing products suited to general office users, mobile teams and professionals requiring higher-performance systems.',
+            points: [
+              'ThinkPad business laptops',
+              'ThinkCentre desktop computers',
+              'ThinkStation professional workstations',
+              'Business tablets and mobile devices',
+              'Professional monitors',
+              'Docking stations and business accessories',
+            ],
+          },
+          {
+            title: 'Apple for Business',
+            copy: 'Apple devices can support executive, creative, mobile and specialized business users requiring an integrated hardware and software environment.',
+            points: [
+              'MacBook laptops',
+              'Mac desktop products',
+              'iPad devices',
+              'Apple professional displays',
+              'Business mobility accessories',
+              'Apple device configurations for organizational use',
+            ],
+          },
+          {
+            title: 'ASUS Business Computing',
+            copy: 'ASUS products can support general business users, mobile professionals and users requiring performance-focused computing environments.',
+            points: [
+              'Business laptops',
+              'Desktop computers',
+              'Professional workstations',
+              'Business and professional monitors',
+              'Mobile computing products',
+              'Accessories and supporting components',
+            ],
+          },
+          {
+            title: 'HPE',
+            copy: 'Enterprise servers, storage, networking and data center infrastructure products.',
+            paragraphs: ['Exact models, configurations and availability are selected according to the organization’s requirements and the manufacturers’ current product portfolios.'],
+          },
+        ],
+        note: 'For detailed Dell server, storage and data-protection solutions, explore our Data Centers & Cybersecurity page.',
+        link: explore('data-centers', 'Data Centers & Cybersecurity'),
       },
       talk(),
       {
@@ -1616,95 +1699,6 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         link: explore('connectivity', 'Connectivity & Network Infrastructure'),
       },
       talk(),
-      {
-        type: 'section',
-        id: 'technology-brands',
-        title: 'Featured Technology Brands',
-        paragraphs: [
-          'Identiti ICT provides access to business computing and infrastructure products from established global technology manufacturers. This multi-brand approach allows products to be selected according to performance, compatibility, availability, budget and organizational standards.',
-          'Our product portfolio may include:',
-        ],
-        groups: [
-          {
-            title: 'HP Business Computing',
-            copy: 'HP technologies support a broad range of end-user and professional computing requirements from everyday business devices to high-performance workstations and displays.',
-            points: [
-              'HP business laptops',
-              'Business desktop and all-in-one computers',
-              'HP professional workstations',
-              'Business and professional monitors',
-              'Docking stations and accessories',
-              'Standardized device configurations',
-            ],
-          },
-          {
-            title: 'Dell Business & Enterprise Technology',
-            copy: 'Dell Technologies provides products across end-user computing, professional workstations and enterprise infrastructure. Depending on the requirement, Dell products can support individual users, standardized device fleets and wider infrastructure deployments.',
-            points: [
-              'Dell business laptops and desktops',
-              'Professional workstations',
-              'Business monitors and accessories',
-              'Dell PowerEdge servers',
-              'Dell enterprise storage products',
-              'Infrastructure components and management products',
-            ],
-          },
-          {
-            title: 'Lenovo Business Technology',
-            copy: 'Lenovo provides business computing products suited to general office users, mobile teams and professionals requiring higher-performance systems.',
-            points: [
-              'ThinkPad business laptops',
-              'ThinkCentre desktop computers',
-              'ThinkStation professional workstations',
-              'Business tablets and mobile devices',
-              'Professional monitors',
-              'Docking stations and business accessories',
-            ],
-          },
-          {
-            title: 'Apple for Business',
-            copy: 'Apple devices can support executive, creative, mobile and specialized business users requiring an integrated hardware and software environment.',
-            points: [
-              'MacBook laptops',
-              'Mac desktop products',
-              'iPad devices',
-              'Apple professional displays',
-              'Business mobility accessories',
-              'Apple device configurations for organizational use',
-            ],
-          },
-          {
-            title: 'ASUS Business Computing',
-            copy: 'ASUS products can support general business users, mobile professionals and users requiring performance-focused computing environments.',
-            points: [
-              'Business laptops',
-              'Desktop computers',
-              'Professional workstations',
-              'Business and professional monitors',
-              'Mobile computing products',
-              'Accessories and supporting components',
-            ],
-          },
-          {
-            title: 'HPE',
-            copy: 'Enterprise servers, storage, networking and data center infrastructure products.',
-            paragraphs: ['Exact models, configurations and availability are selected according to the organization’s requirements and the manufacturers’ current product portfolios.'],
-          },
-        ],
-        note: 'For detailed Dell server, storage and data-protection solutions, explore our Data Centers & Cybersecurity page.',
-        link: explore('data-centers', 'Data Centers & Cybersecurity'),
-      },
-      {
-        type: 'section',
-        title: 'Technology Ecosystem',
-        groups: [
-          { title: 'Business Computing & Devices', points: ['HP', 'Apple', 'Lenovo', 'Dell Technologies', 'ASUS', 'Microsoft Surface', 'Other Approved Device Partners'] },
-          { title: 'Servers, Storage & Infrastructure', points: ['HPE', 'Dell Technologies', 'Lenovo', 'Other Approved Infrastructure Partners'] },
-          { title: 'Networking & Connectivity', points: ['Cisco', 'HPE Aruba Networking', 'Fortinet', 'Huawei', 'Other Approved Networking Partners'] },
-          { title: 'Power, Displays & Peripherals', points: ['APC', 'Samsung', 'Logitech', 'Other Approved Technology Partners'] },
-        ],
-      },
-      talk(),
     ],
   },
   printing: {
@@ -1745,6 +1739,58 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { title: 'Business and Specialized Technologies', copy: 'Source office printing, document imaging, large-format output, labeling and enterprise data-capture products through one technology supplier.' },
           { title: 'Multi-Vendor Product Portfolio', copy: 'Access technologies from established manufacturers and select products according to suitability, compatibility, availability and required performance.' },
           { title: 'From Procurement to Deployment', copy: 'Receive support across product specification, sourcing, configuration, delivery, deployment, warranty coordination and future replacement requirements.' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Featured Printing, Imaging & Data-Capture Technologies',
+        paragraphs: [
+          'Identiti ICT works across established technology platforms to address office printing, document imaging, specialized output, labeling and operational data-capture requirements.',
+          'The appropriate manufacturer, product and configuration are selected according to required volumes, formats, applications, operating conditions, connectivity and compatibility with the organization’s existing environment.',
+        ],
+        groups: [
+          {
+            title: 'HP Business and Large-Format Printing',
+            copy: 'HP technologies support printing requirements ranging from individual business users and office workgroups to enterprise and specialized large-format environments.',
+            paragraphs: ['Depending on the requirement, Identiti ICT can supply HP business printers, multifunction devices and HP DesignJet systems for technical drawings, architectural plans, maps and graphics.'],
+            points: [
+              'Business Laser and inkjet printers',
+              'Color and monochrome printing',
+              'Workgroup and enterprise multifunction devices',
+              'Network-connected printing',
+              'Print-security and device-management capabilities',
+              'HP DesignJet large-format printers and plotters',
+              'Printing supplies, accessories and consumables',
+            ],
+          },
+          {
+            title: 'Epson Printing, Scanning and Point-of-Sale Technologies',
+            copy: 'Epson provides printing and imaging technologies for offices, workgroups, retail operations and organizations requiring professional or specialized output.',
+            paragraphs: ['Depending on the operating environment, Epson products can support business document printing, scanning, receipt printing and large-format applications.'],
+            points: [
+              'Business inkjet printers',
+              'Workgroup multifunction devices',
+              'Document and photo scanners',
+              'Point-of-sale and receipt printers',
+              'Large-format and professional imaging systems',
+              'Mobile and compact printing devices',
+              'Inks, media and supporting consumables',
+            ],
+          },
+          {
+            title: 'Zebra Labeling and Data-Capture Technologies',
+            copy: 'Zebra technologies support organizations that depend on accurate identification, tracking and operational data capture across logistics, warehousing, manufacturing, retail, healthcare and field-service environments.',
+            paragraphs: ['The portfolio covers label printing, barcode scanning, rugged mobile computing and RFID technologies that connect physical products, assets and activities with digital systems.'],
+            points: [
+              'Desktop and industrial label printers',
+              'Mobile label and receipt printers',
+              'Handheld, presentation and fixed barcode scanners',
+              'Rugged mobile computers and handheld terminals',
+              'Healthcare identification and data-capture devices',
+              'RFID readers, printers and tags',
+              'Device accessories, labels, ribbons and supporting supplies',
+            ],
+          },
         ],
       },
       {
@@ -1856,60 +1902,6 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         link: explore('intelligent-ops', 'Intelligent Operations & Automation'),
       },
       talk(),
-      {
-        type: 'section',
-        id: 'featured-printing',
-        title: 'Featured Printing, Imaging & Data-Capture Technologies',
-        paragraphs: [
-          'Identiti ICT works across established technology platforms to address office printing, document imaging, specialized output, labeling and operational data-capture requirements.',
-          'The appropriate manufacturer, product and configuration are selected according to required volumes, formats, applications, operating conditions, connectivity and compatibility with the organization’s existing environment.',
-        ],
-        groups: [
-          {
-            title: 'HP Business and Large-Format Printing',
-            copy: 'HP technologies support printing requirements ranging from individual business users and office workgroups to enterprise and specialized large-format environments.',
-            paragraphs: ['Depending on the requirement, Identiti ICT can supply HP business printers, multifunction devices and HP DesignJet systems for technical drawings, architectural plans, maps and graphics.'],
-            points: [
-              'Business Laser and inkjet printers',
-              'Color and monochrome printing',
-              'Workgroup and enterprise multifunction devices',
-              'Network-connected printing',
-              'Print-security and device-management capabilities',
-              'HP DesignJet large-format printers and plotters',
-              'Printing supplies, accessories and consumables',
-            ],
-          },
-          {
-            title: 'Epson Printing, Scanning and Point-of-Sale Technologies',
-            copy: 'Epson provides printing and imaging technologies for offices, workgroups, retail operations and organizations requiring professional or specialized output.',
-            paragraphs: ['Depending on the operating environment, Epson products can support business document printing, scanning, receipt printing and large-format applications.'],
-            points: [
-              'Business inkjet printers',
-              'Workgroup multifunction devices',
-              'Document and photo scanners',
-              'Point-of-sale and receipt printers',
-              'Large-format and professional imaging systems',
-              'Mobile and compact printing devices',
-              'Inks, media and supporting consumables',
-            ],
-          },
-          {
-            title: 'Zebra Labeling and Data-Capture Technologies',
-            copy: 'Zebra technologies support organizations that depend on accurate identification, tracking and operational data capture across logistics, warehousing, manufacturing, retail, healthcare and field-service environments.',
-            paragraphs: ['The portfolio covers label printing, barcode scanning, rugged mobile computing and RFID technologies that connect physical products, assets and activities with digital systems.'],
-            points: [
-              'Desktop and industrial label printers',
-              'Mobile label and receipt printers',
-              'Handheld, presentation and fixed barcode scanners',
-              'Rugged mobile computers and handheld terminals',
-              'Healthcare identification and data-capture devices',
-              'RFID readers, printers and tags',
-              'Device accessories, labels, ribbons and supporting supplies',
-            ],
-          },
-        ],
-      },
-      talk(),
     ],
   },
   software: {
@@ -1950,6 +1942,41 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { title: 'Licensing Based on Actual Requirements', copy: 'Select products, editions and subscription plans according to your users, workloads and required capabilities.' },
           { title: 'Software and Infrastructure Together', copy: 'Coordinate software, cloud services and licensing with the devices, networks, data center infrastructure and security technologies they depend on.' },
           { title: 'Procurement & Lifecycle Management', copy: 'Receive support across software selection, procurement, activation, configuration and renewals, with licensing adjustments aligned with changing business requirements.' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Featured Software & Cloud Platform',
+        groups: [
+          {
+            title: 'Microsoft Cloud & Business Technologies',
+            copy: 'Microsoft provides an integrated technology ecosystem spanning productivity, collaboration, cloud infrastructure, operating systems, databases, security and business applications.',
+            paragraphs: ['Identiti ICT can support organizations in selecting and procuring Microsoft products and subscriptions according to their users, workloads, existing environment and required capabilities.'],
+            points: [
+              'Microsoft 365 Business and Enterprise plans',
+              'Word, Excel, PowerPoint and Outlook',
+              'Microsoft Teams',
+              'Exchange Online, SharePoint and OneDrive',
+              'Microsoft Intune and Microsoft Entra',
+              'Microsoft 365 security and compliance capabilities',
+              'Microsoft 365 Copilot licensing',
+              'Microsoft Azure cloud services',
+              'Windows and Windows Server',
+              'Microsoft SQL Server',
+              'Microsoft Project and Visio',
+              'Power BI, Power Apps and Power Automate',
+              'Dynamics 365 business applications',
+            ],
+          },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Technology Ecosystem',
+        groups: [
+          { title: 'Productivity, Cloud & Business Applications', points: ['Microsoft', 'Adobe', 'Autodesk', 'DocuSign', 'Other Approved Software and Cloud Partners'] },
+          { title: 'Cybersecurity & Data Protection', points: ['Fortinet', 'Palo Alto Networks', 'Trend Micro', 'Kaspersky', 'Veeam', 'Other Approved Security and Backup Partners'] },
+          { title: 'Virtualization & Infrastructure Management', points: ['Microsoft', 'VMware by Broadcom', 'Other Approved Infrastructure Software Partners'] },
         ],
       },
       talk(),
@@ -2066,43 +2093,6 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         ],
         note: 'For workflow design, business process automation, operational dashboards and application integration, explore our implementation and automation capabilities.',
         link: explore('intelligent-ops', 'Intelligent Operations & Automation'),
-      },
-      talk(),
-      {
-        type: 'section',
-        id: 'featured-software',
-        title: 'Featured Software & Cloud Platform',
-        groups: [
-          {
-            title: 'Microsoft Cloud & Business Technologies',
-            copy: 'Microsoft provides an integrated technology ecosystem spanning productivity, collaboration, cloud infrastructure, operating systems, databases, security and business applications.',
-            paragraphs: ['Identiti ICT can support organizations in selecting and procuring Microsoft products and subscriptions according to their users, workloads, existing environment and required capabilities.'],
-            points: [
-              'Microsoft 365 Business and Enterprise plans',
-              'Word, Excel, PowerPoint and Outlook',
-              'Microsoft Teams',
-              'Exchange Online, SharePoint and OneDrive',
-              'Microsoft Intune and Microsoft Entra',
-              'Microsoft 365 security and compliance capabilities',
-              'Microsoft 365 Copilot licensing',
-              'Microsoft Azure cloud services',
-              'Windows and Windows Server',
-              'Microsoft SQL Server',
-              'Microsoft Project and Visio',
-              'Power BI, Power Apps and Power Automate',
-              'Dynamics 365 business applications',
-            ],
-          },
-        ],
-      },
-      {
-        type: 'section',
-        title: 'Technology Ecosystem',
-        groups: [
-          { title: 'Productivity, Cloud & Business Applications', points: ['Microsoft', 'Adobe', 'Autodesk', 'DocuSign', 'Other Approved Software and Cloud Partners'] },
-          { title: 'Cybersecurity & Data Protection', points: ['Fortinet', 'Palo Alto Networks', 'Trend Micro', 'Kaspersky', 'Veeam', 'Other Approved Security and Backup Partners'] },
-          { title: 'Virtualization & Infrastructure Management', points: ['Microsoft', 'VMware by Broadcom', 'Other Approved Infrastructure Software Partners'] },
-        ],
       },
       talk(),
     ],

@@ -118,13 +118,14 @@ export function WhyFeature({
 
 export function Steps({
   items,
-  vertical = false,
+  vertical,
 }: {
   items: { title: string; copy: string }[]
   vertical?: boolean
 }) {
+  const stacked = vertical ?? items.length > 4
   return (
-    <ol className={vertical ? 'hcm-steps is-vertical' : 'hcm-steps'}>
+    <ol className={stacked ? 'hcm-steps is-vertical' : 'hcm-steps'}>
       {items.map((item, index) => (
         <li key={item.title}>
           <div className="hcm-step-rail">
