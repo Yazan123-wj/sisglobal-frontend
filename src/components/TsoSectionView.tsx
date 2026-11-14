@@ -283,7 +283,7 @@ function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) 
           <h2>{title}</h2>
         </div>
       ) : null}
-      <ul className={`tso-cards${groups.length === 3 ? ' is-three' : ''}${groups.some((group) => group.image) ? ' is-product' : ''}`}>
+      <ul className={`tso-cards is-groups${groups.length === 3 ? ' is-three' : ''}${groups.some((group) => group.image) ? ' is-product' : ''}`}>
         {groups.map((group, index) => (
           <li key={group.title} className={group.image ? 'tso-card is-product' : 'tso-card'}>
             {group.image ? (
@@ -295,8 +295,12 @@ function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) 
             )}
             <div className="tso-card-body">
               {group.title ? <h3>{group.title}</h3> : null}
-              {group.copy ? <p>{group.copy}</p> : null}
-              {group.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {group.copy || group.paragraphs?.length ? (
+                <div className="tso-card-copy">
+                  {group.copy ? <p>{group.copy}</p> : null}
+                  {group.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                </div>
+              ) : null}
               {group.points?.length ? (
                 <ul className="tso-card-points">
                   {group.points.map((point) => <li key={point}>{labeledPoint(point)}</li>)}
@@ -422,7 +426,7 @@ function Cards({
 }
 
 function htmlId(block: TsoBlock) {
-  if (block.type === 'section') return block.anchor ?? block.id
+  if (block.type === 'section') return block.anchor
   if (block.type === 'partners') return block.anchor
 }
 
@@ -640,7 +644,7 @@ function ServiceView({
   return (
     <>
       <SurfaceBand tone={surfaces.next()}>
-        <section id={group.lead.id} className="work-block tso-service tso-anchor">
+        <section className="work-block tso-service">
           <IntroSplit title={group.lead.title}>
             {group.lead.paragraphs?.length ? <Prose paragraphs={group.lead.paragraphs} /> : null}
           </IntroSplit>

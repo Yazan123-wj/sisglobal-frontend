@@ -1,3 +1,6 @@
+import { ictInnerNav, type IctSectionId } from '@/data/ictPages'
+import { tsoInnerNav, type TsoSectionId } from '@/data/tsoPages'
+
 export type IndustryLink = {
   label: string
   to: string
@@ -32,24 +35,82 @@ export type IndustryPageContent = {
   cta: string
 }
 
-const tso = (pillar: string, label: string): IndustryLink => ({ label, to: `/what-we-do/tso/${pillar}` })
+function hintKey(value: string) {
+  return value.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()
+}
+
+function lastPart(label: string) {
+  const tail = label.includes('→') ? label.slice(label.lastIndexOf('→') + 1) : label
+  const parts = tail.split('›').map((part) => part.trim()).filter(Boolean)
+  return parts[parts.length - 1] ?? label
+}
+
+function matchInner(items: { id: string; label: string }[] | undefined, hint: string) {
+  if (!items) return undefined
+  const h = hintKey(hint)
+  const aliases: Record<string, string> = {
+    'in building coverage': 'ibs',
+    'in building coverage design': 'ibs-design',
+    'cel fi': 'indoor-cellular',
+  }
+  if (aliases[h]) return aliases[h]
+  const scored = items
+    .filter((item) => !item.id.endsWith('-overview'))
+    .map((item) => {
+      const lab = hintKey(item.label)
+      if (lab === h) return { id: item.id, score: 100 }
+      if (h.includes(lab) || lab.includes(h)) return { id: item.id, score: 80 }
+      const stop = new Set(['and', 'the', 'for', 'with', 'from'])
+      const words = h.split(' ').filter((word) => word.length > 2 && !stop.has(word))
+      const hits = words.filter((word) => lab.includes(word)).length
+      const score = words.length && hits / words.length >= 0.6 ? 40 + hits * 5 : 0
+      return { id: item.id, score }
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+  return scored[0]?.id
+}
+
+const tsoPillarHint: Record<string, string> = {
+  rollout: 'rollout',
+  'managed-services': 'managed services',
+  'design-optimization': 'design and optimization',
+  'logistics-support': 'logistics and support',
+}
+
+const tso = (pillar: string, label: string): IndustryLink => {
+  const last = lastPart(label)
+  const pillarHint = tsoPillarHint[pillar]
+  const inner = pillarHint && hintKey(last) === pillarHint
+    ? undefined
+    : matchInner(tsoInnerNav[pillar as TsoSectionId], last)
+  return { label, to: inner ? `/what-we-do/tso/${pillar}#${inner}` : `/what-we-do/tso/${pillar}` }
+}
+
 const hcm = (pillar: string, label: string): IndustryLink => ({ label, to: `/what-we-do/hcm/${pillar}` })
+
 function ict(_pillar: string, label: string): IndustryLink {
   const routes: [string, string][] = [
-    ['Connectivity', 'connectivity'],
-    ['Hardware', 'hardware'],
+    ['Intelligent Operations', 'intelligent-ops'],
+    ['Smart Cities', 'smart-cities'],
     ['Data Centers', 'data-centers'],
     ['Physical Security', 'physical-security'],
-    ['Smart Cities', 'smart-cities'],
-    ['Intelligent Operations', 'intelligent-ops'],
     ['Audiovisual', 'audiovisual'],
+    ['Connectivity', 'connectivity'],
+    ['Hardware', 'hardware'],
     ['Software', 'software'],
     ['Printing', 'printing'],
   ]
-  const id = routes.find(([key]) => label.includes(key))?.[1] ?? 'overview'
-  return { label, to: `/what-we-do/ict/${id}` }
+  const id = (routes.find(([key]) => label.includes(key))?.[1] ?? 'overview') as IctSectionId
+  const inner = matchInner(ictInnerNav[id], lastPart(label))
+  return { label, to: inner ? `/what-we-do/ict/${id}/${inner}` : `/what-we-do/ict/${id}` }
 }
-const tsoPage = (label: string): IndustryLink => ({ label, to: '/what-we-do/tso' })
+
+const tsoPage = (label: string): IndustryLink => {
+  const last = lastPart(label)
+  if (/environment|health|safety|ehs/i.test(last)) return { label, to: '/what-we-do/tso#ehs' }
+  return { label, to: '/what-we-do/tso' }
+}
 
 const intros: Record<string, string[]> = {
   telecommunications: [

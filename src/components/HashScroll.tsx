@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { contactTo } from '@/data/contact'
 
+const tsoInnerPage = /^\/what-we-do\/tso\/(rollout|managed-services|design-optimization|logistics-support)/
+
 export default function HashScroll() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -16,6 +18,12 @@ export default function HashScroll() {
     const pathChanged = path.current !== location.pathname
     path.current = location.pathname
     const id = location.hash.replace('#', '')
+    if (tsoInnerPage.test(location.pathname)) {
+      if (!pathChanged) return
+      window.scrollTo({ top: 0, left: 0 })
+      const timer = window.setTimeout(() => window.scrollTo({ top: 0, left: 0 }), 80)
+      return () => window.clearTimeout(timer)
+    }
     if (!id) {
       if (pathChanged) window.scrollTo({ top: 0, left: 0 })
       return

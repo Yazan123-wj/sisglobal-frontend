@@ -4090,6 +4090,41 @@ a.work-box:hover {
   padding: 16px 16px 18px;
 }
 
+.tso-cards.is-groups {
+  align-items: stretch;
+}
+
+.tso-cards.is-groups > .tso-card {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 4;
+}
+
+.tso-cards.is-groups .tso-card-num,
+.tso-cards.is-groups .tso-card-media {
+  grid-row: 1;
+}
+
+.tso-cards.is-groups .tso-card-body {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: 2 / span 3;
+}
+
+.tso-cards.is-groups .tso-card-body h3 {
+  grid-row: 1;
+}
+
+.tso-cards.is-groups .tso-card-copy {
+  grid-row: 2;
+}
+
+.tso-cards.is-groups .tso-card-points {
+  grid-row: 3;
+  margin-top: 0;
+  align-self: start;
+}
+
 .tso-card:has(.tso-card-num) .tso-card-body { padding-top: 20px; }
 
 .tso-card-body h2,
@@ -5052,6 +5087,7 @@ a.about-card:hover { border-color: var(--navy); }
 .industry-support-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   column-gap: 56px;
   row-gap: 0;
   border-top: 1px solid var(--line);
@@ -5065,8 +5101,9 @@ a.about-card:hover { border-color: var(--navy); }
 
 .industry-challenge,
 .industry-support-item {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
   min-height: 0;
   padding: 22px 0;
   background: transparent;
@@ -5092,6 +5129,7 @@ a.about-card:hover { border-color: var(--navy); }
 .industry-challenge h3 {
   display: grid;
   grid-template-columns: 2.2em minmax(0, 1fr);
+  grid-row: 1;
   gap: 10px;
   margin: 0 0 8px;
   font-family: 'Manrope', sans-serif;
@@ -5107,6 +5145,11 @@ a.about-card:hover { border-color: var(--navy); }
   color: var(--muted);
   font-size: 17px;
   line-height: 1.65;
+}
+
+.industry-challenge > p,
+.industry-support-item > p {
+  grid-row: 2;
 }
 
 .industry-challenge p,
@@ -5190,8 +5233,15 @@ a.about-card:hover { border-color: var(--navy); }
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
-  padding-top: 0;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.industry-challenge .industry-chips,
+.industry-support-item .industry-chips {
+  grid-row: 3;
+  margin-top: 0;
+  align-self: start;
 }
 
 .industry-chip {
@@ -5282,6 +5332,7 @@ a.about-card:hover { border-color: var(--navy); }
 .industry-support-item h4 {
   display: grid;
   grid-template-columns: 2.2em minmax(0, 1fr);
+  grid-row: 1;
   gap: 10px;
   margin: 0 0 8px;
   font-family: 'Manrope', sans-serif;
@@ -6920,6 +6971,10 @@ a.about-card:hover { border-color: var(--navy); }
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .tso-cards.is-groups {
+    align-items: stretch;
+  }
   .tso-service-head,
   .intro-split { gap: 22px; }
   .tso-media,
@@ -7713,6 +7768,10 @@ a.about-card:hover { border-color: var(--navy); }
 
   .tso-cards.is-three {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tso-cards.is-groups {
+    align-items: stretch;
   }
 
   .tso-card-media.is-product {

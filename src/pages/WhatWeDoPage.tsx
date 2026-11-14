@@ -343,6 +343,7 @@ export default function WhatWeDoPage() {
     if (!activeInner) return
     if (firstInner.current) {
       firstInner.current = false
+      window.scrollTo({ top: 0, left: 0 })
       return
     }
     document.getElementById('work-content')?.scrollIntoView({ block: 'start' })

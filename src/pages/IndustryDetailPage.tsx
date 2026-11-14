@@ -65,7 +65,12 @@ function ItemLinks({ links }: { links: IndustryItem['links'] }) {
   return (
     <div className="industry-chips">
       {links.map((link) => (
-        <Link key={`${link.to}-${link.label}`} className="industry-chip" to={link.to}>
+        <Link
+          key={`${link.to}-${link.label}`}
+          className="industry-chip"
+          to={link.to}
+          preventScrollReset={link.to.includes('#')}
+        >
           {link.label}
         </Link>
       ))}

@@ -117,6 +117,7 @@ export const tsoSections: Record<TsoSectionId, TsoSection> = {
       },
       {
         type: 'section',
+        anchor: 'ehs',
         title: 'Environment, Health & Safety (EHS)',
         paragraphs: [
           'At Idarat TSO, Environment, Health & Safety (EHS) is not an added layer of compliance, it is built into how we plan, manage and deliver technical operations.',
