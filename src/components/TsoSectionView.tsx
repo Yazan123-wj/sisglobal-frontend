@@ -15,6 +15,7 @@ import LogoMarquee from '@/components/LogoMarquee'
 import type { LogoItem } from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
+import { brandLogo } from '@/data/brandLogos'
 import type { CompanyProfile } from '@/data/companyProfiles'
 import { tsoClients } from '@/data/tsoClients'
 import { tsoPhoto } from '@/data/tsoImages'
@@ -211,7 +212,16 @@ function PointList({ points }: { points: string[] }) {
 function EcoChips({ items }: { items: string[] }) {
   return (
     <div className="tso-eco-chips">
-      {items.map((item) => <span key={item}>{item}</span>)}
+      {items.map((item) => {
+        const src = brandLogo(item)
+        return src ? (
+          <span key={item} className="is-logo" title={item}>
+            <img src={src} alt={item} />
+          </span>
+        ) : (
+          <span key={item}>{item}</span>
+        )
+      })}
     </div>
   )
 }

@@ -3747,7 +3747,7 @@ a.work-box:hover {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 48px;
   max-width: 100%;
   padding: 8px 14px;
   background: var(--ice);
@@ -3766,6 +3766,21 @@ a.work-box:hover {
   height: 5px;
   flex-shrink: 0;
   background: var(--blue);
+}
+
+.tso-eco-chips span.is-logo {
+  background: #fff;
+  padding: 10px 16px;
+}
+
+.tso-eco-chips span.is-logo::before { display: none; }
+
+.tso-eco-chips span.is-logo img {
+  display: block;
+  height: 28px;
+  width: auto;
+  max-width: 132px;
+  object-fit: contain;
 }
 
 .tso-service > h2 {

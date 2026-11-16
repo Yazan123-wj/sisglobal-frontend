@@ -840,7 +840,11 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           { title: 'From Design to Technical Support', copy: 'Work with Identiti across assessment, architecture, technology supply, device installation, platform integration, testing, handover and ongoing technical support.' },
         ],
       },
-      { type: 'partners', title: 'Technology Ecosystem' },
+      {
+        type: 'section',
+        title: 'Technology Ecosystem',
+        chips: ['Microsoft', 'Cisco', 'Huawei', 'HPE', 'Hikvision', 'Fortinet', 'APC'],
+      },
       talk(),
       {
         type: 'section',
