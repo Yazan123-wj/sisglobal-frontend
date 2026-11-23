@@ -6,7 +6,6 @@ import caseIct from '@/assets/case-ict.jpg'
 import caseTelecom from '@/assets/case-telecom.jpg'
 import caseWorkforce from '@/assets/case-workforce.jpg'
 import Arrow from '@/components/Arrow'
-import CompanyProfileDownload from '@/components/CompanyProfileDownload'
 import ContactLink from '@/components/ContactLink'
 import HcmSectionView, { Steps } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
@@ -16,7 +15,7 @@ import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
 import TsoSectionView from '@/components/TsoSectionView'
 import { companyProfile } from '@/data/companyProfiles'
 import { getHcmSection, hcmNav } from '@/data/hcmPages'
-import { getIctSection, ictNav, ictOverviewNav, ictProductNav, ictSolutionNav, isIctInner, type IctSectionId } from '@/data/ictPages'
+import { getIctSection, ictInnerLinks, ictNav, ictOverviewNav, ictProductNav, ictSolutionNav, isIctInner, type IctSectionId } from '@/data/ictPages'
 import { ictPhoto } from '@/data/ictImages'
 import { techPartners } from '@/data/techPartners'
 import { getTsoSection, tsoInnerNav, tsoNav, type TsoSectionId } from '@/data/tsoPages'
@@ -96,7 +95,7 @@ function ServiceView({
         {pillar.approach ? (
           <SurfaceBand tone={surfaces.next()}>
             <section className="work-block" style={{ marginTop: 0 }}>
-              <p className="about-panel-label">How we work</p>
+              <p className="about-panel-label">How We Work</p>
               <Steps items={pillar.approach} />
             </section>
           </SurfaceBand>
@@ -264,32 +263,32 @@ export default function WhatWeDoPage() {
   const heroLead = pageSection?.lead ?? (pillar ? pillar.intro : selected.intro[0])
   const heroEyebrow = pageSection?.eyebrow ?? (pillar ? pillar.label : selected.label)
   const tsoHeroCta = {
-    overview: 'Talk to our TSO team',
-    rollout: 'Talk to our rollout team',
-    'managed-services': 'Talk to our managed services team',
-    'design-optimization': 'Talk to our design team',
-    'logistics-support': 'Talk to our logistics team',
+    overview: 'Talk to Our TSO Team',
+    rollout: 'Talk to Our Rollout Team',
+    'managed-services': 'Talk to Our Managed Services Team',
+    'design-optimization': 'Talk to Our Design Team',
+    'logistics-support': 'Talk to Our Logistics Team',
   } as const
   const hcmHeroCta = {
-    overview: 'Talk to our HCM team',
-    'search-selection': 'Talk to our search team',
-    'hcm-services': 'Talk to our HCM services team',
-    'my-idarat': 'Talk to our MY Idarat team',
+    overview: 'Talk to Our HCM Team',
+    'search-selection': 'Talk to Our Search Team',
+    'hcm-services': 'Talk to Our HCM Services Team',
+    'my-idarat': 'Talk to Our MY Idarat Team',
   } as const
   const ictHeroCta: Record<IctSectionId, string> = {
-    overview: 'Talk to our ICT team',
-    'solutions-services': 'Talk to our ICT team',
-    'products-supply': 'Talk to our ICT team',
-    'how-we-deliver': 'Talk to our ICT team',
-    connectivity: 'Talk to our connectivity team',
-    'data-centers': 'Talk to our data centers team',
-    'smart-cities': 'Talk to our smart cities team',
-    'intelligent-ops': 'Talk to our operations team',
-    audiovisual: 'Talk to our audiovisual team',
-    'physical-security': 'Talk to our physical security team',
-    hardware: 'Talk to our hardware team',
-    printing: 'Talk to our printing team',
-    software: 'Talk to our software team',
+    overview: 'Talk to Our ICT Team',
+    'solutions-services': 'Talk to Our ICT Team',
+    'products-supply': 'Talk to Our ICT Team',
+    'how-we-deliver': 'Talk to Our ICT Team',
+    connectivity: 'Talk to Our Connectivity Team',
+    'data-centers': 'Talk to Our Data Centers Team',
+    'smart-cities': 'Talk to Our Smart Cities Team',
+    'intelligent-ops': 'Talk to Our Operations Team',
+    audiovisual: 'Talk to Our Audiovisual Team',
+    'physical-security': 'Talk to Our Physical Security Team',
+    hardware: 'Talk to Our Hardware Team',
+    printing: 'Talk to Our Printing Team',
+    software: 'Talk to Our Software Team',
   }
   const heroCta = tsoSection
     ? tsoHeroCta[tsoSection.id]
@@ -433,10 +432,12 @@ export default function WhatWeDoPage() {
             <>
               {ictAreaPills ? (
                 <PageSubnavPills
-                  items={ictAreaPills}
+                  items={ictAreaPills.map((item) => ({ ...item, children: ictInnerLinks(item.id) }))}
                   label={ictProductsPage || ictProductLine ? 'Identiti ICT products' : 'Identiti ICT services'}
                   activeId={ictSolutionLine || ictProductLine ? (ictSection?.id ?? '') : ''}
                   onSelect={(id) => navigate(`/what-we-do/ict/${id}`)}
+                  activeChildId={ictTopic}
+                  onSelectChild={(id, inner) => navigate(`/what-we-do/ict/${id}/${inner}`)}
                 />
               ) : null}
               {innerNav && activeInner ? (
@@ -477,19 +478,22 @@ export default function WhatWeDoPage() {
             profile={ictSection.id === 'overview' && !ictPreview ? companyProfile('ict') : undefined}
           />
         ) : hcmSection ? (
-          <HcmSectionView section={hcmSection} image={images.hcm} />
+          <HcmSectionView
+            section={hcmSection}
+            image={images.hcm}
+            profile={hcmSection.id === 'overview' ? companyProfile('hcm') : undefined}
+          />
         ) : (
           <ServiceView service={selected} image={images[selected.key]} pillarId={pillarId} />
         )}
       </section>
-      {hcmSection?.id === 'overview' ? <CompanyProfileDownload profile={companyProfile('hcm')} /> : null}
       {tsoSection || ictSection ? null : hcmSection?.close ? (
         <section className="about-cta">
           <div className="container">
             <h2>{hcmSection.close.title}</h2>
             {hcmSection.close.copy ? <p className="work-cta-copy">{hcmSection.close.copy}</p> : null}
             <ContactLink className="button button-primary" intent="talk">
-              {hcmSection.close.cta} <Arrow dir="right" />
+              {hcmSection.close.cta} <Arrow />
             </ContactLink>
           </div>
         </section>
@@ -499,7 +503,7 @@ export default function WhatWeDoPage() {
             <h2>{selected.cta.title}</h2>
             <p className="work-cta-copy">{selected.cta.copy}</p>
             <ContactLink className="button button-primary" intent="talk">
-              {selected.cta.label} <Arrow dir="right" />
+              {selected.cta.label} <Arrow />
             </ContactLink>
           </div>
         </section>

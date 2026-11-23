@@ -6,10 +6,12 @@ import industryFinance from '@/assets/industry-finance.jpg'
 import industryGovernment from '@/assets/industry-government.jpg'
 import industryProfessional from '@/assets/industry-professional.jpg'
 import Arrow from '@/components/Arrow'
+import CompanyProfileLink from '@/components/CompanyProfileLink'
 import IntroSplit from '@/components/IntroSplit'
 import LogoMarquee from '@/components/LogoMarquee'
 import StatisticsBar from '@/components/StatisticsBar'
 import { SurfaceBand, createSurfaceTones } from '@/components/SurfaceBand'
+import type { CompanyProfile } from '@/data/companyProfiles'
 import { hcmClients } from '@/data/hcmClients'
 import type { HcmItem, HcmSection } from '@/data/hcmPages'
 
@@ -139,7 +141,15 @@ export function Steps({
   )
 }
 
-export default function HcmSectionView({ section, image }: { section: HcmSection; image?: string }) {
+export default function HcmSectionView({
+  section,
+  image,
+  profile,
+}: {
+  section: HcmSection
+  image?: string
+  profile?: CompanyProfile
+}) {
   const surfaces = createSurfaceTones()
 
   return (
@@ -148,6 +158,7 @@ export default function HcmSectionView({ section, image }: { section: HcmSection
         <SurfaceBand tone={surfaces.next()}>
           <IntroSplit title={section.title}>
             {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            {profile ? <CompanyProfileLink profile={profile} /> : null}
           </IntroSplit>
         </SurfaceBand>
       ) : null}

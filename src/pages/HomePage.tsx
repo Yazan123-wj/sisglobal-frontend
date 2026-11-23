@@ -8,13 +8,11 @@ import caseWorkforce from '@/assets/case-workforce.jpg'
 import homeCareersImage from '@/assets/home-careers.jpg'
 import homeInsightsImage from '@/assets/home-insights.jpg'
 import Arrow from '@/components/Arrow'
-import CompanyProfileDownload from '@/components/CompanyProfileDownload'
 import ContactLink from '@/components/ContactLink'
 import DifferenceSection from '@/components/DifferenceSection'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import LogoMarquee from '@/components/LogoMarquee'
 import MetricsBar from '@/components/MetricsBar'
-import { companyProfile } from '@/data/companyProfiles'
 import { homeClients } from '@/data/homeClients'
 import { techPartners } from '@/data/techPartners'
 import { workIndustries } from '@/data/workContent'
@@ -45,9 +43,9 @@ const storyImages: Record<InsightImage, string> = {
 type ServiceKey = 'hcm' | 'tso' | 'ict'
 
 const services: Record<ServiceKey, { label: string; eyebrow: string; title: string; description: string; accent: string; details: string[] }> = {
-  hcm: { label: 'Idarat HCM', eyebrow: 'Human Capital Management', title: 'People operations that move with your business.', description: 'From workforce mobilisation to payroll and compliant HR operations, Idarat HCM helps ambitious organisations build capacity with confidence.', accent: 'hcm', details: ['Workforce solutions', 'Payroll operations', 'HR managed services'] },
-  tso: { label: 'Idarat TSO', eyebrow: 'Technical Services & Operations', title: 'Expert operations, delivered on the ground.', description: 'Idarat TSO brings specialist field talent, disciplined service delivery and regional execution to complex technical programmes.', accent: 'tso', details: ['Telecom rollouts', 'Managed services', 'Field operations'] },
-  ict: { label: 'Identiti ICT', eyebrow: 'ICT Infrastructure', title: 'Infrastructure built for what is next.', description: 'Identiti ICT designs, deploys and supports secure technology foundations that keep enterprise operations resilient and ready to scale.', accent: 'ict', details: ['Technology infrastructure', 'Cybersecurity', 'Systems integration'] },
+  hcm: { label: 'Idarat HCM', eyebrow: 'Human Capital Management', title: 'People operations that move with your business', description: 'From workforce mobilisation to payroll and compliant HR operations, Idarat HCM helps ambitious organisations build capacity with confidence.', accent: 'hcm', details: ['Workforce solutions', 'Payroll operations', 'HR managed services'] },
+  tso: { label: 'Idarat TSO', eyebrow: 'Technical Services & Operations', title: 'Expert operations, delivered on the ground', description: 'Idarat TSO brings specialist field talent, disciplined service delivery and regional execution to complex technical programmes.', accent: 'tso', details: ['Telecom rollouts', 'Managed services', 'Field operations'] },
+  ict: { label: 'Identiti ICT', eyebrow: 'ICT Infrastructure', title: 'Infrastructure built for what is next', description: 'Identiti ICT designs, deploys and supports secure technology foundations that keep enterprise operations resilient and ready to scale.', accent: 'ict', details: ['Technology infrastructure', 'Cybersecurity', 'Systems integration'] },
 }
 
 function PartnerStrip() {
@@ -75,13 +73,11 @@ export default function HomePage() {
   return (
     <main id="top">
       <section className={`hero ${active.accent}`} aria-labelledby="hero-title">
-        <div className="hero-visual" style={{ backgroundImage: `url(${heroNetworkImage})` }} aria-hidden="true" />
-        <div className="hero-grid" aria-hidden="true" /><div className="hero-orbit orbit-one" aria-hidden="true" /><div className="hero-orbit orbit-two" aria-hidden="true" />
-        <div className="container hero-content">
+        <div className="hero-visual" style={{ backgroundImage: `url(${heroNetworkImage})` }} aria-hidden="true" />        <div className="container hero-content">
           <div className="hero-copy">
             <h1 id="hero-title">{active.title}</h1>
             <div className="hero-actions">
-              <button className="button button-secondary" type="button" onClick={() => goTo('services')}>Explore our services <Arrow /></button>
+              <button className="button button-secondary" type="button" onClick={() => goTo('services')}>Explore Our Services <Arrow /></button>
             </div>
           </div>
         </div>
@@ -94,17 +90,16 @@ export default function HomePage() {
         </div>
         <div className="about-do">
           <div className="about-do-heading">
-            <h2>Who we are,<br /><em>and what we do.</em></h2>
+            <h2>Who we are,<br /><em>and what we do</em></h2>
             <div>
               <p className="about-do-lead">Headquartered in Riyadh. Trusted across the region.</p>
-              <p>SIS Global turns complex business needs into practical solutions through three specialized businesses and one accountable partner.</p>
-            </div>
+              <p>SIS Global turns complex business needs into practical solutions through three specialized businesses and one accountable partner.</p>            </div>
           </div>
           <div id="services" className="service-cards">
             {([
-              { key: 'hcm', to: '/what-we-do/hcm', label: 'Idarat HCM', title: 'Build Stronger Teams.', copy: 'Find the right talent and simplify HR operations with recruitment, payroll and workforce management built around your business.', image: caseWorkforce },
-              { key: 'tso', to: '/what-we-do/tso', label: 'Idarat TSO', title: 'Keep Your Network Performing.', copy: 'Build, maintain and optimize your telecom networks with expert engineering, field services and coordinated logistics support.', image: caseTelecom },
-              { key: 'ict', to: '/what-we-do/ict', label: 'Identiti ICT', title: 'Put Technology to Work.', copy: 'Connect, protect and automate your business with integrated ICT solutions and technology supply, from design to ongoing support.', image: caseIct },
+              { key: 'hcm', to: '/what-we-do/hcm', label: 'Idarat HCM', title: 'Build Stronger Teams', copy: 'Find the right talent and simplify HR operations with recruitment, payroll and workforce management built around your business.', image: caseWorkforce },
+              { key: 'tso', to: '/what-we-do/tso', label: 'Idarat TSO', title: 'Keep Your Network Performing', copy: 'Build, maintain and optimize your telecom networks with expert engineering, field services and coordinated logistics support.', image: caseTelecom },
+              { key: 'ict', to: '/what-we-do/ict', label: 'Identiti ICT', title: 'Put Technology to Work', copy: 'Connect, protect and automate your business with integrated ICT solutions and technology supply, from design to ongoing support.', image: caseIct },
             ] as const).map((item) => (
               <Link key={item.key} className={`service-card service-${item.key}`} to={item.to}>
                 <img src={item.image} alt="" />
@@ -142,9 +137,9 @@ export default function HomePage() {
       <section id="cases" className="case-section section">
         <div className="container">
           <div className="cases-heading">
-            <p className="eyebrow">Success stories</p>
+            <p className="eyebrow">Success Stories</p>
             <div className="cases-lead">
-              <h2>Projects that<br /><em>deliver impact.</em></h2>
+              <h2>Projects that<br /><em>deliver impact</em></h2>
               <div>
                 <p>Discover how we help operators, enterprises and public-sector organizations turn complex challenges into measurable results.</p>
                 <Link className="text-link" to="/insights/stories">View Success Stories <Arrow /></Link>
@@ -162,7 +157,7 @@ export default function HomePage() {
                   <span>{featuredStory.topic}</span>
                   <h3>{featuredStory.title}</h3>
                   <p>{featuredStory.excerpt}</p>
-                  <small>Read story <Arrow /></small>
+                  <small>Read Story <Arrow /></small>
                 </div>
               </Link>
             ) : null}
@@ -175,7 +170,7 @@ export default function HomePage() {
                   <span>{story.topic}</span>
                   <h3>{story.title}</h3>
                   <p>{story.excerpt}</p>
-                  <small>Read story <Arrow /></small>
+                  <small>Read Story <Arrow /></small>
                 </div>
               </Link>
             ))}
@@ -184,15 +179,15 @@ export default function HomePage() {
         </div>
       </section>
       <GlobalPresenceSection
-        heading={<>Where you can<br /><em>find us.</em></>}
+        heading={<>Where you can<br /><em>find us</em></>}
         lead="Explore our locations and connect with the teams delivering SIS Global’s services across the region."
       />
       <section className="home-split" aria-label="Careers and insights">
         <Link id="careers" className="home-split-pane" to="/vacancies">
           <img className="home-split-photo" src={homeCareersImage} alt="" aria-hidden="true" />
           <div className="home-split-copy">
-            <p className="eyebrow light">Work with us</p>
-            <h2>Build what’s next<br /><em>with us.</em></h2>
+            <p className="eyebrow light">Work With Us</p>
+            <h2>Build what’s next<br /><em>with us</em></h2>
             <p>Find your next opportunity. Explore our open vacancies.</p>
             <span className="button button-primary">Explore Vacancies <Arrow /></span>
           </div>
@@ -201,16 +196,15 @@ export default function HomePage() {
           <img className="home-split-photo" src={homeInsightsImage} alt="" aria-hidden="true" />
           <div className="home-split-copy">
             <p className="eyebrow light">News & Insights</p>
-            <h2>News &amp;<br /><em>Insights.</em></h2>
+            <h2>News &amp;<br /><em>Insights</em></h2>
             <p>Articles, news and success stories in one place.</p>
             <span className="button button-primary">View All <Arrow /></span>
           </div>
         </Link>
       </section>
-      <CompanyProfileDownload profile={companyProfile('sis')} />
       <section className="about-cta">
         <div className="container">
-          <h2>Let’s put your plans into action.</h2>
+          <h2>Let’s put your plans into action</h2>
           <p>Tell us what your business needs and the right specialist will get back to you.</p>
           <ContactLink className="button button-primary">Contact Us <Arrow /></ContactLink>
         </div>

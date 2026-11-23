@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
+import Arrow from '@/components/Arrow'
 import { vacancies, vacancyLocations } from '@/data/vacancies'
 
 export default function VacanciesPage() {
@@ -47,7 +48,7 @@ export default function VacanciesPage() {
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
             <p className="eyebrow light">Careers</p>
-            <h1 id="vacancies-title">Find your next role at SIS Global.</h1>
+            <h1 id="vacancies-title">Find your next role at SIS Global</h1>
             <p>Search open vacancies by job title or keyword, then filter by the office location that works for you.</p>
           </div>
         </div>
@@ -56,7 +57,7 @@ export default function VacanciesPage() {
       <form className="vacancy-search" onSubmit={submitSearch} role="search">
         <div className="container vacancy-search-inner">
           <label className="vacancy-field">
-            <span>Job title or keyword</span>
+            <span>Job Title or Keyword</span>
             <input
               name="q"
               value={query}
@@ -82,7 +83,7 @@ export default function VacanciesPage() {
           <div className="vacancy-results-head">
             <p>{results.length} {results.length === 1 ? 'vacancy' : 'vacancies'}</p>
             {(appliedQuery || appliedLocation) ? (
-              <button type="button" className="text-link" onClick={clearFilters}>Clear filters</button>
+              <button type="button" className="text-link" onClick={clearFilters}>Clear Filters</button>
             ) : null}
           </div>
           {results.length ? (
@@ -96,7 +97,7 @@ export default function VacanciesPage() {
                       <p>{vacancy.summary}</p>
                       <p className="vacancy-place">{vacancy.location}</p>
                     </div>
-                    <Link className="button button-navy" to={`/vacancies/${vacancy.id}`}>Learn More</Link>
+                    <Link className="button button-secondary" to={`/vacancies/${vacancy.id}`}>Learn More <Arrow /></Link>
                   </article>
                 </li>
               ))}

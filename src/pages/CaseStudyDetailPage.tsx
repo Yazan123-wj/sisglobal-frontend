@@ -62,7 +62,7 @@ export default function CaseStudyDetailPage() {
             </div>
             <div>
               <dt>Type</dt>
-              <dd>Case study</dd>
+              <dd>Case Study</dd>
             </div>
           </dl>
         </div>
@@ -86,7 +86,7 @@ export default function CaseStudyDetailPage() {
       <article id="case-study" className="insight-article">
         <div className="container insight-article-layout">
           <div className="insight-article-main">
-            <p className="insight-article-kicker">Case study · {study.unit}</p>
+            <p className="insight-article-kicker">Case Study · {study.unit}</p>
             <p className="insight-lead">{lead}</p>
 
             <figure className="insight-figure">
@@ -123,7 +123,7 @@ export default function CaseStudyDetailPage() {
               <h2>Talk to the team</h2>
               <p>If this is relevant to a live programme, we can walk through how SIS Global would approach it.</p>
               <ContactLink className="button button-primary">
-                Contact Us <Arrow dir="right" />
+                Contact Us <Arrow />
               </ContactLink>
             </div>
           </aside>
@@ -146,7 +146,7 @@ export default function CaseStudyDetailPage() {
                   <div className="insight-tile-body">
                     <p>{item.unit} · {item.topic}</p>
                     <h3>{item.title}</h3>
-                    <small>Read case study</small>
+                    <small>Read Case Study</small>
                   </div>
                 </Link>
               ))}
@@ -159,7 +159,7 @@ export default function CaseStudyDetailPage() {
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

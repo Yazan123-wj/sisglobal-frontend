@@ -23,7 +23,7 @@ export default function DifferenceSection() {
   return (
     <div className="difference-stage">
       <div className="difference-head">
-        <p className="eyebrow">What sets us apart</p>
+        <p className="eyebrow">What Sets Us Apart</p>
         <h2>The Expertise You Need. <em>The Accountability You Expect.</em></h2>
       </div>
       <div className="difference-split">

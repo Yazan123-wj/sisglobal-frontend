@@ -87,19 +87,19 @@ export const workNav = [
 ] as const
 
 export const workIndustries = [
-  { slug: 'telecommunications', title: 'Telecommunications', copy: 'Rollout, optimization, maintenance and specialist workforce for mobile operators and network vendors.', cta: 'Explore more' },
-  { slug: 'government', title: 'Government & Public Sector', copy: 'Secure infrastructure, smart services and compliant workforce support for national programs.', cta: 'Explore more' },
-  { slug: 'energy-utilities', title: 'Energy & Utilities', copy: 'Reliable power, connected assets and skilled field teams for critical utility networks.', cta: 'Explore more' },
-  { slug: 'oil-gas-manufacturing', title: 'Oil, Gas & Manufacturing', copy: 'Safe operations, connected production, IT/OT security and technical manpower for industrial sites.', cta: 'Explore more' },
-  { slug: 'data-centers', title: 'Data Centers & Technology', copy: 'Infrastructure, power and cybersecurity for facilities where availability is critical.', cta: 'Explore more' },
-  { slug: 'healthcare', title: 'Healthcare', copy: 'Connected, secure hospitals and the specialist staff that keep them running.', cta: 'Explore more' },
-  { slug: 'education', title: 'Education', copy: 'Smart campuses, digital classrooms and reliable connectivity for schools and universities.', cta: 'Explore more' },
-  { slug: 'financial-services', title: 'Banking & Financial Services', copy: 'Secure, compliant technology and workforce operations for banks and fintechs.', cta: 'Explore more' },
-  { slug: 'transportation-logistics', title: 'Transportation & Logistics', copy: 'Visibility, automation and connectivity for ports, airports, fleets and warehouses.', cta: 'Explore more' },
-  { slug: 'construction-real-estate', title: 'Construction, Real Estate & Smart Buildings', copy: 'Smart building systems, security and project manpower from build to operation.', cta: 'Explore more' },
-  { slug: 'hospitality-tourism', title: 'Hospitality & Tourism', copy: 'Seamless guest connectivity, secure venues and seasonal workforce support.', cta: 'Explore more' },
-  { slug: 'professional-services', title: 'Professional & Business Services', copy: 'Specialist talent, simpler HR and a connected workplace for consultancies and growing firms.', cta: 'Explore more' },
-  { slug: 'retail-consumer', title: 'Retail & Consumer', copy: 'Store technology, data capture and flexible staffing for multi-branch retail.', cta: 'Explore more' },
+  { slug: 'telecommunications', title: 'Telecommunications', copy: 'Rollout, optimization, maintenance and specialist workforce for mobile operators and network vendors.', cta: 'Explore More' },
+  { slug: 'government', title: 'Government & Public Sector', copy: 'Secure infrastructure, smart services and compliant workforce support for national programs.', cta: 'Explore More' },
+  { slug: 'energy-utilities', title: 'Energy & Utilities', copy: 'Reliable power, connected assets and skilled field teams for critical utility networks.', cta: 'Explore More' },
+  { slug: 'oil-gas-manufacturing', title: 'Oil, Gas & Manufacturing', copy: 'Safe operations, connected production, IT/OT security and technical manpower for industrial sites.', cta: 'Explore More' },
+  { slug: 'data-centers', title: 'Data Centers & Technology', copy: 'Infrastructure, power and cybersecurity for facilities where availability is critical.', cta: 'Explore More' },
+  { slug: 'healthcare', title: 'Healthcare', copy: 'Connected, secure hospitals and the specialist staff that keep them running.', cta: 'Explore More' },
+  { slug: 'education', title: 'Education', copy: 'Smart campuses, digital classrooms and reliable connectivity for schools and universities.', cta: 'Explore More' },
+  { slug: 'financial-services', title: 'Banking & Financial Services', copy: 'Secure, compliant technology and workforce operations for banks and fintechs.', cta: 'Explore More' },
+  { slug: 'transportation-logistics', title: 'Transportation & Logistics', copy: 'Visibility, automation and connectivity for ports, airports, fleets and warehouses.', cta: 'Explore More' },
+  { slug: 'construction-real-estate', title: 'Construction, Real Estate & Smart Buildings', copy: 'Smart building systems, security and project manpower from build to operation.', cta: 'Explore More' },
+  { slug: 'hospitality-tourism', title: 'Hospitality & Tourism', copy: 'Seamless guest connectivity, secure venues and seasonal workforce support.', cta: 'Explore More' },
+  { slug: 'professional-services', title: 'Professional & Business Services', copy: 'Specialist talent, simpler HR and a connected workplace for consultancies and growing firms.', cta: 'Explore More' },
+  { slug: 'retail-consumer', title: 'Retail & Consumer', copy: 'Store technology, data capture and flexible staffing for multi-branch retail.', cta: 'Explore More' },
 ]
 
 export function getIndustry(slug: string) {

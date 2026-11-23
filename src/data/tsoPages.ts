@@ -22,6 +22,7 @@ export type TsoBlock =
       items?: Line[]
       points?: string[]
       groups?: { title: string; copy?: string; paragraphs?: string[]; points?: string[]; image?: string }[]
+      partner?: { name: string; logo: string; badge: string; badgeAlt: string }
       note?: string
       cta?: string
       link?: { label: string; to: string }

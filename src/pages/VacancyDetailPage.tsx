@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
+import Check from '@/components/Check'
 import { getVacancy } from '@/data/vacancies'
 
 export default function VacancyDetailPage() {
@@ -21,7 +22,7 @@ export default function VacancyDetailPage() {
     <main className="vacancy-detail-page">
       <section className="vacancy-detail-hero">
         <div className="container">
-          <Link className="text-link" to="/vacancies"><Arrow dir="left" /> All vacancies</Link>
+          <Link className="text-link" to="/vacancies"><Arrow dir="left" /> All Vacancies</Link>
           <p className="vacancy-meta">{vacancy.unit} · {vacancy.type} · {vacancy.location}</p>
           <h1>{vacancy.title}</h1>
           <p>{vacancy.summary}</p>
@@ -47,10 +48,10 @@ export default function VacancyDetailPage() {
           <aside id="apply" className="form-card vacancy-apply">
             {sent ? (
               <div className="success-state">
-                <span>✓</span>
-                <h3>Application received.</h3>
+                <span><Check /></span>
+                <h3>Application received</h3>
                 <p>Thank you. The SIS Global hiring team will review your application for {vacancy.title}.</p>
-                <button className="button button-secondary" type="button" onClick={() => setSent(false)}>Submit another</button>
+                <button className="button button-secondary" type="button" onClick={() => setSent(false)}>Submit Another</button>
               </div>
             ) : (
               <form onSubmit={submit}>
@@ -66,7 +67,7 @@ export default function VacancyDetailPage() {
                   <label className="wide">CV / resume *<input required type="file" name="cv" accept=".pdf,.doc,.docx" /></label>
                   <label className="wide">Message<textarea name="message" rows={4} placeholder="A short note about your experience" /></label>
                 </div>
-                <button className="button button-primary form-submit" type="submit">Submit application</button>
+                <button className="button button-primary form-submit" type="submit">Submit Application</button>
               </form>
             )}
           </aside>

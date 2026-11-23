@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 
 import Arrow from '@/components/Arrow'
 import ContactLink from '@/components/ContactLink'
+import SiteSearch from '@/components/SiteSearch'
 import { brandForPath } from '@/data/brand'
+import { useMediaQuery } from '@/hooks'
 
 const workLinks = [
   { label: 'Idarat HCM', to: '/what-we-do/hcm', note: 'Human capital' },
@@ -29,6 +31,8 @@ export default function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<OpenMenu>(null)
   const hideMenu = useRef(0)
   const location = useLocation()
+  // Below this width the nav collapses into the menu, so search sits beside the menu button instead.
+  const navCollapsed = useMediaQuery('(max-width: 860px)')
 
   const closeMenus = () => {
     window.clearTimeout(hideMenu.current)
@@ -45,6 +49,21 @@ export default function SiteHeader() {
     window.clearTimeout(hideMenu.current)
     hideMenu.current = window.setTimeout(() => setOpenMenu(null), 180)
   }
+
+  // The collapsed menu covers the screen, so the page behind it stays put and Escape closes it.
+  const sheetOpen = menuOpen && navCollapsed
+  useEffect(() => {
+    if (!sheetOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    document.documentElement.classList.add('nav-sheet-open')
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.documentElement.classList.remove('nav-sheet-open')
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [sheetOpen])
 
   const brand = brandForPath(location.pathname)
   const workCurrent = location.pathname.startsWith('/what-we-do')
@@ -64,6 +83,7 @@ export default function SiteHeader() {
       >
         <img className="brand-logo-img" src={brand.src} alt={brand.alt} />
       </Link>
+      {navCollapsed ? <SiteSearch onOpen={closeMenus} /> : null}
       <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-controls="main-nav">
         <span>{menuOpen ? 'Close' : 'Menu'}</span>
         <span className="menu-lines" aria-hidden="true"><i /><i /></span>
@@ -144,6 +164,7 @@ export default function SiteHeader() {
         <NavLink to="/vacancies" className={careerCurrent ? 'is-current' : undefined} onClick={closeMenus}>
           Career
         </NavLink>
+        {navCollapsed ? null : <SiteSearch onOpen={closeMenus} />}
         <ContactLink className="button button-primary" onClick={closeMenus}>
           Contact Us <Arrow />
         </ContactLink>

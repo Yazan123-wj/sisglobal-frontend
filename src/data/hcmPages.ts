@@ -155,7 +155,7 @@ export const hcmSections: Record<HcmSectionId, HcmSection> = {
     close: {
       title: 'Looking for the right talent?',
       copy: '',
-      cta: 'Talk to our Search & Selection team.',
+      cta: 'Talk to Our Search & Selection Team',
     },
   },
   'hcm-services': {
@@ -217,7 +217,7 @@ export const hcmSections: Record<HcmSectionId, HcmSection> = {
     close: {
       title: 'Looking to simplify your HR operations?',
       copy: '',
-      cta: 'Talk to our HCM team.',
+      cta: 'Talk to Our HCM Team',
     },
   },
   'my-idarat': {

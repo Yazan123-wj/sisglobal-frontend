@@ -17,7 +17,7 @@ export default function ContactPage() {
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
             <p className="eyebrow light">Contact Us</p>
-            <h1 id="contact-title">Let’s put your plans into action.</h1>
+            <h1 id="contact-title">Let’s put your plans into action</h1>
             <p>Tell us what your business needs and the right specialist will get back to you.</p>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default function ContactPage() {
       </section>
 
       <GlobalPresenceSection
-        heading={<>Where you can<br /><em>find us.</em></>}
+        heading={<>Where you can<br /><em>find us</em></>}
         lead="Explore our locations and connect with the teams delivering SIS Global’s services across the region."
       />
     </main>

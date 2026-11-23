@@ -19,19 +19,19 @@ const insightImages: Record<InsightImage, string> = {
 
 const kindCopy: Record<InsightKind, { title: string; lead: string; focus: string; navId: string }> = {
   article: {
-    title: 'Articles from the SIS Global team.',
+    title: 'Articles from the SIS Global team',
     lead: 'Perspectives on people, field operations and the technology that keeps organisations moving.',
     focus: 'Editorial',
     navId: 'insight-articles',
   },
   news: {
-    title: 'News and updates from SIS Global.',
+    title: 'News and updates from SIS Global',
     lead: 'Company announcements, certifications and service news from across the group.',
     focus: 'Updates',
     navId: 'insight-news',
   },
   story: {
-    title: 'Success stories from live programmes.',
+    title: 'Success stories from live programmes',
     lead: 'How people, field operations and technology come together on the ground.',
     focus: 'Delivery',
     navId: 'insight-stories',
@@ -130,7 +130,7 @@ export default function InsightKindPage({ kind: kindId }: { kind: InsightKind })
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

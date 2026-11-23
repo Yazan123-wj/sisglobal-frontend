@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import ceoPortrait from '@/assets/ceo-sammer-al-sabawi.jpg'
 import heroNetworkImage from '@/assets/sis-global-network-hero.png'
 import Arrow from '@/components/Arrow'
+import CompanyProfileLink from '@/components/CompanyProfileLink'
 import ContactLink from '@/components/ContactLink'
 import GlobalPresenceSection from '@/components/GlobalPresenceSection'
 import IntroSplit from '@/components/IntroSplit'
@@ -25,6 +26,7 @@ import {
   aboutValues,
   aboutVision,
 } from '@/data/aboutPage'
+import { companyProfile } from '@/data/companyProfiles'
 import { contactTo } from '@/data/contact'
 import { clients } from '@/data/clients'
 
@@ -84,6 +86,7 @@ export default function AboutPage() {
         <div className="container">
           <IntroSplit title="About SIS Global">
             {aboutIntro.slice(1).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            <CompanyProfileLink profile={companyProfile('sis')} />
           </IntroSplit>
         </div>
       </section>
@@ -168,15 +171,16 @@ export default function AboutPage() {
           <h2>Our Team</h2>
           <div className="about-team">
             {aboutTeam.map((member) => (
-              <article key={member.name}>
+              // Focusable so the bio that shows on hover is also reachable by keyboard.
+              <article key={member.name} tabIndex={0}>
                 <div className="about-team-photo" aria-hidden="true">
                   {member.image ? <img src={member.image} alt="" /> : <span>{teamInitials(member.name)}</span>}
                 </div>
                 <div className="about-team-copy">
                   <h3>{member.name}</h3>
                   <p>{member.role}</p>
-                  <small>{member.years} years of experience</small>
                 </div>
+                <p className="about-team-bio">{member.bio}</p>
               </article>
             ))}
           </div>

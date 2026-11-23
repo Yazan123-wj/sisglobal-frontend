@@ -33,7 +33,7 @@ function CaseCard({ item, featured = false }: { item: Insight; featured?: boolea
         <p>{item.unit} · {item.topic}</p>
         <h3>{item.title}</h3>
         <p>{item.excerpt}</p>
-        <small>Read case study</small>
+        <small>Read Case Study</small>
       </div>
     </Link>
   )
@@ -50,8 +50,8 @@ export default function CaseStudiesPage() {
         <div className="about-hero-visual" style={{ backgroundImage: `url(${heroNetworkImage})` }} aria-hidden="true" />
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
-            <p className="eyebrow light">Case studies</p>
-            <h1 id="cases-title">How SIS Global delivers on live programmes.</h1>
+            <p className="eyebrow light">Case Studies</p>
+            <h1 id="cases-title">How SIS Global delivers on live programmes</h1>
             <p>Field operations, workforce programmes and ICT estates — written from the work, not from a pitch deck.</p>
           </div>
           <dl className="about-hero-facts">
@@ -90,7 +90,7 @@ export default function CaseStudiesPage() {
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

@@ -100,17 +100,58 @@ export const aboutCeo = {
   role: 'Founder & CEO, SIS Global',
 }
 
-export const aboutTeam: { name: string; role: string; years: number; image?: string }[] = [
-  { name: 'Noura Al Harbi', role: 'Chief Operating Officer', years: 16 },
-  { name: 'Omar Al Qahtani', role: 'Managing Director, Idarat HCM', years: 14 },
-  { name: 'Layla Haddad', role: 'Managing Director, Idarat TSO', years: 15 },
-  { name: 'Faisal Al Mutairi', role: 'Managing Director, Identiti ICT', years: 12 },
-  { name: 'Hana Al Masri', role: 'Chief People Officer', years: 11 },
-  { name: 'Karim Nasser', role: 'Chief Financial Officer', years: 18 },
-  { name: 'Reem Al Dosari', role: 'Director of Operations', years: 10 },
-  { name: 'Tareq Al Zahrani', role: 'Regional Director, Gulf', years: 13 },
-  { name: 'Dina Khoury', role: 'Director of Client Partnerships', years: 9 },
-  { name: 'Yousef Al Shammari', role: 'Head of Quality & Compliance', years: 12 },
+// Placeholder team: names, roles and bios are dummy until the client supplies the real ones.
+export const aboutTeam: { name: string; role: string; bio: string; image?: string }[] = [
+  {
+    name: 'Noura Al Harbi',
+    role: 'Chief Operating Officer',
+    bio: 'Leads day-to-day operations across SIS Global’s three businesses, keeping delivery consistent from one client and market to the next.',
+  },
+  {
+    name: 'Omar Al Qahtani',
+    role: 'Managing Director, Idarat HCM',
+    bio: 'Heads Idarat HCM, overseeing recruitment, payroll and HR outsourcing for clients across Saudi Arabia and the region.',
+  },
+  {
+    name: 'Layla Haddad',
+    role: 'Managing Director, Idarat TSO',
+    bio: 'Runs Idarat TSO’s rollout, managed services and field operations for telecom operators and network vendors.',
+  },
+  {
+    name: 'Faisal Al Mutairi',
+    role: 'Managing Director, Identiti ICT',
+    bio: 'Leads Identiti ICT, bringing together solution design, vendor partnerships and technology supply for enterprise clients.',
+  },
+  {
+    name: 'Hana Al Masri',
+    role: 'Chief People Officer',
+    bio: 'Looks after how SIS Global hires, develops and supports its own people across every office.',
+  },
+  {
+    name: 'Karim Nasser',
+    role: 'Chief Financial Officer',
+    bio: 'Oversees finance, planning and commercial governance for the group and its three businesses.',
+  },
+  {
+    name: 'Reem Al Dosari',
+    role: 'Director of Operations',
+    bio: 'Coordinates delivery teams and processes so projects move from mobilization to handover on schedule.',
+  },
+  {
+    name: 'Tareq Al Zahrani',
+    role: 'Regional Director, Gulf',
+    bio: 'Manages client relationships and delivery across the Gulf from the Riyadh and Dubai offices.',
+  },
+  {
+    name: 'Dina Khoury',
+    role: 'Director of Client Partnerships',
+    bio: 'Works with key accounts to shape long-term engagements across HCM, technical services and ICT.',
+  },
+  {
+    name: 'Yousef Al Shammari',
+    role: 'Head of Quality & Compliance',
+    bio: 'Maintains the group’s ISO-certified management systems and keeps delivery aligned with EHS and regulatory requirements.',
+  },
 ]
 
 export const aboutCerts = [
@@ -122,7 +163,7 @@ export const aboutCerts = [
 ]
 
 export const aboutCta = {
-  title: "Let's Build What's Next.",
+  title: "Let's Build What's Next",
   copy: "Whether you're strengthening your workforce, managing critical technical operations or advancing your technology environment, SIS Global brings together the expertise and capabilities to help you move forward.",
   action: 'Talk to SIS Global',
 }

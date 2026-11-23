@@ -2,6 +2,23 @@ import type { TsoBlock } from '@/data/tsoPages'
 import quatra4000e from '@/assets/cel-fi/quatra-4000e.png'
 import quatraEvo from '@/assets/cel-fi/quatra-evo.png'
 import goG43 from '@/assets/cel-fi/go-g43.png'
+import nextivityElite from '@/assets/nextivity/elite-partner.png'
+import nextivityLogo from '@/assets/nextivity/logo-horizontal.png'
+import ciscoEnterprise from '@/assets/product-placeholders/cisco-enterprise.png'
+import arubaNetworking from '@/assets/product-placeholders/aruba-networking.png'
+import fortinetSecurity from '@/assets/product-placeholders/fortinet-security.png'
+import powerPlatform from '@/assets/product-placeholders/power-platform.png'
+import teamsRooms from '@/assets/product-placeholders/teams-rooms.png'
+import hpComputing from '@/assets/product-placeholders/hp-computing.png'
+import dellBusiness from '@/assets/product-placeholders/dell-business.png'
+import lenovoBusiness from '@/assets/product-placeholders/lenovo-business.png'
+import appleBusiness from '@/assets/product-placeholders/apple-business.png'
+import asusComputing from '@/assets/product-placeholders/asus-computing.png'
+import hpeHardware from '@/assets/product-placeholders/hpe-hardware.png'
+import hpPrinting from '@/assets/product-placeholders/hp-printing.png'
+import epsonPrinting from '@/assets/product-placeholders/epson-printing.png'
+import zebraCapture from '@/assets/product-placeholders/zebra-capture.png'
+import microsoftCloud from '@/assets/product-placeholders/microsoft-cloud.png'
 
 export type IctSectionId =
   | 'overview'
@@ -350,6 +367,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'Cisco Enterprise Networking',
+            image: ciscoEnterprise,
             copy: 'Cisco technologies can support connectivity across campus, branches, data center and distributed enterprise environments.',
             paragraphs: ['Depending on the organization’s requirements, solutions may include Cisco Catalyst switching and wireless infrastructure, enterprise routing, SD-WAN and Cisco Meraki cloud-managed networking.'],
             points: [
@@ -364,6 +382,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'HPE Aruba Networking',
+            image: arubaNetworking,
             copy: 'HPE Aruba Networking solutions can support secure wired and wireless connectivity across offices, campuses, hospitality environments, healthcare facilities and other enterprise locations.',
             paragraphs: ['Solutions may combine enterprise Wi-Fi, switching, network access control and centralized management to provide improved visibility and more consistent user and device connectivity.'],
             points: [
@@ -392,6 +411,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
       {
         type: 'section',
         title: 'Nextivity CEL-FI Smart Indoor Cellular Coverage',
+        partner: { name: 'Nextivity', logo: nextivityLogo, badge: nextivityElite, badgeAlt: 'Nextivity Elite Partner' },
         paragraphs: [
           'For indoor cellular coverage requirements, Identiti ICT works with Nextivity CEL-FI, a range of intelligent cellular coverage solutions designed to improve reliable voice and data connectivity inside buildings and facilities.',
           'CEL-FI solutions use Nextivity’s proprietary IntelliBoost technology to process and strengthen cellular signals while maintaining network-safe operation. Depending on the selected system and deployment architecture, CEL-FI can support single, dual or multiple mobile network operators, 4G and 5G connectivity, active DAS configurations and remote system management through the Nextivity WAVE platform.',
@@ -726,6 +746,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'Fortinet Integrated Cybersecurity Solutions',
+            image: fortinetSecurity,
             copy: 'Identiti ICT helps organizations select, configure and integrate Fortinet technologies to protect networks, users, devices and cloud environments. Fortinet Security Fabric connects these capabilities to improve visibility and support consistent security management.',
             points: [
               'FortiGate and Secure SD-WAN: Protect network traffic, connect branches and secure application access across distributed locations.',
@@ -1084,6 +1105,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'Microsoft Power Platform',
+            image: powerPlatform,
             copy: 'Identiti ICT can use Microsoft Power Platform to develop business applications, automate workflows and create operational dashboards connected with Microsoft 365, Dynamics 365, Azure and other organizational systems.',
             paragraphs: [
               'Microsoft Power Platform can support focused departmental requirements or broader process-transformation initiatives.',
@@ -1252,6 +1274,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'Microsoft Teams Rooms with Logitech',
+            image: teamsRooms,
             copy: 'Identiti ICT can deliver Microsoft Teams Rooms environments using compatible Logitech video-collaboration technologies for meeting spaces of different sizes.',
             paragraphs: [
               'Microsoft Teams Rooms extends the Teams collaboration experience into shared meeting spaces, while Logitech room solutions provide integrated cameras, microphones, speakers and touch controls.',
@@ -1534,6 +1557,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'HP Business Computing',
+            image: hpComputing,
             copy: 'HP technologies support a broad range of end-user and professional computing requirements from everyday business devices to high-performance workstations and displays.',
             points: [
               'HP business laptops',
@@ -1546,6 +1570,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'Dell Business & Enterprise Technology',
+            image: dellBusiness,
             copy: 'Dell Technologies provides products across end-user computing, professional workstations and enterprise infrastructure. Depending on the requirement, Dell products can support individual users, standardized device fleets and wider infrastructure deployments.',
             points: [
               'Dell business laptops and desktops',
@@ -1558,6 +1583,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'Lenovo Business Technology',
+            image: lenovoBusiness,
             copy: 'Lenovo provides business computing products suited to general office users, mobile teams and professionals requiring higher-performance systems.',
             points: [
               'ThinkPad business laptops',
@@ -1570,6 +1596,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'Apple for Business',
+            image: appleBusiness,
             copy: 'Apple devices can support executive, creative, mobile and specialized business users requiring an integrated hardware and software environment.',
             points: [
               'MacBook laptops',
@@ -1582,6 +1609,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'ASUS Business Computing',
+            image: asusComputing,
             copy: 'ASUS products can support general business users, mobile professionals and users requiring performance-focused computing environments.',
             points: [
               'Business laptops',
@@ -1594,6 +1622,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'HPE',
+            image: hpeHardware,
             copy: 'Enterprise servers, storage, networking and data center infrastructure products.',
             paragraphs: ['Exact models, configurations and availability are selected according to the organization’s requirements and the manufacturers’ current product portfolios.'],
           },
@@ -1755,6 +1784,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'HP Business and Large-Format Printing',
+            image: hpPrinting,
             copy: 'HP technologies support printing requirements ranging from individual business users and office workgroups to enterprise and specialized large-format environments.',
             paragraphs: ['Depending on the requirement, Identiti ICT can supply HP business printers, multifunction devices and HP DesignJet systems for technical drawings, architectural plans, maps and graphics.'],
             points: [
@@ -1769,6 +1799,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'Epson Printing, Scanning and Point-of-Sale Technologies',
+            image: epsonPrinting,
             copy: 'Epson provides printing and imaging technologies for offices, workgroups, retail operations and organizations requiring professional or specialized output.',
             paragraphs: ['Depending on the operating environment, Epson products can support business document printing, scanning, receipt printing and large-format applications.'],
             points: [
@@ -1783,6 +1814,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
           },
           {
             title: 'Zebra Labeling and Data-Capture Technologies',
+            image: zebraCapture,
             copy: 'Zebra technologies support organizations that depend on accurate identification, tracking and operational data capture across logistics, warehousing, manufacturing, retail, healthcare and field-service environments.',
             paragraphs: ['The portfolio covers label printing, barcode scanning, rugged mobile computing and RFID technologies that connect physical products, assets and activities with digital systems.'],
             points: [
@@ -1954,6 +1986,7 @@ export const ictSections: Record<IctSectionId, IctSection> = {
         groups: [
           {
             title: 'Microsoft Cloud & Business Technologies',
+            image: microsoftCloud,
             copy: 'Microsoft provides an integrated technology ecosystem spanning productivity, collaboration, cloud infrastructure, operating systems, databases, security and business applications.',
             paragraphs: ['Identiti ICT can support organizations in selecting and procuring Microsoft products and subscriptions according to their users, workloads, existing environment and required capabilities.'],
             points: [
@@ -2106,4 +2139,15 @@ export const ictSections: Record<IctSectionId, IctSection> = {
 export function getIctSection(id: string | null): IctSection {
   if (id && id in ictSections) return ictSections[id as IctSectionId]
   return ictSections.overview
+}
+
+/** Inner pages of a service, titled as on the service's own cards. */
+export function ictInnerLinks(parent: IctSectionId): { id: string; label: string }[] {
+  const blocks = ictSections[parent]?.blocks ?? []
+  return (ictInnerNav[parent] ?? [])
+    .filter((item) => !item.id.endsWith('-overview'))
+    .map((item) => {
+      const lead = blocks.find((block) => block.type === 'section' && block.id === item.id)
+      return { id: item.id, label: lead?.type === 'section' ? lead.title : item.label }
+    })
 }

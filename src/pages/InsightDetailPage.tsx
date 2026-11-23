@@ -116,7 +116,7 @@ export default function InsightDetailPage() {
                   <dd>{insight.date}</dd>
                 </div>
                 <div>
-                  <dt>Reading time</dt>
+                  <dt>Reading Time</dt>
                   <dd>{insight.read}</dd>
                 </div>
                 <div>
@@ -133,7 +133,7 @@ export default function InsightDetailPage() {
               <h2>Talk to the team</h2>
               <p>If this is relevant to a live programme, we can walk through how SIS Global would approach it.</p>
               <ContactLink className="button button-primary">
-                Contact Us <Arrow dir="right" />
+                Contact Us <Arrow />
               </ContactLink>
             </div>
           </aside>
@@ -169,7 +169,7 @@ export default function InsightDetailPage() {
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

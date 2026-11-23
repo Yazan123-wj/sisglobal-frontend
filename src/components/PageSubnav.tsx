@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 
 import Arrow from '@/components/Arrow'
 import { cn } from '@/lib/cn'
@@ -236,20 +236,31 @@ function scrollChildIntoRow(row: HTMLElement | null, selector: string) {
   }
 }
 
+export type PageSectionGroup = PageSectionLink & { children?: PageSectionLink[] }
+
 export function PageSubnavPills({
   items,
   label,
   activeId,
   onSelect,
+  activeChildId,
+  onSelectChild,
 }: {
-  items: PageSectionLink[]
+  items: PageSectionGroup[]
   label: string
   activeId: string
   onSelect: (id: string) => void
+  activeChildId?: string
+  onSelectChild?: (parentId: string, childId: string) => void
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
   const rowRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(false)
+  const [openId, setOpenId] = useState<string | null>(null)
+  const [menuLeft, setMenuLeft] = useState(0)
+  const open = onSelectChild ? items.find((item) => item.id === openId && item.children?.length) : undefined
 
   const update = () => {
     const row = rowRef.current
@@ -265,16 +276,53 @@ export function PageSubnavPills({
     const row = rowRef.current
     if (!row) return
     update()
-    row.addEventListener('scroll', update, { passive: true })
+    const onScroll = () => {
+      update()
+      setOpenId(null)
+    }
+    row.addEventListener('scroll', onScroll, { passive: true })
     const observer = new ResizeObserver(update)
     observer.observe(row)
     window.addEventListener('resize', update)
     return () => {
-      row.removeEventListener('scroll', update)
+      row.removeEventListener('scroll', onScroll)
       observer.disconnect()
       window.removeEventListener('resize', update)
     }
   }, [itemKey])
+
+  // The row scrolls sideways, so the menu lives outside it and is lined up under its pill here.
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current
+    const menu = menuRef.current
+    if (!wrap || !menu || !openId) return
+    const pill = wrap.querySelector<HTMLElement>(`[data-pill="${openId}"]`)
+    if (!pill) return
+    const wrapRect = wrap.getBoundingClientRect()
+    // Pull back by the menu's inner padding so its text lines up with the pill label.
+    const left = pill.getBoundingClientRect().left - wrapRect.left - 21
+    setMenuLeft(Math.max(0, Math.min(left, wrapRect.width - menu.offsetWidth)))
+  }, [openId])
+
+  useEffect(() => {
+    setOpenId(null)
+  }, [activeId, activeChildId])
+
+  useEffect(() => {
+    if (!openId) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenId(null)
+    }
+    const onPointer = (event: PointerEvent) => {
+      if (!wrapRef.current?.contains(event.target as Node)) setOpenId(null)
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onPointer)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onPointer)
+    }
+  }, [openId])
 
   useLayoutEffect(() => {
     const row = rowRef.current
@@ -297,8 +345,16 @@ export function PageSubnavPills({
   const allowArrows = items.length > 3
   const scrolling = allowArrows && (canPrev || canNext)
 
+  const hoverOpen = (id: string | null) => (event: ReactPointerEvent) => {
+    if (event.pointerType === 'mouse') setOpenId(id)
+  }
+
   return (
-    <div className={cn('page-subnav-pills-wrap', scrolling && 'is-scroll')}>
+    <div
+      ref={wrapRef}
+      className={cn('page-subnav-pills-wrap', scrolling && 'is-scroll')}
+      onPointerLeave={hoverOpen(null)}
+    >
       {allowArrows ? (
         <button
           type="button"
@@ -311,17 +367,42 @@ export function PageSubnavPills({
         </button>
       ) : null}
       <div ref={rowRef} className="page-subnav-pills" role="navigation" aria-label={label}>
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={cn(item.id === activeId && 'is-active')}
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => keepRowScroll(rowRef.current, () => onSelect(item.id))}
-          >
-            {item.label}
-          </button>
-        ))}
+        {items.map((item) => {
+          const pill = (
+            <button
+              key={item.id}
+              type="button"
+              className={cn(item.id === activeId && 'is-active')}
+              onMouseDown={(event) => event.preventDefault()}
+              onPointerEnter={onSelectChild && !item.children?.length ? hoverOpen(null) : undefined}
+              onClick={() => keepRowScroll(rowRef.current, () => onSelect(item.id))}
+            >
+              {item.label}
+            </button>
+          )
+          if (!onSelectChild || !item.children?.length) return pill
+          return (
+            <span
+              key={item.id}
+              className={cn('page-subnav-pill', openId === item.id && 'is-open')}
+              data-pill={item.id}
+              onPointerEnter={hoverOpen(item.id)}
+            >
+              {pill}
+              <button
+                type="button"
+                className="page-subnav-pill-caret"
+                aria-label={`${item.label} pages`}
+                aria-haspopup="true"
+                aria-expanded={openId === item.id}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => setOpenId((current) => (current === item.id ? null : item.id))}
+              >
+                <span className="nav-caret" aria-hidden="true" />
+              </button>
+            </span>
+          )
+        })}
       </div>
       {allowArrows ? (
         <button
@@ -333,6 +414,23 @@ export function PageSubnavPills({
         >
           <Arrow dir="right" />
         </button>
+      ) : null}
+      {open && onSelectChild ? (
+        <div ref={menuRef} className="page-subnav-menu" style={{ left: menuLeft }}>
+          {open.children?.map((child) => (
+            <button
+              key={child.id}
+              type="button"
+              className={cn(open.id === activeId && child.id === activeChildId && 'is-current')}
+              onClick={() => {
+                setOpenId(null)
+                onSelectChild(open.id, child.id)
+              }}
+            >
+              {child.label}
+            </button>
+          ))}
+        </div>
       ) : null}
     </div>
   )

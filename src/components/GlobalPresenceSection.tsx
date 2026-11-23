@@ -43,7 +43,7 @@ export default function GlobalPresenceSection({
         </div>
 
         <div className="presence-copy">
-          <p className="presence-index">Global presence</p>
+          <p className="presence-index">Global Presence</p>
           <h2 id="global-presence-heading">{heading ?? <>Local expertise.<br /><em>International reach.</em></>}</h2>
           {lead ? <p className="presence-lead-copy">{lead}</p> : null}
 

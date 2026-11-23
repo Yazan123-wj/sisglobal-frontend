@@ -1,62 +1,69 @@
-import { useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 
 import BrandMark from '@/components/BrandMark'
 import { gsap, useGSAP } from '@/lib/gsap'
+import { hasLogoScale, logoScale, measureLogo } from '@/lib/logoScale'
 
 export type LogoItem = { name: string; mark?: string; src?: string }
+
+function scaleStyle(src: string) {
+  const scale = logoScale(src)
+  return scale ? ({ '--logo-scale': scale } as CSSProperties) : undefined
+}
 
 export default function LogoMarquee({ items }: { items: LogoItem[] }) {
   const root = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLUListElement>(null)
   const loop = [...items, ...items, ...items]
 
+  // Each logo is measured once so the whole strip can be drawn at one visual size.
+  const sources = useMemo(() => items.flatMap((item) => (item.src ? [item.src] : [])), [items])
+  const [, refresh] = useState(0)
+  const ready = sources.every(hasLogoScale)
+
+  useEffect(() => {
+    if (ready) return
+    let live = true
+    Promise.all(sources.map(measureLogo)).then(() => {
+      if (live) refresh((count) => count + 1)
+    })
+    return () => { live = false }
+  }, [ready, sources])
+
   useGSAP(() => {
-    const wrapEl = root.current
     const trackEl = track.current
-    if (!wrapEl || !trackEl) return
+    if (!trackEl) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const copies = 3
     const loopWidth = () => trackEl.scrollWidth / copies
+    // The strip moves at one steady speed, in pixels per frame.
+    const speed = 0.55
     let x = 0
-    let speed = 0.55
-    let target = 0.55
-
-    const onMove = (event: MouseEvent) => {
-      const rect = wrapEl.getBoundingClientRect()
-      const t = gsap.utils.clamp(0, 1, (event.clientX - rect.left) / Math.max(rect.width, 1))
-      target = gsap.utils.mapRange(0, 1, -1.85, 1.85, t)
-    }
-    const onLeave = () => { target = 0.55 }
 
     const tick = () => {
-      speed += (target - speed) * 0.08
       x -= speed
       const width = loopWidth()
       if (width <= 0) return
       if (x <= -width) x += width
-      if (x > 0) x -= width
       gsap.set(trackEl, { x })
     }
 
-    wrapEl.addEventListener('mousemove', onMove)
-    wrapEl.addEventListener('mouseleave', onLeave)
     gsap.ticker.add(tick)
 
     return () => {
-      wrapEl.removeEventListener('mousemove', onMove)
-      wrapEl.removeEventListener('mouseleave', onLeave)
       gsap.ticker.remove(tick)
     }
   }, { scope: root })
 
   return (
     <div className="logo-swiper" ref={root}>
-      <ul className="logo-track" ref={track} aria-hidden="true">
+      <ul className={ready ? 'logo-track is-ready' : 'logo-track'} ref={track} aria-hidden="true">
         {loop.map((item, index) => (
           <li key={`${item.name}-${index}`} title={item.name}>
             {item.src ? (
-              <img src={item.src} alt="" />
+              <img src={item.src} alt="" style={scaleStyle(item.src)} />
             ) : item.mark ? (
               <BrandMark mark={item.mark} />
             ) : null}

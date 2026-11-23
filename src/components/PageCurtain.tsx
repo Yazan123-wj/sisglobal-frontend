@@ -39,9 +39,9 @@ export default function PageCurtain() {
         .set(node, { pointerEvents: 'all' })
         .fromTo(bands, { scaleY: 0 }, {
           scaleY: 1,
-          duration: 0.4,
-          stagger: 0.07,
-          ease: 'power3.inOut',
+          duration: 0.16,
+          stagger: 0.03,
+          ease: 'power2.inOut',
           transformOrigin: origin,
         })
     })
@@ -77,9 +77,9 @@ export default function PageCurtain() {
     gsap.set(node, { pointerEvents: 'all' })
     gsap.to(bands, {
       scaleY: 0,
-      duration: 0.48,
-      stagger: 0.07,
-      ease: 'power3.inOut',
+      duration: 0.22,
+      stagger: 0.03,
+      ease: 'power2.out',
       transformOrigin: origin,
       onComplete: () => {
         gsap.set(node, { pointerEvents: 'none' })

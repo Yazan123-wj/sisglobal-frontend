@@ -52,7 +52,7 @@ export default function InsightsPage() {
         <div className="container about-hero-inner">
           <div className="about-hero-copy">
             <p className="eyebrow light">Insights</p>
-            <h1 id="insights-title">Articles, news and success stories in one place.</h1>
+            <h1 id="insights-title">Articles, news and success stories in one place</h1>
             <p>Perspectives from the SIS Global team on people, field operations and the technology that keeps organisations moving.</p>
           </div>
           <dl className="about-hero-facts">
@@ -87,7 +87,7 @@ export default function InsightsPage() {
                   <p>{kind.intro}</p>
                 </div>
                 <Link className="text-link" to={insightKindPath[kind.id]}>
-                  View all {kind.label.toLowerCase()} <Arrow />
+                  View All {kind.label} <Arrow />
                 </Link>
               </div>
               <div className="insight-tile-grid">
@@ -103,7 +103,7 @@ export default function InsightsPage() {
         <div className="container">
           <h2>Discuss your project with SIS Global</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

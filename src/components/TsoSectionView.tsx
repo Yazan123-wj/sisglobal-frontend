@@ -1,4 +1,4 @@
-import { createContext, Fragment, useContext, useRef } from 'react'
+import { createContext, useContext, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import iso14001 from '@/assets/certs/iso-14001.png'
@@ -7,7 +7,7 @@ import iso27001 from '@/assets/certs/iso-27001.png'
 import iso45001 from '@/assets/certs/iso-45001.png'
 import iso9001 from '@/assets/certs/iso-9001.png'
 import Arrow from '@/components/Arrow'
-import CompanyProfileDownload from '@/components/CompanyProfileDownload'
+import CompanyProfileLink from '@/components/CompanyProfileLink'
 import ContactLink from '@/components/ContactLink'
 import { Steps, WhyFeature } from '@/components/HcmSectionView'
 import IntroSplit from '@/components/IntroSplit'
@@ -196,6 +196,36 @@ function Prose({ paragraphs }: { paragraphs: string[] }) {
   )
 }
 
+function PartnerFeature({
+  title,
+  paragraphs,
+  partner,
+}: {
+  title: string
+  paragraphs: string[]
+  partner: NonNullable<SectionBlock['partner']>
+}) {
+  const [lead, ...rest] = paragraphs
+
+  return (
+    <article className="tso-partner">
+      <header className="tso-partner-head">
+        <div className="tso-partner-intro">
+          <img className="tso-partner-logo" src={partner.logo} alt={partner.name} />
+          <h2>{title}</h2>
+          <p>{lead}</p>
+        </div>
+        <img className="tso-partner-badge" src={partner.badge} alt={partner.badgeAlt} />
+      </header>
+      {rest.length ? (
+        <div className="tso-partner-copy">
+          {rest.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      ) : null}
+    </article>
+  )
+}
+
 function PhotoMedia({ id }: { id: string }) {
   const { photo } = useView()
   return (
@@ -293,7 +323,7 @@ function GroupList({ title, groups }: { title?: string; groups: GroupBlock[] }) 
           <h2>{title}</h2>
         </div>
       ) : null}
-      <ul className={`tso-cards is-groups${groups.length === 3 ? ' is-three' : ''}${groups.some((group) => group.image) ? ' is-product' : ''}`}>
+      <ul className={`tso-cards is-groups${groups.length === 3 || (groups.length > 3 && groups.some((group) => group.image)) ? ' is-three' : ''}${groups.some((group) => group.image) ? ' is-product' : ''}`}>
         {groups.map((group, index) => (
           <li key={group.title} className={group.image ? 'tso-card is-product' : 'tso-card'}>
             {group.image ? (
@@ -445,11 +475,13 @@ function BlockView({
   photoKey,
   withPhoto = true,
   introTitle,
+  profile,
 }: {
   block: TsoBlock
   photoKey: string
   withPhoto?: boolean
   introTitle?: string
+  profile?: CompanyProfile
 }) {
   const { partners } = useView()
   const anchor = htmlId(block)
@@ -458,6 +490,7 @@ function BlockView({
       return introTitle ? (
         <IntroSplit title={introTitle}>
           {block.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {profile ? <CompanyProfileLink profile={profile} /> : null}
         </IntroSplit>
       ) : (
         <Prose paragraphs={block.paragraphs} />
@@ -675,6 +708,8 @@ function ServiceView({
                   withPhoto={photoCards && Boolean(part.items)}
                   grid={photoCards && Boolean(part.items)}
                 />
+              ) : part.partner && part.paragraphs?.length ? (
+                <PartnerFeature title={part.title} paragraphs={part.paragraphs} partner={part.partner} />
               ) : part.title === 'How We Work' && part.paragraphs?.length ? (
                 <WorkFaq title={part.title} paragraphs={part.paragraphs} heading="h2" />
               ) : isScope(part) && part.paragraphs?.length ? (
@@ -717,7 +752,7 @@ function ServiceView({
                 {cta.title ? <h2>{cta.title}</h2> : null}
                 {cta.copy ? <p>{cta.copy}</p> : null}
               </div>
-              <CtaLink label="Talk to our team" topic={group.lead.id} />
+              <CtaLink label="Talk to Our Team" topic={group.lead.id} />
             </section>
           ) : (
             <footer className="tso-close">
@@ -791,7 +826,14 @@ function Offers({ blocks }: { blocks: SectionBlock[] }) {
   )
 }
 
-function renderGroup(group: Group, index: number, photoKey: string, withPhoto = true, introTitle?: string) {
+function renderGroup(
+  group: Group,
+  index: number,
+  photoKey: string,
+  withPhoto = true,
+  introTitle?: string,
+  profile?: CompanyProfile,
+) {
   if (group.kind === 'offers') return <Offers key={`offers-${index}`} blocks={group.blocks} />
   if (group.kind === 'service') {
     return <ServiceView key={group.lead.id} group={group} stackedCta />
@@ -803,6 +845,7 @@ function renderGroup(group: Group, index: number, photoKey: string, withPhoto = 
       photoKey={photoKey}
       withPhoto={withPhoto}
       introTitle={introTitle}
+      profile={profile}
     />
   )
 }
@@ -855,16 +898,6 @@ export default function TsoSectionView({
               if (group.kind === 'offers') return null
               if (isPartnersGroup(group) && isIctWhy(intro[index - 1])) return null
               if (isCtaGroup(group) && isWhyGroup(intro[index - 1], section.id) && !isIctWhy(intro[index - 1])) return null
-              if (isCtaGroup(group) && profile) {
-                return (
-                  <Fragment key={`${group.kind}-${index}`}>
-                    <CompanyProfileDownload profile={profile} />
-                    <SurfaceBand tone="navy">
-                      {renderGroup(group, index, section.id)}
-                    </SurfaceBand>
-                  </Fragment>
-                )
-              }
               if (group.kind === 'block' && group.block.type === 'stats') {
                 return (
                   <StatisticsBar
@@ -888,6 +921,7 @@ export default function TsoSectionView({
                     index === 0 && group.kind === 'block' && group.block.type === 'prose'
                       ? (section.id === 'overview' ? section.title : (section.eyebrow || section.nav))
                       : undefined,
+                    index === 0 ? profile : undefined,
                   )}
                   {closePartners ? renderGroup(closePartners, index + 1, section.id, false) : null}
                   {closeCta ? renderGroup(closeCta, index + 2, section.id, false) : null}

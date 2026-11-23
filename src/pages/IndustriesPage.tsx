@@ -61,7 +61,7 @@ export default function IndustriesPage() {
                   <h3>{industry.title}</h3>
                   <p>{industry.copy}</p>
                   <span className="text-link">
-                    {industry.cta} <Arrow dir="right" />
+                    {industry.cta} <Arrow />
                   </span>
                 </div>
               </Link>
@@ -90,7 +90,7 @@ export default function IndustriesPage() {
                   <span>{story.topic}</span>
                   <h3>{story.title}</h3>
                   <p>{story.excerpt}</p>
-                  <small>Read story <Arrow /></small>
+                  <small>Read Story <Arrow /></small>
                 </div>
               </Link>
             ))}
@@ -103,7 +103,7 @@ export default function IndustriesPage() {
           <h2>Don’t see your industry?</h2>
           <p>Tell us what you need and the right specialist will get back to you.</p>
           <ContactLink className="button button-primary">
-            Send Enquiry <Arrow dir="right" />
+            Send Enquiry <Arrow />
           </ContactLink>
         </div>
       </section>

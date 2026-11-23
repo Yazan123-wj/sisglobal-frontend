@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import Check from '@/components/Check'
 import { contactInterests, isContactInterest, messageFromContact } from '@/data/contact'
 
 const shapes = ['circle', 'square', 'diamond', 'plus'] as const
@@ -79,8 +80,8 @@ export default function ContactForm() {
   if (stage === 'sent') {
     return (
       <div className="form-card success-state">
-        <span>✓</span>
-        <h3>Thanks for getting in touch.</h3>
+        <span><Check /></span>
+        <h3>Thanks for getting in touch</h3>
         <p>Your enquiry has been received. A SIS Global specialist will contact you shortly.</p>
       </div>
     )

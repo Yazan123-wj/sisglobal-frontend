@@ -12,7 +12,7 @@ import { getIndustry, workIndustries } from '@/data/workContent'
 const sections = [
   { id: 'industry-overview', label: 'Overview' },
   { id: 'industry-challenges', label: 'Challenges' },
-  { id: 'industry-support', label: 'How we help' },
+  { id: 'industry-support', label: 'How We Help' },
   { id: 'industry-faq', label: 'FAQ' },
 ]
 
@@ -180,7 +180,7 @@ export default function IndustryDetailPage() {
       <section id="industry-support" className="industry-block section">
         <div className="container">
           <div className="industry-section-head">
-            <p className="about-panel-label">How we help</p>
+            <p className="about-panel-label">How We Help</p>
             <h2>{page.supportTitle}</h2>
           </div>
           {page.support.map((group, index) => (
@@ -204,7 +204,7 @@ export default function IndustryDetailPage() {
           <FaqList faqs={page.faqs} />
           {related.length ? (
             <div className="industry-related">
-              <p className="about-panel-label">Related industries</p>
+              <p className="about-panel-label">Related Industries</p>
               <div className="industry-related-grid">
                 {related.map((item) => (
                   <Link key={item.slug} className="industry-related-card" to={`/what-we-do/industries/${item.slug}`}>
@@ -213,7 +213,7 @@ export default function IndustryDetailPage() {
                     </div>
                     <div>
                       <h3>{item.title}</h3>
-                      <span className="text-link">{item.cta} <Arrow dir="right" /></span>
+                      <span className="text-link">{item.cta} <Arrow /></span>
                     </div>
                   </Link>
                 ))}
@@ -227,7 +227,7 @@ export default function IndustryDetailPage() {
         <div className="container">
           <h2>{page.cta}</h2>
           <ContactLink className="button button-primary">
-            Contact Us <Arrow dir="right" />
+            Contact Us <Arrow />
           </ContactLink>
         </div>
       </section>

@@ -21,32 +21,13 @@ export default function SiteMotion() {
   useGSAP(() => {
     if (prefersReducedMotion()) return
 
-    gsap.utils.toArray<HTMLElement>('.about-hero-visual, .hero-visual').forEach((visual) => {
-      const section = visual.parentElement
-      if (!section) return
-      gsap.fromTo(
-        visual,
-        { yPercent: -8 },
-        {
-          yPercent: 12,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        },
-      )
-    })
-
     gsap.utils.toArray<HTMLElement>('[data-curtain]').forEach((node) => {
       const curtain = ensureCurtain(node)
       gsap.set(curtain, { yPercent: 0 })
       gsap.to(curtain, {
         yPercent: 101,
-        duration: 0.9,
-        ease: 'power3.inOut',
+        duration: 0.4,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: node,
           start: 'top 84%',
