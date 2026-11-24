@@ -38,10 +38,12 @@ const ViewContext = createContext<{
   photo: (key: string) => string
   partners: LogoItem[]
   photoCards?: boolean
+  bulletLists?: boolean
 }>({
   photo: tsoPhoto,
   partners: tsoClients,
   photoCards: true,
+  bulletLists: false,
 })
 
 function useView() {
@@ -373,6 +375,35 @@ function SectionExtras({ block }: { block: SectionBlock }) {
   )
 }
 
+/** Entries that are a single line each: no description, link or picture to put in a card. */
+function isPlainList(items: NonNullable<SectionBlock['items']>) {
+  return items.every((item) => !item.copy && !item.href)
+}
+
+function BulletList({
+  items,
+  title,
+  lead,
+  heading: Heading = 'h3',
+}: {
+  items: NonNullable<SectionBlock['items']>
+  title?: string
+  lead?: string[]
+  heading?: 'h2' | 'h3'
+}) {
+  return (
+    <div className={title ? 'tso-bullets' : 'tso-bullets is-untitled'}>
+      {title ? <Heading>{title}</Heading> : null}
+      <div className="tso-bullets-body">
+        {lead?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        <ul>
+          {items.map((item) => <li key={item.title}>{item.title}</li>)}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
 function Cards({
   items,
   withPhoto = false,
@@ -388,7 +419,7 @@ function Cards({
   heading?: 'h2' | 'h3'
   grid?: boolean
 }) {
-  const { photo, photoCards = true } = useView()
+  const { photo, photoCards = true, bulletLists = false } = useView()
   const scroller = useRef<HTMLUListElement>(null)
   const swipe = withPhoto && items.length > 1
   const ictGrid = grid && !photoCards
@@ -402,6 +433,10 @@ function Cards({
     const card = node.querySelector<HTMLElement>('.tso-card')
     const step = (card?.offsetWidth ?? 320) + 16
     node.scrollBy({ left: step * direction, behavior: 'smooth' })
+  }
+
+  if (bulletLists && !withPhoto && isPlainList(items)) {
+    return <BulletList items={items} title={title} lead={lead} heading={heading} />
   }
 
   return (
@@ -857,6 +892,7 @@ export default function TsoSectionView({
   partners = tsoClients,
   photo = tsoPhoto,
   photoCards = true,
+  bulletLists = false,
   profile,
 }: {
   section: WorkPageSection
@@ -865,10 +901,12 @@ export default function TsoSectionView({
   partners?: LogoItem[]
   photo?: (key: string) => string
   photoCards?: boolean
+  /** Show lists of one-line entries as bullet points instead of numbered cards. */
+  bulletLists?: boolean
   profile?: CompanyProfile
 }) {
   const groups = groupBlocks(section.blocks)
-  const view = { partners, photo, photoCards }
+  const view = { partners, photo, photoCards, bulletLists }
   const body = (() => {
     if (section.id === 'overview' && previewId) {
       const offers = groups.find((group) => group.kind === 'offers')

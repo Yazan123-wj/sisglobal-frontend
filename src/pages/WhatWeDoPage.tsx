@@ -475,6 +475,7 @@ export default function WhatWeDoPage() {
             partners={techPartners}
             photo={ictPhoto}
             photoCards={false}
+            bulletLists
             profile={ictSection.id === 'overview' && !ictPreview ? companyProfile('ict') : undefined}
           />
         ) : hcmSection ? (
